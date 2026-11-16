@@ -70,9 +70,9 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 | Aplicação funcionando | Validado | `03-iis/06-navegador-site-pelo-ip.jpg` |
 | Serviços validados | Validado | `00-validacao/validacao-20261116-123441.txt` (49/49) |
 | Scripts testados | Validado | todos rodaram na VM; dois bugs encontrados e corrigidos (ver `docs/testes-realizados.md`) |
-| README completo | Executado | integrantes e descrição da Civia preenchidos; faltam ODS, cidade e indicador de impacto (não constam da apresentação da equipe) |
+| README completo | Validado | ficha, integrantes, cidade, ODS, indicador, tecnologias, hospedagem, IP, domínio e rastreabilidade |
 | Repositório organizado | Validado | https://github.com/LuisCrivellaro/civia-infra |
-| Ficha CitizenTech | Executado | `docs/ficha-citizentech.md` com equipe ASTRO e dados da apresentação; faltam ODS, cidade e indicador |
+| Ficha CitizenTech | Validado | `docs/ficha-citizentech.md` completa |
 | Evidências associadas aos critérios | Validado | tabela de rastreabilidade no README |
 | Vídeo demonstrativo de até sete minutos | Pendente | roteiro pronto em `docs/roteiro-video.md`; vídeo não gravado |
 | Link de entrega preparado | Executado | link pronto; envio no Teams não feito |

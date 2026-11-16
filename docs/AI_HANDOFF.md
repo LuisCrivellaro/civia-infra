@@ -56,7 +56,7 @@ Fora do repositório: as quatro skills de escrita foram instaladas em `%USERPROF
 1. Prints de telas gráficas: feitos em 16/11 (Monitor de Desempenho, Agendador, Recovery, Event Viewer, logs do IIS). Falta só a aba Security da pasta do site (opcional).
 2. GPO na prática: feito em 16/11 12:33.
 3. RDP de outra máquina (ou do host: `mstsc /v:192.168.0.250`) com `hostname` na tela.
-4. Ficha da Civia: problema, cidadão, cidade, ODS, integrantes e RM.
+4. Ficha da Civia: completa (equipe ASTRO, cidade, ODS 10 e 11, indicador) em 16/11.
 5. Vídeo de até 7 min (`docs/roteiro-video.md`), link no README.
 6. Commit e push finais; um integrante envia o link no Teams até 19/11 às 23h55.
 

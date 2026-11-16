@@ -4,7 +4,7 @@ Entrega da disciplina Operating Systems da Global Solution 2026 (Engenharia de S
 
 O objetivo é montar em uma VM um Windows Server que hospede a aplicação web da Civia, com domínio, DNS, IIS, permissões NTFS, compartilhamento de arquivos, GPO, acesso remoto, monitoramento com alertas, auditoria e recuperação automática depois de uma falha provocada.
 
-> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-123441.txt)). A recuperação automática foi comprovada em dois testes de falha. Faltam alguns prints de telas gráficas, os dados da equipe e o vídeo; o status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md).
+> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-123441.txt)). A recuperação automática foi comprovada em dois testes de falha. A GPO foi demonstrada com um usuário comum. Falta gravar o vídeo; o status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md).
 
 ## Ficha da CitizenTech
 
@@ -13,6 +13,9 @@ O objetivo é montar em uma VM um Windows Server que hospede a aplicação web d
 | Nome da solução | Civia: óculos inteligentes e aplicativo de acessibilidade urbana ("a cidade se adapta a você") |
 | Problema que resolve | avisos de mobilidade urbana (placas, painéis, comunicados sonoros) não chegam a pessoas com deficiência visual ou auditiva |
 | Cidadão beneficiado | pessoas com deficiência visual ou auditiva |
+| Cidade | São Paulo (SP), em toda a rede de metrô, trem e ônibus, começando pelas estações da Avenida Paulista, que a equipe usa no caminho até a FIAP |
+| ODS | 10 (Redução das desigualdades) e 11 (Cidades e comunidades sustentáveis, meta 11.2) |
+| Indicador de impacto | percentual de trajetos que o usuário conclui sem precisar pedir ajuda a outra pessoa |
 | Virtualização | Hyper-V do Windows 11 Pro, VM geração 2 (4 GB de RAM, 2 vCPUs, 60 GB), switch externo (equivalente ao Bridge) |
 | Tecnologias da infraestrutura | Windows Server 2022 Standard Evaluation (inglês), AD DS, DNS, IIS 10, File Server, GPO, RDP, Performance Monitor (PLA), Agendador de Tarefas, PowerShell 5.1 |
 | Hospedagem | Caminho A (site estático HTML, CSS e JavaScript), pool sem código gerenciado |

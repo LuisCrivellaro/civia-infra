@@ -1,18 +1,18 @@
 # Ficha da CitizenTech
 
-Modelo sugerido no documento geral da GS (slide "A Ficha da CitizenTech"). Os dados da solução vêm da apresentação da equipe ASTRO (Apresentação_GS_CIVIA.pdf). Cidade/bairro, indicador de impacto e ODS não constam da apresentação e precisam ser preenchidos pela equipe.
+Modelo sugerido no documento geral da GS (slide "A Ficha da CitizenTech"). Os dados da solução vêm da apresentação da equipe ASTRO (Apresentação_GS_CIVIA.pdf). Cidade, ODS e indicador de impacto foram definidos pela equipe em 16/11/2026.
 
 | Campo | Valor |
 |---|---|
 | Nome da CitizenTech | Civia |
-| Cidade e bairro | a preencher |
+| Cidade e bairro | São Paulo (SP), em toda a rede de metrô, trem e ônibus, começando pelas estações da Avenida Paulista, que a equipe usa no caminho até a FIAP |
 | Cidadão beneficiado | pessoas com deficiência visual ou auditiva que se deslocam pela cidade |
 | Problema, em uma frase | avisos de mobilidade urbana (placas, painéis, comunicados sonoros) não chegam a quem não vê ou não ouve, e uma mudança de plataforma ou de caminho vira uma dificuldade |
 | Como funciona | óculos inteligentes com câmera e microfone captam o ambiente, uma IA interpreta e o aplicativo comunica por áudio, legendas e vibração; o app oferece rotas acessíveis, avisos em tempo real e pedido de ajuda |
 | O que cada parte faz | a preencher (a parte de Operating Systems está abaixo) |
 | Link do repositório | https://github.com/LuisCrivellaro/civia-infra |
-| Indicador de impacto | a preencher |
-| ODS conectados | a preencher, com uma frase sobre como a solução contribui para cada um |
+| Indicador de impacto | percentual de trajetos que o usuário conclui sem precisar pedir ajuda a outra pessoa (medido pelo aplicativo, que registra quando a função de pedir ajuda é acionada) |
+| ODS conectados | ODS 10 (Redução das desigualdades): pessoas com deficiência visual ou auditiva passam a receber as mesmas informações de mobilidade que os demais passageiros. ODS 11 (Cidades e comunidades sustentáveis): contribui com a meta 11.2, transporte acessível para todos, com atenção às pessoas com deficiência |
 
 ## Integrantes (equipe ASTRO)
 
