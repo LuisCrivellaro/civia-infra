@@ -32,6 +32,16 @@ C:\Scripts\Demo-Video.ps1
 
 Se precisar regravar só uma parte: `C:\Scripts\Demo-Video.ps1 -ComecarNaParte 6`.
 
+### Gravando em trechos
+
+Também dá para gravar uma parte por vez e juntar depois. `-SoParte` roda só a parte pedida e para no fim, sem esperar ENTER:
+
+```powershell
+cls; C:\Scripts\Demo-Video.ps1 -SoParte 1
+```
+
+Para cada trecho: inicie a gravação, rode o comando com o número da parte, fale e pare a gravação. Na parte 6 o script ainda espera um ENTER para provocar a falha. Nas partes 4, 5 e 7 a janela que abre fica aberta; feche antes do próximo trecho. Para juntar os arquivos, o Clipchamp (vem no Windows) basta: arraste os trechos na ordem para a linha do tempo e exporte em 1080p.
+
 ## 0:00 a 0:40 · Parte 1: servidor, IP e domínio
 
 Na tela: `hostname`, IPv4/máscara/DHCP, gateway, DNS, origem do IP (Manual) e `Get-ADDomain`.

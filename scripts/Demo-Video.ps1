@@ -11,14 +11,18 @@
 .EXAMPLE
     C:\Scripts\Demo-Video.ps1
     C:\Scripts\Demo-Video.ps1 -ComecarNaParte 6
+    C:\Scripts\Demo-Video.ps1 -SoParte 3
 #>
 [CmdletBinding()]
 param(
     [int]$ComecarNaParte = 1,
+    # Roda so esta parte e para (para gravar o video em trechos)
+    [ValidateRange(0, 8)][int]$SoParte = 0,
     # Sem pausas, sem abrir janelas e sem rodar o teste de falha (para conferir o script)
     [switch]$Testar
 )
 
+if ($SoParte) { $ComecarNaParte = $SoParte }
 Import-Module WebAdministration -ErrorAction SilentlyContinue
 $ou = 'OU=CitizenTech,DC=citizentech,DC=local'
 
@@ -33,7 +37,9 @@ function Cmd([string]$texto, [scriptblock]$bloco) {
     (& $bloco 2>&1 | Out-String -Width 200).TrimEnd() | Write-Host
 }
 function Abrir([string]$exe, [string]$arg) { if (-not $Testar) { if ($arg) { Start-Process $exe $arg } else { Start-Process $exe } } }
-function Proxima { if ($Testar) { return }; Write-Host "`n[ENTER para a proxima parte]" -ForegroundColor DarkGray -NoNewline; [void](Read-Host) }
+function Proxima {
+    if ($SoParte) { Write-Host "`n[Fim da parte $SoParte]" -ForegroundColor DarkGray; exit 0 }
+    if ($Testar) { return }; Write-Host "`n[ENTER para a proxima parte]" -ForegroundColor DarkGray -NoNewline; [void](Read-Host) }
 
 if ($ComecarNaParte -le 1) {
     Titulo 1 '0:00-0:40' 'Servidor: hostname, IP fixo e dominio'

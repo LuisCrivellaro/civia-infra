@@ -67,6 +67,7 @@ VM `SRV-CITIZENTECH` no Hyper-V do PC de desenvolvimento, Windows Server 2022 St
 | 16/11 12:34 | Liberação de logon local desfeita | Passou | arquivo original restaurado, versão da GPO 6; `secedit` mostra o direito sem o grupo |
 | 16/11 12:34 | `Validar-Ambiente.ps1` | 49 PASSOU | `00-validacao/validacao-20261116-123441.txt` |
 | 16/11 12:41 | `Demo-Video.ps1 -Testar` | Passou | as 8 partes rodaram sem erro na VM; ajustados a exibição do gateway/DNS e o `nslookup` só em IPv4 para não mostrar o IPv6 público no vídeo |
+| 16/11 18:17 | `Demo-Video.ps1 -Testar -SoParte 3` e `-SoParte 8` | Passou | cada um rodou só a parte pedida e terminou com código 0 |
 | 16/11 01:25 | `Coletar-Evidencias.ps1` | Passou | 40 saídas sem erro em `evidencias/` |
 
 Nas evidências, os endereços IPv6 públicos da conexão de internet (prefixo da operadora) foram trocados por `[IPv6-publico-removido]`, porque o repositório é público. Nenhum outro conteúdo foi alterado.
