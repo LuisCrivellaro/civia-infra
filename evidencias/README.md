@@ -16,11 +16,12 @@ Gerado em 16/11/2026 na VM `SRV-CITIZENTECH`:
 - `04-ntfs-gpo/09-relatorio-gpo.html`: relatório da GPO gerado com `Get-GPOReport` (seção 5.1 do roteiro);
 - `05-monitoramento/09-perfmon-grafico-3-contadores.png` e `10-agendador-historico.png`;
 - `06-teste-falha/06-services-recovery-w3svc.png`: aba Recovery do W3SVC no `services.msc`;
-- `07-logs/07-event-viewer-security.png` e `08-pasta-logs-iis.png`.
+- `07-logs/07-event-viewer-security.png` e `08-pasta-logs-iis.png`;
+- `03-iis/07-aba-seguranca-site.png`, `04-ntfs-gpo/10-rdp-conexao-hostname.png` e `11-share-acessado-do-host.png`, tirados à noite pela Área de Trabalho Remota e pelo Explorador do PC host.
 
 Única alteração nas saídas: os endereços IPv6 públicos da conexão de internet (prefixo da operadora) foram trocados por `[IPv6-publico-removido]`, porque o repositório é público.
 
-Ainda faltam três prints pedidos no roteiro: conexão RDP com `hostname` (5.2), acesso a `\\SRV-CITIZENTECH\CitizenTech` a partir de um cliente (4.5) e aba Segurança da pasta do site (4.4). Os passos estão em `docs/auditoria-final.md`.
+Todos os prints pedidos no roteiro estão nas pastas.
 
 ## O que vai em cada pasta
 

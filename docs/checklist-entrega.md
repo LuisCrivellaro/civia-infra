@@ -28,7 +28,7 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 | Application pool configurado | Validado | `03-iis/03-get-webapppoolstate.txt` |
 | Permissões NTFS aplicadas | Validado | `03-iis/05-get-acl-site.txt`, `04-ntfs-gpo/02-get-acl-share.txt` |
 | Site responde HTTP | Validado | `03-iis/04-invoke-webrequest.txt` (200) |
-| Evidências capturadas | Validado, com pendência | falta o print da aba Segurança da pasta do site, pedido na seção 4.4 do roteiro (não está no checklist de prints da seção 9) |
+| Evidências capturadas | Validado | `03-iis/07-aba-seguranca-site.png` (aba Security com `IIS_IUSRS` em Read & execute) |
 
 ## Monitoramento (2 pontos)
 
@@ -83,6 +83,6 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 | Item | Status | Evidência |
 |---|---|---|
 | GPO aplicada e verificada com usuário | Validado | `04-ntfs-gpo/07-gpo-painel-bloqueado-bruno.png` (bruno.teste bloqueado no Painel de Controle), `08-gpresult-bruno.txt`, relatório HTML `09-relatorio-gpo.html` |
-| Acesso remoto validado | Executado, falta print | RDP ativo com NLA, firewall só na rede local (`04-ntfs-gpo/05-rdp.txt`), porta 3389 aberta a partir do PC host. O vídeo foi gravado numa sessão RDP do PC host, mas falta o print pedido na seção 5.2 (conexão de outra máquina com `hostname` na tela) |
-| Compartilhamento acessado | Executado, falta print | `04-ntfs-gpo/01-get-smbshare.txt`; acesso pelo namespace DFS testado no próprio servidor. Falta o print do acesso a `\\SRV-CITIZENTECH\CitizenTech` a partir de um cliente (seção 4.5) |
+| Acesso remoto validado | Validado | RDP com NLA e firewall só na rede local (`04-ntfs-gpo/05-rdp.txt`); `04-ntfs-gpo/10-rdp-conexao-hostname.png`: conexão do PC host com `hostname` e `whoami` na tela |
+| Compartilhamento acessado | Validado | `04-ntfs-gpo/01-get-smbshare.txt`; `04-ntfs-gpo/11-share-acessado-do-host.png`: `\\192.168.0.250\CitizenTech` aberto no Explorador do PC host, com `CITIZENTECH\Administrator` |
 | DFS Namespace | Validado | `04-ntfs-gpo/06-get-dfsnroot.txt` (`\\citizentech.local\CitizenTechDFS` Online) |

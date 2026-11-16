@@ -97,4 +97,5 @@ Cada ajuste mantém o objetivo do roteiro. O motivo vem logo depois.
 - Digitar as senhas (Administrator, DSRM e contas de teste) nas janelas do Windows.
 - Fazer logon com o `bruno.teste` para o teste da GPO.
 - Gravar, narrar, editar e publicar o vídeo.
-- Ainda pendente: prints da conexão RDP de outra máquina, do compartilhamento acessado de um cliente e da aba Segurança da pasta do site; envio do link no Teams.
+- Digitar a senha na conexão ao compartilhamento a partir do PC host.
+- Ainda pendente: envio do link no Teams.

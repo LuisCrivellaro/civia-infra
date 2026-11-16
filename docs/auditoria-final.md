@@ -11,12 +11,9 @@ A infraestrutura pedida está configurada e comprovada na VM `SRV-CITIZENTECH`:
 - a GPO foi testada com um usuário comum;
 - o vídeo está publicado.
 
-Faltam três prints que o roteiro pede e uma decisão de escopo:
+Os três prints que faltavam na primeira versão desta auditoria (conexão RDP, compartilhamento acessado de um cliente e aba Segurança) foram tirados na mesma noite e estão nas evidências.
 
-1. **Print da conexão RDP** a partir de outra máquina, com `hostname` na tela (seção 5.2).
-2. **Print do acesso a `\\SRV-CITIZENTECH\CitizenTech`** a partir de um cliente (seção 4.5).
-3. **Print da aba Segurança** da pasta do site (seção 4.4).
-4. **A aplicação hospedada é uma página de demonstração.** O roteiro pede a "aplicação WEB CitizenTech desenvolvida em outra disciplina", e o repositório publica uma página estática com os dados da Civia. Isso está declarado no README e na própria página, mas pode custar pontos em "Aplicação hospedada no IIS" e "Funcionamento completo".
+Fica uma decisão de escopo: **a aplicação hospedada é uma página de demonstração.** O roteiro pede a "aplicação WEB CitizenTech desenvolvida em outra disciplina", e o repositório publica uma página estática com os dados da Civia. Isso está declarado no README e na própria página, mas pode custar pontos em "Aplicação hospedada no IIS" e "Funcionamento completo".
 
 Os 49/49 do validador cobrem a configuração do servidor. Eles não cobrem os prints manuais, o conteúdo do vídeo nem o envio no Teams.
 
@@ -30,8 +27,8 @@ Os 49/49 do validador cobrem a configuração do servidor. Eles não cobrem os p
 | | OU, grupos, usuários | `Configurar-AD.ps1` | `02-ad-dns/04-usuarios.txt`, `05-grupos.txt` | Validado | - |
 | Aplicação no IIS (2,0) | IIS instalado | `Configurar-IIS.ps1` | `03-iis/01-windowsfeature-web.txt` | Validado | - |
 | | Caminho A, site e pool sem runtime | `Configurar-IIS.ps1`, `app/` | `03-iis/02-get-website.txt`, `03-get-webapppoolstate.txt`, `04-invoke-webrequest.txt` (200), `06-navegador-site-pelo-ip.jpg` | Validado, com ressalva | a página é de demonstração; trocar pela aplicação web da equipe, se ela existir a tempo |
-| | NTFS da pasta do site | `Configurar-IIS.ps1` | `03-iis/05-get-acl-site.txt` | Executado, falta print | print da aba Segurança (D.3) |
-| | File Server e compartilhamento | `Configurar-Infraestrutura.ps1` | `04-ntfs-gpo/01-get-smbshare.txt`, `02-get-acl-share.txt` | Executado, falta print | acesso de um cliente (D.2) |
+| | NTFS da pasta do site | `Configurar-IIS.ps1` | `03-iis/05-get-acl-site.txt`, `07-aba-seguranca-site.png` | Validado | - |
+| | File Server e compartilhamento | `Configurar-Infraestrutura.ps1` | `04-ntfs-gpo/01-get-smbshare.txt`, `02-get-acl-share.txt`, `11-share-acessado-do-host.png` | Validado | - |
 | Monitoramento (2,0) | Data Collector Set com CPU, memória e disco | `Configurar-Monitoramento.ps1` | `05-monitoramento/01-logman-query.txt`, `02-perflogs.txt`, `09-perfmon-grafico-3-contadores.png` | Validado | - |
 | | script de alerta por limiar | `Monitor-Recursos.ps1` | `04-execucao-monitor.txt`, `07-alertas.txt` (CPU 100 %, evento 9001), `08-alertas-perfmon.txt` (evento 2031) | Validado | - |
 | | verificação agendada | `Configurar-Monitoramento.ps1` | `05-tarefa-agendada.txt`, `10-agendador-historico.png` | Validado | - |
@@ -43,7 +40,7 @@ Os 49/49 do validador cobrem a configuração do servidor. Eles não cobrem os p
 | | logs do IIS | - | `06-logs-iis.txt`, `u_ex261116.log`, `08-pasta-logs-iis.png` | Validado | - |
 | Funcionamento completo (2,0) | bloco de validação 8.1 com `Test-NetConnection` | `Coletar-Evidencias.ps1`, `Validar-Ambiente.ps1` | `00-validacao/00-ficha-infraestrutura.txt` (`TcpTestSucceeded : True`), `validacao-20261116-123441.txt` (49/49) | Validado | o roteiro pede "um único print"; a saída está em texto |
 | | GPO visível e verificável | `Configurar-Infraestrutura.ps1` | `04-ntfs-gpo/03-get-gpo-all.txt`, `07-gpo-painel-bloqueado-bruno.png`, `08-gpresult-bruno.txt`, `09-relatorio-gpo.html` | Validado | - |
-| | acesso remoto RDP | `Configurar-Infraestrutura.ps1` | `04-ntfs-gpo/05-rdp.txt`, validação (NLA, firewall `LocalSubnet`) | Executado, falta print | print da conexão (D.1) |
+| | acesso remoto RDP | `Configurar-Infraestrutura.ps1` | `04-ntfs-gpo/05-rdp.txt`, validação (NLA, firewall `LocalSubnet`), `10-rdp-conexao-hostname.png` | Validado | - |
 | | DFS (opcional) | `Configurar-Infraestrutura.ps1 -Componentes DFS` | `04-ntfs-gpo/06-get-dfsnroot.txt` | Validado | - |
 | | README com ficha e rastreabilidade (8.3) | `README.md`, `docs/ficha-citizentech.md` | ficha, IP, hostname, domínio, credenciais de teste sem senha, tabela de critérios | Validado | - |
 | | estrutura do repositório (8.2) | `README.md` | pastas `docs/`, `scripts/`, `evidencias/01-rede` a `07-logs` | Validado | - |
@@ -72,28 +69,15 @@ Nenhum script `.ps1` foi alterado nesta auditoria e os arquivos de `app/` també
 
 ## D. Pendências humanas
 
-1. **Print da conexão RDP (seção 5.2):**
-   1. No PC host, abra `mstsc`, digite `192.168.0.250` e entre como `CITIZENTECH\Administrator`.
-   2. Use a janela **sem** tela cheia, para a barra de título "192.168.0.250 - Conexão de Área de Trabalho Remota" aparecer.
-   3. Dentro da sessão, abra o PowerShell e digite `hostname`.
-   4. Tire o print da janela inteira com Win+Shift+S.
-   5. Salve como `evidencias/04-ntfs-gpo/10-rdp-conexao-hostname.png`.
-2. **Print do compartilhamento a partir de um cliente (seção 4.5):**
-   1. No PC host, abra o Explorador e digite `\\192.168.0.250\CitizenTech` na barra de endereço.
-   2. Quando pedir credenciais, use `CITIZENTECH\ana.souza` e a senha de teste.
-   3. Tire o print com a pasta aberta mostrando `LEIA-ME.txt`.
-   4. Salve como `evidencias/04-ntfs-gpo/11-share-acessado-do-host.png`.
-3. **Print da aba Segurança (seção 4.4):**
-   1. Na VM, abra o Explorador em `C:\inetpub`.
-   2. Clique com o botão direito em `citizentech` > Properties > Security.
-   3. Selecione `IIS_IUSRS`, para aparecer Read & execute.
-   4. Tire o print e salve como `evidencias/03-iis/07-aba-seguranca-site.png`.
-4. **Vídeo:** confirme no YouTube Studio que a duração é de no máximo 7:00 e que a visibilidade é "Não listado".
-5. **Envio:** um integrante envia `https://github.com/LuisCrivellaro/civia-infra` na tarefa de Operating Systems do Teams até 19/11 às 23h55 e confere se ficou como entregue.
-6. **Aplicação real (opcional, decisão da equipe):** se a aplicação web da Civia de outra disciplina estiver pronta, troque o conteúdo de `app/`, rode `Configurar-IIS.ps1` de novo e tire um print novo do navegador. Se ela tiver backend, o caminho passa a ser o B.
-7. **Publicação:** revisar estas mudanças e fazer commit e push. A auditoria deixou tudo sem commit.
+1. **Prints da conexão RDP, do compartilhamento e da aba Segurança:** feitos em 16/11, entre 20:14 e 20:20. A IA conduziu a Área de Trabalho Remota e o Explorador; o aluno digitou a senha para conectar ao compartilhamento.
+   - `evidencias/04-ntfs-gpo/10-rdp-conexao-hostname.png`
+   - `evidencias/04-ntfs-gpo/11-share-acessado-do-host.png`
+   - `evidencias/03-iis/07-aba-seguranca-site.png`
+2. **Vídeo:** confirme no YouTube Studio que a duração é de no máximo 7:00 e que a visibilidade é "Não listado".
+3. **Envio:** um integrante envia `https://github.com/LuisCrivellaro/civia-infra` na tarefa de Operating Systems do Teams até 19/11 às 23h55 e confere se ficou como entregue.
+4. **Aplicação real (opcional, decisão da equipe):** se a aplicação web da Civia de outra disciplina estiver pronta, troque o conteúdo de `app/`, rode `Configurar-IIS.ps1` de novo e tire um print novo do navegador. Se ela tiver backend, o caminho passa a ser o B.
+5. **Publicação:** feita depois da revisão do aluno.
 
-Depois dos prints, mude os itens correspondentes para Validado em `docs/checklist-entrega.md` e no README.
 
 ## E. Riscos restantes
 
@@ -101,9 +85,6 @@ Depois dos prints, mude os itens correspondentes para Validado em `docs/checklis
 |---|---|---|
 | Aplicação hospedada é uma página de demonstração | Alto | o roteiro e o documento geral pedem a aplicação web da equipe; afeta dois critérios que somam 4 pontos |
 | Envio no Teams não feito | Crítico até ser feito | sem envio não há nota; depende só da equipe |
-| Falta o print da conexão RDP | Médio | o roteiro pede o print; a configuração está comprovada em texto e o vídeo foi gravado por RDP |
-| Falta o print do compartilhamento acessado de um cliente | Médio | o roteiro pede o print; a configuração está comprovada em texto |
-| Falta o print da aba Segurança | Baixo | pedido na seção 4.4, mas fora do checklist de prints da seção 9; o `Get-Acl` está salvo |
 | Duração do vídeo não conferida nesta auditoria | Baixo | o roteiro foi montado para 7:00 e o vídeo foi editado; falta confirmar o tempo final |
 | GPO testada com logon no controlador de domínio | Baixo | exigiu uma liberação temporária, documentada e desfeita; o ideal seria uma VM cliente |
 | Bloco 8.1 salvo em texto, não em print único | Baixo | o conteúdo está completo, com `TcpTestSucceeded : True` |
@@ -118,6 +99,7 @@ Depois dos prints, mude os itens correspondentes para Validado em `docs/checklis
 - recuperação automática nos modos Crash e Parada;
 - auditoria e logs;
 - GPO com usuário comum;
+- prints da conexão RDP, do compartilhamento a partir do PC host e da aba Segurança;
 - DFS Namespace;
 - README e ficha;
 - rastreabilidade;
@@ -125,7 +107,6 @@ Depois dos prints, mude os itens correspondentes para Validado em `docs/checklis
 - vídeo publicado.
 
 **Ainda precisa de validação:**
-- prints do RDP, do compartilhamento a partir de um cliente e da aba Segurança;
 - duração final do vídeo.
 
 **Impede a entrega:**
@@ -154,6 +135,6 @@ Nenhuma pendência técnica impede o envio.
 
 - **Os quatro pilares têm evidência real.** O documento geral fala em configuração e evidências, monitoramento e serviço, logs de auditoria e teste de falha. Os critérios de monitoramento (2,0), tolerância a falhas (1,0) e auditoria (1,0) estão completos.
 - **Rede e identidade (2,0)** está completo.
-- **As ressalvas ficam em "Aplicação hospedada no IIS" e em "Funcionamento completo":** a página publicada é de demonstração, e faltam três prints que o roteiro pede.
+- **A ressalva fica em "Aplicação hospedada no IIS" e em "Funcionamento completo":** a página publicada é de demonstração. Os prints pedidos no roteiro estão completos.
 
-Nenhuma dessas ressalvas impede o envio, mas os prints levam poucos minutos e reduzem o risco de perder pontos. Este parecer não prevê nota.
+A ressalva não impede o envio. Este parecer não prevê nota.

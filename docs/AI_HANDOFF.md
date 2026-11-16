@@ -7,7 +7,7 @@ Atualizado em 16/11/2026, depois da auditoria final (`docs/auditoria-final.md`).
 - Repositório local em `C:\Projetos\OS GS`, publicado em https://github.com/LuisCrivellaro/civia-infra (público).
 - VM `SRV-CITIZENTECH` no Hyper-V do PC (switch externo `Civia-Externo`, IP 192.168.0.250), Windows Server 2022 Standard Evaluation em inglês, domínio `citizentech.local`.
 - Todas as etapas executadas na VM em 16/11/2026; `Validar-Ambiente.ps1` = 49/49. Recuperação automática comprovada (Crash e Parada).
-- Evidências de texto e prints em `evidencias/`; ficha da equipe completa; vídeo publicado. Faltam os prints da conexão RDP, do compartilhamento acessado de um cliente e da aba Segurança da pasta do site.
+- Evidências de texto e prints em `evidencias/`; ficha da equipe completa; vídeo publicado. Os prints pedidos no roteiro estão completos.
 - Registro completo das execuções: `docs/testes-realizados.md`.
 - Comandos na VM foram executados por PowerShell Direct a partir do host (`Invoke-Command -VMName SRV-CITIZENTECH`). Para repetir à mão, use a janela da VM ou o mesmo método com `Get-Credential`.
 
@@ -55,15 +55,13 @@ Fora do repositório: as quatro skills de escrita foram instaladas em `%USERPROF
 
 ## Pendências (em ordem)
 
-1. Prints de telas gráficas: feitos em 16/11 (Monitor de Desempenho, Agendador, Recovery, Event Viewer, logs do IIS). Falta a aba Security da pasta do site (pedida na seção 4.4).
+1. Prints de telas gráficas: feitos em 16/11 (Monitor de Desempenho, Agendador, Recovery, Event Viewer, logs do IIS). Aba Security da pasta do site: feita.
 2. GPO na prática: feito em 16/11 12:33.
-3. RDP de outra máquina (ou do host: `mstsc /v:192.168.0.250`) com `hostname` na tela: falta o print.
-4. Acesso a `\\SRV-CITIZENTECH\CitizenTech` a partir de um cliente: falta o print.
+3. RDP de outra máquina (ou do host: `mstsc /v:192.168.0.250`) com `hostname` na tela: feito.
+4. Acesso a `\\SRV-CITIZENTECH\CitizenTech` a partir de um cliente: feito.
 5. Ficha da Civia: completa (equipe ASTRO, cidade, ODS 10 e 11, indicador) em 16/11.
 6. Vídeo: feito em 16/11, https://www.youtube.com/watch?v=CGmx1JJHYeI (link no README e no checklist).
 7. Revisar e publicar as mudanças da auditoria final; um integrante envia o link no Teams até 19/11 às 23h55.
-
-Os passos exatos de cada print estão na seção "Pendências humanas" de `docs/auditoria-final.md`.
 
 ## Comandos para continuar
 

@@ -41,6 +41,7 @@ Continuar do ponto em que parou, sem recomeçar; revisar o que já existia; exec
 | Ajustes no script do vídeo (gravar por partes, tirar avisos da tela, abrir o print e o relatório da GPO) | fez cada ajuste e testou no modo de ensaio |
 | Link do vídeo publicado | colocou o link no README e no checklist |
 | Auditoria final antes da entrega | revisou documentos, scripts e evidências contra os PDFs e escreveu `docs/auditoria-final.md` |
+| Tirar os prints que faltavam | conduziu a Área de Trabalho Remota e o Explorador e salvou os prints da conexão RDP, da aba Segurança e do compartilhamento; o aluno digitou a senha da conexão ao compartilhamento |
 
 ## Quem fez o quê
 
