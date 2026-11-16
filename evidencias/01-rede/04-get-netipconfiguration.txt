@@ -1,0 +1,36 @@
+﻿# Evidencia: 04-get-netipconfiguration
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:34
+# Comando  : Get-NetIPConfiguration -Detailed
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+
+ComputerName                          : SRV-CITIZENTECH
+InterfaceAlias                        : Ethernet
+InterfaceIndex                        : 3
+InterfaceDescription                  : Microsoft Hyper-V Network Adapter
+NetCompartment.CompartmentId          : 1
+NetCompartment.CompartmentDescription : Default Compartment
+NetAdapter.LinkLayerAddress           : 00-15-5D-00-11-00
+NetAdapter.Status                     : Up
+NetProfile.Name                       : Network
+NetProfile.NetworkCategory            : Public
+NetProfile.IPv6Connectivity           : LocalNetwork
+NetProfile.IPv4Connectivity           : LocalNetwork
+IPv6Address                           : [IPv6-publico-removido]
+                                        [IPv6-publico-removido]
+IPv6LinkLocalAddress                  : fe80::68bd:c72f:99ca:66ff%3
+IPv4Address                           : 192.168.0.250
+IPv6DefaultGateway                    : fe80::3a3f:b3ff:fea6:cf46
+IPv4DefaultGateway                    : 192.168.0.1
+NetIPv6Interface.NlMTU                : 1500
+NetIPv4Interface.NlMTU                : 1500
+NetIPv6Interface.DHCP                 : Enabled
+NetIPv4Interface.DHCP                 : Disabled
+DNSServer                             : ::1
+                                        127.0.0.1
+
+
+
+

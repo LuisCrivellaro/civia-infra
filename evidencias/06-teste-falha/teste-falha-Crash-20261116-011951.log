@@ -1,0 +1,84 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261116011951
+Username: CITIZENTECH\Administrator
+RunAs User: CITIZENTECH\Administrator
+Configuration Name: 
+Machine: SRV-CITIZENTECH (Microsoft Windows NT 10.0.20348.0)
+Host Application: powershell.exe -so -NoLogo -NoProfile
+Process ID: 2744
+PSVersion: 5.1.20348.558
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.20348.558
+BuildVersion: 10.0.20348.558
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+=== TESTE DE FALHA - CITIZENTECH - modo Crash - 2026-11-16 01:19:51 ===
+
+[1] Estado inicial do servico, pool e site
+
+Name   Status
+----   ------
+W3SVC Running
+WAS   Running
+
+
+Pool CitizenTechPool : Started
+
+[2] Resposta HTTP antes da falha
+HTTP 200 (OK)
+
+[3] Provocando a falha (modo Crash)
+W3SVC roda no processo 1736 junto com: W3SVC, WAS
+Processo 1736 (W3SVC/WAS) encerrado a forca.
+Processo de trabalho w3wp 3492 do pool CitizenTechPool encerrado a forca.
+
+[4] Acessando o site durante a falha
+
+Name   Status
+----   ------
+W3SVC Stopped
+
+
+PS>TerminatingError(Invoke-WebRequest): "The operation has timed out."
+Site indisponivel, como esperado: HTTP 0 - The operation has timed out.
+
+[5] Aguardando recuperacao automatica (ate 90 s, sem nenhuma acao deste script)
+  01:20:04  W3SVC=Stopped  HTTP=200
+  01:20:07  W3SVC=Running  HTTP=200
+Eventos do Service Control Manager:
+
+TimeCreated             Id Message
+-----------             -- -------
+11/16/2026 1:19:53 AM 7031 The Windows Process Activation Service service terminated unexpectedly.  It has done this 2
+                           time(s).  The following corrective action will be taken in 10000 milliseconds: Restart the
+                           service.
+11/16/2026 1:19:53 AM 7031 The World Wide Web Publishing Service service terminated unexpectedly.  It has done this 2
+                           time(s).  The following corrective action will be taken in 10000 milliseconds: Restart the
+                           service.
+
+
+
+[6] Estado final
+
+Name   Status
+----   ------
+W3SVC Running
+WAS   Running
+
+
+Pool CitizenTechPool : Started
+
+[7] Resposta HTTP depois
+HTTP 200 (OK)
+
+=== RESULTADO: RECUPERACAO AUTOMATICA COMPROVADA ===
+Mecanismo: Service Control Manager (acoes de recuperacao do sc.exe failure)
+Tempo ate voltar: 15.7 s
+**********************
+Windows PowerShell transcript end
+End time: 20261116012007
+**********************

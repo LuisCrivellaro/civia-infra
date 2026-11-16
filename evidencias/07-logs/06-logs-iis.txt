@@ -1,0 +1,30 @@
+﻿# Evidencia: 06-logs-iis
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:46
+# Comando  : Get-ChildItem C:\inetpub\logs\LogFiles -Recurse
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+FullName                                       Length LastWriteTime        
+--------                                       ------ -------------        
+C:\inetpub\logs\LogFiles\W3SVC2                       11/16/2026 1:15:12 AM
+C:\inetpub\logs\LogFiles\W3SVC2\u_ex261116.log 19389  11/16/2026 1:20:37 AM
+
+
+== ultimas linhas
+2026-11-16 04:23:56 192.168.0.250 GET /health.txt t=1794803036030 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 46
+2026-11-16 04:24:01 192.168.0.250 GET /health.txt t=1794803041038 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 45
+2026-11-16 04:24:06 192.168.0.250 GET /health.txt t=1794803046038 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 46
+2026-11-16 04:24:11 192.168.0.250 GET /health.txt t=1794803051043 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 45
+2026-11-16 04:24:16 192.168.0.250 GET /health.txt t=1794803056042 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 45
+2026-11-16 04:24:21 192.168.0.250 GET /health.txt t=1794803061032 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 45
+2026-11-16 04:24:26 192.168.0.250 GET /health.txt t=1794803066045 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 46
+2026-11-16 04:24:26 ::1 GET / - 80 - ::1 Mozilla/5.0+(Windows+NT;+Windows+NT+10.0;+en-US)+WindowsPowerShell/5.1.20348.558 - 200 0 0 0
+2026-11-16 04:24:26 fe80::68bd:c72f:99ca:66ff%3 GET / - 80 - fe80::68bd:c72f:99ca:66ff%3 Mozilla/5.0+(Windows+NT;+Windows+NT+10.0;+en-US)+WindowsPowerShell/5.1.20348.558 - 200 0 0 0
+2026-11-16 04:24:31 192.168.0.250 GET /health.txt t=1794803071030 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 46
+2026-11-16 04:24:36 192.168.0.250 GET /health.txt t=1794803076031 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 44
+2026-11-16 04:24:41 192.168.0.250 GET /health.txt t=1794803081042 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 46
+2026-11-16 04:24:46 192.168.0.250 GET /health.txt t=1794803086040 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 45
+2026-11-16 04:24:51 192.168.0.250 GET /health.txt t=1794803091043 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 43
+2026-11-16 04:24:56 192.168.0.250 GET /health.txt t=1794803096040 80 - 192.168.0.17 Mozilla/5.0+(Windows+NT+10.0;+Win64;+x64)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Claude/5.11492.5+Chrome/156.0.8078.75+Safari/537.36+MSIX http://192.168.0.250/ 200 0 0 46
+

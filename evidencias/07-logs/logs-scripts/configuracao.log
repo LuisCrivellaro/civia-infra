@@ -1,0 +1,68 @@
+﻿2026-11-16 01:05:18 | ETAPA | Adaptadores de rede
+2026-11-16 01:05:19 | ETAPA | Configuracao IPv4 atual
+2026-11-16 01:05:20 | INFO  | Hostname atual: WIN-DJREAMNFLUL | Hostname desejado: SRV-CITIZENTECH
+2026-11-16 01:05:20 | INFO  | IP desejado (config): 192.168.0.250/24 gw 192.168.0.1 dns 192.168.0.250
+2026-11-16 01:05:20 | AVISO | Confira se o IP desejado esta na mesma sub-rede do gateway e fora da faixa do DHCP do roteador.
+2026-11-16 01:05:31 | OK    | Nome alterado para SRV-CITIZENTECH. Vale apos reiniciar.
+2026-11-16 01:05:31 | AVISO | Reinicie a VM antes de configurar o IP e o AD (Restart-Computer).
+2026-11-16 01:06:31 | INFO  | Testando se 192.168.0.250 ja esta em uso na rede...
+2026-11-16 01:06:38 | OK    | IP fixo aplicado: 192.168.0.250/24, gateway 192.168.0.1
+2026-11-16 01:06:38 | OK    | DNS definido: 192.168.0.250
+2026-11-16 01:06:38 | INFO  | Teste do gateway:
+2026-11-16 01:06:38 | ERRO  | Generic failure 
+2026-11-16 01:07:01 | ETAPA | Instalando AD-Domain-Services com ferramentas de gerenciamento
+2026-11-16 01:07:22 | OK    | Recurso instalado. Proximo passo: -Etapa PromoverDominio
+2026-11-16 01:10:17 | AVISO | Informe a senha do modo de restauracao (DSRM). Guarde em local seguro, fora do repositorio.
+2026-11-16 01:10:18 | ETAPA | Rodando Test-ADDSForestInstallation (nao altera nada)
+2026-11-16 01:10:29 | AVISO | Promovendo SRV-CITIZENTECH a DC de citizentech.local. O servidor vai reiniciar.
+2026-11-16 01:14:20 | ETAPA | Dominio: citizentech.local (Windows2016Domain)
+2026-11-16 01:14:21 | OK    | OU criada: OU=CitizenTech,DC=citizentech,DC=local
+2026-11-16 01:14:21 | OK    | Grupo criado: GG_CitizenTech_Admins
+2026-11-16 01:14:21 | OK    | Grupo criado: GG_CitizenTech_Usuarios
+2026-11-16 01:14:21 | OK    | Usuario criado: ana.souza
+2026-11-16 01:14:21 | OK    | ana.souza adicionado ao grupo GG_CitizenTech_Admins
+2026-11-16 01:14:21 | OK    | Usuario criado: bruno.teste
+2026-11-16 01:14:21 | OK    | bruno.teste adicionado ao grupo GG_CitizenTech_Usuarios
+2026-11-16 01:14:21 | ETAPA | Validacao (mesmos comandos do roteiro, secao 3.5)
+2026-11-16 01:14:37 | ETAPA | Instalando IIS (Web-Server) e ferramentas de gerenciamento
+2026-11-16 01:15:06 | ETAPA | Publicando a aplicacao em C:\inetpub\citizentech
+2026-11-16 01:15:06 | ETAPA | Liberando a porta 80: parando o Default Web Site
+2026-11-16 01:15:06 | OK    | Default Web Site parado e sem inicio automatico.
+2026-11-16 01:15:06 | ETAPA | Pool de aplicativos CitizenTechPool
+2026-11-16 01:15:07 | ETAPA | Site CitizenTech na porta 80
+2026-11-16 01:15:08 | ETAPA | Permissoes NTFS da pasta do site
+2026-11-16 01:15:08 | ETAPA | Firewall: regra HTTP de entrada do IIS
+2026-11-16 01:15:09 | ETAPA | Validacao (roteiro 4.2)
+2026-11-16 01:15:12 | OK    | HTTP 200 em http://localhost/
+2026-11-16 01:15:53 | ETAPA | File Server e compartilhamento
+2026-11-16 01:15:54 | OK    | Compartilhamento criado: \\SRV-CITIZENTECH\CitizenTech
+2026-11-16 01:15:54 | ETAPA | GPO de usuarios (bloqueio do Painel de Controle)
+2026-11-16 01:15:55 | OK    | GPO criada: GPO_CitizenTech_Usuarios
+2026-11-16 01:15:55 | OK    | GPO vinculada a OU=CitizenTech,DC=citizentech,DC=local
+2026-11-16 01:15:56 | OK    | Relatorio da GPO: C:\Scripts\logs\GPO_Report.html
+2026-11-16 01:15:56 | AVISO | Para ver o efeito, faca logon com um usuario da OU em um cliente do dominio e rode gpupdate /force.
+2026-11-16 01:15:56 | ETAPA | Acesso remoto (RDP administrativo com NLA)
+2026-11-16 01:15:57 | OK    | RDP habilitado so para a sub-rede local. Nao crie redirecionamento de porta 3389 no roteador.
+2026-11-16 01:15:57 | ETAPA | Politica de auditoria (Logon e File System, sucesso e falha)
+2026-11-16 01:15:57 | OK    | Auditoria de leitura/escrita ativada em C:\inetpub\citizentech
+2026-11-16 01:15:57 | OK    | Auditoria de leitura/escrita ativada em C:\Shares\CitizenTech
+2026-11-16 01:15:57 | AVISO | O DC aplica a Default Domain Controllers Policy. Confira de novo com "auditpol /get" depois de um gpupdate.
+2026-11-16 01:16:08 | ETAPA | Contadores no idioma local: \Processor(_Total)\% Processor Time | \Memory\Available MBytes | \LogicalDisk(C:)\% Free Space
+2026-11-16 01:16:09 | ETAPA | Criando Data Collector Set CitizenTech_Monitor
+2026-11-16 01:16:09 | OK    | CitizenTech_Monitor criado e iniciado.
+2026-11-16 01:16:09 | ETAPA | Criando Data Collector Set de alerta CitizenTech_Alertas
+2026-11-16 01:16:09 | OK    | CitizenTech_Alertas criado e iniciado.
+2026-11-16 01:16:09 | OK    | Fonte de eventos CitizenTechMonitor criada no log Application.
+2026-11-16 01:16:09 | OK    | Scripts copiados para C:\Scripts
+2026-11-16 01:16:10 | OK    | Tarefa CitizenTech_Monitor_Alertas: Ready
+2026-11-16 01:16:10 | ETAPA | Validacao (roteiro 6.1 e 6.3)
+2026-11-16 01:16:11 | ETAPA | Primeira execucao manual do script de alerta:
+2026-11-16 01:16:28 | ETAPA | Pool CitizenTechPool: rapidFailProtection=false, autoStart=true
+2026-11-16 01:16:29 | ETAPA | Recuperacao do servico W3SVC : reset=86400 actions=restart/5000/restart/10000/restart/30000
+2026-11-16 01:16:29 | ETAPA | Recuperacao do servico WAS : reset=86400 actions=restart/5000/restart/10000/restart/30000
+2026-11-16 01:16:30 | OK    | Tarefa CitizenTech_Recuperacao: Ready
+2026-11-16 01:24:06 | ETAPA | DFS Namespace (opcional)
+2026-11-16 01:24:16 | OK    | Raiz DFS criada: \\citizentech.local\CitizenTechDFS
+2026-11-16 01:24:16 | OK    | Pasta DFS \\citizentech.local\CitizenTechDFS\Arquivos -> \\SRV-CITIZENTECH\CitizenTech
+2026-11-16 01:25:03 | ETAPA | Acesso remoto (RDP administrativo com NLA)
+2026-11-16 01:25:04 | OK    | RDP habilitado so para a sub-rede local. Nao crie redirecionamento de porta 3389 no roteador.

@@ -1,0 +1,48 @@
+﻿# Evidencia: 01-logman-query
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : logman query
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+Name:                 CitizenTech_Monitor
+Status:               Running
+Root Path:            C:\PerfLogs\CitizenTech
+Segment:              Off
+Schedules:            On
+Run as:               SYSTEM
+
+Name:                 CitizenTech_Monitor\Recursos
+Type:                 Counter
+Output Location:      C:\PerfLogs\CitizenTech\20261116-000001\Recursos_.blg
+Append:               Off
+Circular:             Off
+Overwrite:            Off
+Sample Interval:      15 second(s)
+
+Counters:
+  \Processor(_Total)\% Processor Time
+  \Memory\Available MBytes
+  \LogicalDisk(C:)\% Free Space
+
+The command completed successfully.
+
+Name:                 CitizenTech_Alertas
+Status:               Running
+Root Path:            C:\PerfLogs\CitizenTech
+Segment:              Off
+Schedules:            On
+Run as:               SYSTEM
+
+Name:                 CitizenTech_Alertas\LimitesCitizenTech
+Type:                 Alert
+Sample Interval:      15 second(s)
+Event Log:            On
+
+Thresholds:
+  \Processor(_Total)\% Processor Time>80
+  \Memory\Available MBytes<500
+  \LogicalDisk(C:)\Free Megabytes<15360
+
+The command completed successfully.
+

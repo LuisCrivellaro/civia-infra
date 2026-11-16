@@ -1,0 +1,8 @@
+﻿# Evidencia: 04-execucao-monitor
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:42
+# Comando  : Monitor-Recursos.ps1
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+01:25:46 Recursos normais. CPU=60.1% | RAM livre=2225 MB | Disco livre C:=47.9 GB (80.7%)
+

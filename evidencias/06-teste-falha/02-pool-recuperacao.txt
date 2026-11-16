@@ -1,0 +1,15 @@
+﻿# Evidencia: 02-pool-recuperacao
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:46
+# Comando  : Pool: rapidFailProtection e autoStart
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+
+name                : CitizenTechPool
+autoStart           : True
+rapidFailProtection : False
+
+
+
+

@@ -37,6 +37,29 @@ Não testado fora da VM, por depender de Windows Server, AD, IIS ou administrado
 
 ## Na VM
 
-| Data | Teste | Resultado | Evidência |
+VM `SRV-CITIZENTECH` no Hyper-V do PC de desenvolvimento, Windows Server 2022 Standard Evaluation (inglês), build 20348. Os scripts foram executados pelo PowerShell Direct (o host roda o comando dentro da VM e recebe a saída), em sessão de administrador. As senhas (Administrator, DSRM e contas de teste) foram digitadas pelo aluno em janelas do Windows e não ficaram gravadas em arquivo.
+
+| Data/hora | Teste | Resultado | Evidência |
 |---|---|---|---|
-| | | | |
+| 16/11 01:05 | `Configurar-Rede.ps1` diagnóstico e `-Acao Renomear` | Passou | hostname `SRV-CITIZENTECH` após reinício |
+| 16/11 01:06 | `Configurar-Rede.ps1 -Acao IPFixo` | Passou com erro no fim, corrigido | IP aplicado; o teste do gateway deu "Generic failure" porque o IP ainda estava em verificação (Tentative). O script passou a esperar o estado Preferred |
+| 16/11 01:06 | DNS IPv6 | Corrigido | o roteador entregava DNS IPv6 da operadora; o script passou a configurar `::1` |
+| 16/11 01:07 | `Configurar-AD.ps1 -Etapa InstalarRecurso` | Passou | AD-Domain-Services e RSAT-AD-PowerShell Installed |
+| 16/11 01:10 | `Configurar-AD.ps1 -Etapa PromoverDominio` | Passou | "Operation completed successfully"; `02-ad-dns/01-get-addomain.txt` |
+| 16/11 01:14 | `Configurar-AD.ps1 -Etapa CriarObjetos` | Passou | `02-ad-dns/04-usuarios.txt`, `05-grupos.txt` |
+| 16/11 01:15 | `Configurar-IIS.ps1` | Passou | site Started, pool Started, HTTP 200; página aberta do PC host pelo IP (`03-iis/06-navegador-site-pelo-ip.jpg`) |
+| 16/11 01:15 | `Configurar-Infraestrutura.ps1` (FileServer, GPO, RDP, Auditoria) | Passou, com bug no RDP | o validador mostrou as regras de firewall do RDP desligadas; corrigido (ver abaixo) |
+| 16/11 01:16 | `Configurar-Monitoramento.ps1` | Passou | os dois Data Collector Sets em Running, tarefa Ready |
+| 16/11 01:16 | `Configurar-Recuperacao.ps1` | Passou | `06-teste-falha/01-sc-qfailure.txt` |
+| 16/11 01:18 | `Teste-Falha.ps1 -Modo Crash` (1ª versão) | Inconclusivo | o site continuou respondendo 200 depois de encerrar o svchost do W3SVC/WAS: o `w3wp.exe` do pool seguiu atendendo. O script corretamente não declarou recuperação |
+| 16/11 01:19 | `Teste-Falha.ps1 -Modo Crash` (encerra também o `w3wp.exe`) | Passou | site fora do ar (timeout), voltou em 15,7 s sem ação do script; evento 7031 do Service Control Manager |
+| 16/11 01:20 | `Teste-Falha.ps1 -Modo Parada` | Passou | `Stop-Service W3SVC`; a tarefa `CitizenTech_Recuperacao` religou em 60,7 s; linha `AGENDADA` no `recuperacao.log` |
+| 16/11 01:22 | Auditoria após `gpupdate /force` | Passou | Logon e File System continuam com Success and Failure; eventos 4663 do site e do compartilhamento |
+| 16/11 01:22 | Carga de CPU por 90 s | Passou | alerta real "CPU alta: 100%" no `alertas.log`, evento 9001 e evento 2031 do Monitor de Desempenho |
+| 16/11 01:24 | `Configurar-Infraestrutura.ps1 -Componentes DFS` | Passou | `\\citizentech.local\CitizenTechDFS` Online, pasta acessível |
+| 16/11 01:24 | `Validar-Ambiente.ps1` | 48 PASSOU, 1 FALHOU | regras de firewall do RDP desligadas: o `Set-NetFirewallRule` regravava o objeto lido antes do `Enable`. Script corrigido e componente rodado de novo |
+| 16/11 01:25 | Porta 3389 a partir do PC host | Passou | `Test-NetConnection 192.168.0.250 -Port 3389` = True |
+| 16/11 01:25 | `Validar-Ambiente.ps1` | 49 PASSOU | `00-validacao/validacao-20261116-012533.txt` |
+| 16/11 01:25 | `Coletar-Evidencias.ps1` | Passou | 40 saídas sem erro em `evidencias/` |
+
+Nas evidências, os endereços IPv6 públicos da conexão de internet (prefixo da operadora) foram trocados por `[IPv6-publico-removido]`, porque o repositório é público. Nenhum outro conteúdo foi alterado.

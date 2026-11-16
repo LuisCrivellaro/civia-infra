@@ -1,0 +1,17 @@
+﻿# Evidencia: 01-get-addomain
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-ADDomain | Select-Object Name, DNSRoot, DomainMode
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+
+Name        : citizentech
+DNSRoot     : citizentech.local
+DomainMode  : Windows2016Domain
+NetBIOSName : CITIZENTECH
+PDCEmulator : SRV-CITIZENTECH.citizentech.local
+
+
+
+

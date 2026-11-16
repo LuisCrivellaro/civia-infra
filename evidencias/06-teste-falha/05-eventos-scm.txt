@@ -1,0 +1,16 @@
+﻿# Evidencia: 05-eventos-scm
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:46
+# Comando  : Eventos 7031/7034/7036 do W3SVC
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+TimeCreated             Id Message                                                                                                                                                                                        
+-----------             -- -------                                                                                                                                                                                        
+11/16/2026 1:19:53 AM 7031 The Windows Process Activation Service service terminated unexpectedly.  It has done this 2 time(s).  The following corrective action will be taken in 10000 milliseconds: Restart the service.
+11/16/2026 1:19:53 AM 7031 The World Wide Web Publishing Service service terminated unexpectedly.  It has done this 2 time(s).  The following corrective action will be taken in 10000 milliseconds: Restart the service. 
+11/16/2026 1:18:55 AM 7031 The Windows Process Activation Service service terminated unexpectedly.  It has done this 1 time(s).  The following corrective action will be taken in 5000 milliseconds: Restart the service. 
+11/16/2026 1:18:55 AM 7031 The World Wide Web Publishing Service service terminated unexpectedly.  It has done this 1 time(s).  The following corrective action will be taken in 5000 milliseconds: Restart the service.  
+
+
+

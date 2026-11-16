@@ -1,0 +1,24 @@
+﻿# Evidencia: 03-get-counter
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-Counter CPU -SampleInterval 2 -MaxSamples 3
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+Timestamp                  CounterSamples                                                                                      
+---------                  --------------                                                                                      
+11/16/2026 1:25:38 AM      \\srv-citizentech\processor(_total)\% processor time :                                              
+                           56.975516820945                                                                                     
+                                                                                                                               
+                                                                                                                               
+11/16/2026 1:25:40 AM      \\srv-citizentech\processor(_total)\% processor time :                                              
+                           53.1250632811646                                                                                    
+                                                                                                                               
+                                                                                                                               
+11/16/2026 1:25:42 AM      \\srv-citizentech\processor(_total)\% processor time :                                              
+                           54.338931127485                                                                                     
+                                                                                                                               
+                                                                                                                               
+
+
+

@@ -50,7 +50,8 @@ Cada ajuste mantém o objetivo do roteiro. O motivo vem logo depois.
    - Solução: `Teste-Falha.ps1 -Modo Crash` encerra à força o processo `svchost` que hospeda W3SVC/WAS (o script confere antes que nenhum outro serviço roda no mesmo processo). O SCM registra o evento 7031 e reinicia o serviço em 5 s.
    - `Teste-Falha.ps1 -Modo Parada` repete o teste do PDF, mas espera até 180 s pela tarefa `CitizenTech_Recuperacao` (roda a cada 2 min) e confere no `recuperacao.log` uma linha nova marcada `AGENDADA`.
    - O fallback manual só roda com `-PermitirFallbackManual` e, se usado, o resultado é registrado como `RECUPERACAO MANUAL (NAO AUTOMATICA)`.
-3. Também configuramos `sc.exe failureflag W3SVC 1` para a recuperação valer quando o serviço para com código de erro, e a mesma política no WAS, de que o W3SVC depende.
+3. Encerrar só o processo do W3SVC/WAS não derruba o site. Na VM, o primeiro teste de crash terminou como inconclusivo: o `w3wp.exe` do pool continuou atendendo a fila do `http.sys` e o site respondeu 200 durante a queda do serviço. O modo Crash passou a encerrar também o `w3wp.exe` do `CitizenTechPool`; com isso o site ficou fora do ar e voltou em 15,7 s pela ação do SCM (evento 7031).
+4. Também configuramos `sc.exe failureflag W3SVC 1` para a recuperação valer quando o serviço para com código de erro, e a mesma política no WAS, de que o W3SVC depende.
 
 ### Monitoramento (6.1 e 6.2)
 

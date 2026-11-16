@@ -1,0 +1,17 @@
+﻿# Evidencia: 05-tarefa-agendada
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:46
+# Comando  : Get-ScheduledTask / Get-ScheduledTaskInfo
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+TaskName                    LastRunTime            LastTaskResult NextRunTime          
+--------                    -----------            -------------- -----------          
+CitizenTech_Recuperacao     11/16/2026 1:25:25 AM               0 11/16/2026 1:27:27 AM
+CitizenTech_DCS_Inicio      11/30/1999 12:00:00 AM         267011                      
+CitizenTech_Monitor_Alertas 11/16/2026 1:22:22 AM               0 11/16/2026 1:27:27 AM
+CitizenTech_Alertas         11/16/2026 1:16:16 AM          267009                      
+CitizenTech_Monitor         11/16/2026 1:16:16 AM          267009                      
+
+
+

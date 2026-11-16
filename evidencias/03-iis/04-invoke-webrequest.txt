@@ -1,0 +1,15 @@
+﻿# Evidencia: 04-invoke-webrequest
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Invoke-WebRequest http://localhost
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+
+StatusCode        : 200
+StatusDescription : OK
+Tamanho           : 1790
+
+
+
+

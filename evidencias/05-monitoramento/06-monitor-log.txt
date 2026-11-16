@@ -1,0 +1,12 @@
+﻿# Evidencia: 06-monitor-log
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:46
+# Comando  : Get-Content C:\Scripts\logs\monitor.log -Tail 30
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+2026-11-16 01:16:12 | NORMAL | CPU=0% | RAM livre=2581 MB | Disco livre C:=48.3 GB (81.3%) | fontes CPU=Get-Counter RAM=Get-Counter
+2026-11-16 01:17:12 | NORMAL | CPU=0% | RAM livre=2716 MB | Disco livre C:=48.3 GB (81.3%) | fontes CPU=Get-Counter RAM=Get-Counter
+2026-11-16 01:22:12 | NORMAL | CPU=49.5% | RAM livre=2676 MB | Disco livre C:=48.2 GB (81.2%) | fontes CPU=Get-Counter RAM=Get-Counter
+2026-11-16 01:22:51 | ALERTA | CPU=100% | RAM livre=2567 MB | Disco livre C:=48.2 GB (81.2%) | fontes CPU=Get-Counter RAM=Get-Counter
+2026-11-16 01:25:42 | NORMAL | CPU=60.1% | RAM livre=2225 MB | Disco livre C:=47.9 GB (80.7%) | fontes CPU=Get-Counter RAM=Get-Counter
+

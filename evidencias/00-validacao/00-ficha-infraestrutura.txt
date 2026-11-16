@@ -1,0 +1,140 @@
+﻿# Evidencia: 00-ficha-infraestrutura
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:46
+# Comando  : Bloco de validacao final (roteiro 8.1)
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+=== FICHA DA INFRAESTRUTURA ===
+SRV-CITIZENTECH
+
+Windows IP Configuration
+
+   Host Name . . . . . . . . . . . . : SRV-CITIZENTECH
+   Primary Dns Suffix  . . . . . . . : citizentech.local
+   Node Type . . . . . . . . . . . . : Hybrid
+   IP Routing Enabled. . . . . . . . : No
+   WINS Proxy Enabled. . . . . . . . : No
+   DNS Suffix Search List. . . . . . : citizentech.local
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . : 
+   Description . . . . . . . . . . . : Microsoft Hyper-V Network Adapter
+   Physical Address. . . . . . . . . : 00-15-5D-00-11-00
+   DHCP Enabled. . . . . . . . . . . : No
+   Autoconfiguration Enabled . . . . : Yes
+   IPv6 Address. . . . . . . . . . . : [IPv6-publico-removido](Preferred) 
+   Lease Obtained. . . . . . . . . . : Monday, November 16, 2026 1:11:39 AM
+   Lease Expires . . . . . . . . . . : Tuesday, November 17, 2026 12:41:21 AM
+   IPv6 Address. . . . . . . . . . . : [IPv6-publico-removido](Preferred) 
+   Link-local IPv6 Address . . . . . : fe80::68bd:c72f:99ca:66ff%3(Preferred) 
+   IPv4 Address. . . . . . . . . . . : 192.168.0.250(Preferred) 
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : fe80::3a3f:b3ff:fea6:cf46%3
+                                       192.168.0.1
+   DHCPv6 IAID . . . . . . . . . . . : 100668765
+   DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-32-8C-79-F4-00-15-5D-00-11-00
+   DNS Servers . . . . . . . . . . . : ::1
+                                       127.0.0.1
+   NetBIOS over Tcpip. . . . . . . . : Enabled
+Server:  UnKnown
+Address:  ::1
+
+Name:    srv-citizentech.citizentech.local
+Addresses:  [IPv6-publico-removido]
+	  [IPv6-publico-removido]
+	  192.168.0.250
+
+
+
+ComputerName     : srv-citizentech.citizentech.local
+RemoteAddress    : fe80::68bd:c72f:99ca:66ff%3
+RemotePort       : 80
+InterfaceAlias   : Ethernet
+SourceAddress    : [IPv6-publico-removido]
+TcpTestSucceeded : True
+
+
+Name    : citizentech
+DNSRoot : citizentech.local
+
+
+Name         : AD-Domain-Services
+InstallState : Installed
+
+
+Name         : DNS
+InstallState : Installed
+
+
+Name         : FS-FileServer
+InstallState : Installed
+
+
+Name         : Web-Server
+InstallState : Installed
+
+
+name         : Default Web Site
+state        : Stopped
+physicalPath : %SystemDrive%\inetpub\wwwroot
+
+
+name         : CitizenTech
+state        : Started
+physicalPath : C:\inetpub\citizentech
+
+
+Value : Started
+
+
+Name   : DNS
+Status : Running
+
+
+Name   : W3SVC
+Status : Running
+
+
+Name : ADMIN$
+Path : C:\Windows
+
+
+Name : C$
+Path : C:\
+
+
+Name : CitizenTech
+Path : C:\Shares\CitizenTech
+
+
+Name : CitizenTechDFS
+Path : C:\DFSRoots\CitizenTechDFS
+
+
+Name : IPC$
+Path : 
+
+
+Name : NETLOGON
+Path : C:\Windows\SYSVOL\sysvol\citizentech.local\SCRIPTS
+
+
+Name : SYSVOL
+Path : C:\Windows\SYSVOL\sysvol
+
+
+DisplayName : Default Domain Policy
+GpoStatus   : AllSettingsEnabled
+
+
+DisplayName : Default Domain Controllers Policy
+GpoStatus   : AllSettingsEnabled
+
+
+DisplayName : GPO_CitizenTech_Usuarios
+GpoStatus   : AllSettingsEnabled
+
+
+
+

@@ -1,0 +1,3 @@
+﻿2026-11-16 01:19:03 | modo=Crash | INCONCLUSIVO (a indisponibilidade nao foi observada) | mecanismo= | tempo=10.8s | transcript=C:\Scripts\logs\teste-falha-Crash-20261116-011852.log
+2026-11-16 01:20:07 | modo=Crash | RECUPERACAO AUTOMATICA COMPROVADA | mecanismo=Service Control Manager (acoes de recuperacao do sc.exe failure) | tempo=15.7s | transcript=C:\Scripts\logs\teste-falha-Crash-20261116-011951.log
+2026-11-16 01:21:35 | modo=Parada | RECUPERACAO AUTOMATICA COMPROVADA | mecanismo=Tarefa agendada CitizenTech_Recuperacao (Recupera-Site.ps1) | tempo=60.7s | transcript=C:\Scripts\logs\teste-falha-Parada-20261116-012034.log

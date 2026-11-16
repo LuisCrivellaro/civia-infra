@@ -1,0 +1,22 @@
+﻿# Evidencia: 03-get-webapppoolstate
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-WebAppPoolState -Name CitizenTechPool
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+Value  
+-----  
+Started
+
+
+
+
+name                  : CitizenTechPool
+managedRuntimeVersion : 
+autoStart             : True
+startMode             : OnDemand
+
+
+
+

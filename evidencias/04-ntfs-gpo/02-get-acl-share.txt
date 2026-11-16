@@ -1,0 +1,20 @@
+﻿# Evidencia: 02-get-acl-share
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-Acl C:\Shares\CitizenTech
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+IdentityReference                            FileSystemRights AccessControlType IsInherited
+-----------------                            ---------------- ----------------- -----------
+CITIZENTECH\Domain Users          ReadAndExecute, Synchronize             Allow       False
+CITIZENTECH\GG_CitizenTech_Admins         Modify, Synchronize             Allow       False
+NT AUTHORITY\SYSTEM                               FullControl             Allow        True
+BUILTIN\Administrators                            FullControl             Allow        True
+BUILTIN\Users                     ReadAndExecute, Synchronize             Allow        True
+BUILTIN\Users                                      AppendData             Allow        True
+BUILTIN\Users                                     CreateFiles             Allow        True
+CREATOR OWNER                                       268435456             Allow        True
+
+
+

@@ -4,10 +4,12 @@ Atualizado em 14/11/2026. Prazo da entrega: 19/11/2026, 23h55 (Teams).
 
 ## Estado
 
-- Repositório local em `C:\Projetos\OS GS`. Não é repositório Git ainda; nada foi commitado nem publicado.
-- Scripts, página de demonstração e documentação prontos.
-- Nada foi executado em Windows Server. Todos os critérios estão como Preparado ou Pendente.
-- Testes feitos fora da VM e seus resultados: `docs/testes-realizados.md`.
+- Repositório local em `C:\Projetos\OS GS`, publicado em https://github.com/LuisCrivellaro/civia-infra (público).
+- VM `SRV-CITIZENTECH` no Hyper-V do PC (switch externo `Civia-Externo`, IP 192.168.0.250), Windows Server 2022 Standard Evaluation em inglês, domínio `citizentech.local`.
+- Todas as etapas executadas na VM em 16/11/2026; `Validar-Ambiente.ps1` = 49/49. Recuperação automática comprovada (Crash e Parada).
+- Evidências de texto em `evidencias/`; faltam prints manuais de telas gráficas, a ficha da equipe e o vídeo.
+- Registro completo das execuções: `docs/testes-realizados.md`.
+- Comandos na VM foram executados por PowerShell Direct a partir do host (`Invoke-Command -VMName SRV-CITIZENTECH`). Para repetir à mão, use a janela da VM ou o mesmo método com `Get-Credential`.
 
 ## Arquivos
 
@@ -45,16 +47,12 @@ Fora do repositório: as quatro skills de escrita foram instaladas em `%USERPROF
 
 ## Pendências (em ordem)
 
-1. Criar a VM e instalar o Windows Server 2022 (humano).
-2. Seguir `docs/roteiro-configuracao.md` passos 1 a 12 (humano, na VM).
-3. Rodar `Validar-Ambiente.ps1` até ficar tudo `PASSOU` e `Coletar-Evidencias.ps1`.
-4. Fazer os prints manuais listados em `evidencias/README.md`.
-5. Copiar `evidencias/` da VM para o repositório.
-6. Atualizar status em `README.md` e `docs/checklist-entrega.md`; registrar em `docs/testes-realizados.md` (seção "Na VM").
-7. Preencher ficha da CitizenTech, integrantes, IP real.
-8. Se a aplicação real da equipe existir, trocar `app/` e rodar `Configurar-IIS.ps1` de novo.
-9. Gravar o vídeo (`docs/roteiro-video.md`), subir e colocar o link no README.
-10. Criar o repositório no GitHub, commit e push (com autorização do aluno), enviar o link no Teams por um integrante, conferir o envio.
+1. Prints manuais na janela da VM (logon como `CITIZENTECH\Administrator`): Monitor de Desempenho com os dois conjuntos e o gráfico; Agendador de Tarefas com histórico; aba Recovery do World Wide Web Publishing Service; Event Viewer > Security; pasta `C:\inetpub\logs\LogFiles`; aba Security de `C:\inetpub\citizentech`.
+2. GPO na prática: logon como `bruno.teste` (alternativa de laboratório no roteiro de configuração, passo 7) e print do Painel de Controle bloqueado.
+3. RDP de outra máquina (ou do host: `mstsc /v:192.168.0.250`) com `hostname` na tela.
+4. Ficha da Civia: problema, cidadão, cidade, ODS, integrantes e RM.
+5. Vídeo de até 7 min (`docs/roteiro-video.md`), link no README.
+6. Commit e push finais; um integrante envia o link no Teams até 19/11 às 23h55.
 
 ## Comandos para continuar
 

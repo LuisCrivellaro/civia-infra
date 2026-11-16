@@ -1,0 +1,18 @@
+﻿# Evidencia: 08-alertas-perfmon
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:46
+# Comando  : Eventos 2031 do Monitor de Desempenho
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+TimeCreated             Id Message                                                                                                                                                                                               
+-----------             -- -------                                                                                                                                                                                               
+11/16/2026 1:23:54 AM 2031 Performance counter \Processor(_Total)\% Processor Time has tripped its alert threshold. The counter value of 94.584078 is over the limit value of 80.000000. 80.000000 is the alert threshold value. 
+11/16/2026 1:23:39 AM 2031 Performance counter \Processor(_Total)\% Processor Time has tripped its alert threshold. The counter value of 100.000000 is over the limit value of 80.000000. 80.000000 is the alert threshold value.
+11/16/2026 1:23:24 AM 2031 Performance counter \Processor(_Total)\% Processor Time has tripped its alert threshold. The counter value of 100.000000 is over the limit value of 80.000000. 80.000000 is the alert threshold value.
+11/16/2026 1:23:09 AM 2031 Performance counter \Processor(_Total)\% Processor Time has tripped its alert threshold. The counter value of 100.000000 is over the limit value of 80.000000. 80.000000 is the alert threshold value.
+11/16/2026 1:22:54 AM 2031 Performance counter \Processor(_Total)\% Processor Time has tripped its alert threshold. The counter value of 100.000000 is over the limit value of 80.000000. 80.000000 is the alert threshold value.
+11/16/2026 1:22:45 AM 2031 Performance counter \Processor(_Total)\% Processor Time has tripped its alert threshold. The counter value of 100.000000 is over the limit value of 80.000000. 80.000000 is the alert threshold value.
+
+
+

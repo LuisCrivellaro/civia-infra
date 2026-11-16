@@ -1,0 +1,87 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261116012034
+Username: CITIZENTECH\Administrator
+RunAs User: CITIZENTECH\Administrator
+Configuration Name: 
+Machine: SRV-CITIZENTECH (Microsoft Windows NT 10.0.20348.0)
+Host Application: powershell.exe -so -NoLogo -NoProfile
+Process ID: 1556
+PSVersion: 5.1.20348.558
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.20348.558
+BuildVersion: 10.0.20348.558
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+=== TESTE DE FALHA - CITIZENTECH - modo Parada - 2026-11-16 01:20:34 ===
+
+[1] Estado inicial do servico, pool e site
+
+Name   Status
+----   ------
+W3SVC Running
+WAS   Running
+
+
+Pool CitizenTechPool : Started
+
+[2] Resposta HTTP antes da falha
+HTTP 200 (OK)
+
+[3] Provocando a falha (modo Parada)
+W3SVC parado com Stop-Service (parada limpa).
+
+[4] Acessando o site durante a falha
+
+Name   Status
+----   ------
+W3SVC Stopped
+
+
+PS>TerminatingError(Invoke-WebRequest): "The operation has timed out."
+Site indisponivel, como esperado: HTTP 0 - The operation has timed out.
+
+[5] Aguardando recuperacao automatica (ate 180 s, sem nenhuma acao deste script)
+PS>TerminatingError(Invoke-WebRequest): "Unable to connect to the remote server"
+  01:20:50  W3SVC=Stopped  HTTP=0
+PS>TerminatingError(Invoke-WebRequest): "Unable to connect to the remote server"
+  01:20:57  W3SVC=Stopped  HTTP=0
+PS>TerminatingError(Invoke-WebRequest): "Unable to connect to the remote server"
+  01:21:04  W3SVC=Stopped  HTTP=0
+PS>TerminatingError(Invoke-WebRequest): "Unable to connect to the remote server"
+  01:21:11  W3SVC=Stopped  HTTP=0
+PS>TerminatingError(Invoke-WebRequest): "Unable to connect to the remote server"
+  01:21:18  W3SVC=Stopped  HTTP=0
+PS>TerminatingError(Invoke-WebRequest): "Unable to connect to the remote server"
+  01:21:25  W3SVC=Stopped  HTTP=0
+PS>TerminatingError(Invoke-WebRequest): "Unable to connect to the remote server"
+  01:21:32  W3SVC=Stopped  HTTP=0
+  01:21:35  W3SVC=Running  HTTP=200
+Linhas novas no recuperacao.log:
+2026-11-16 01:21:32 | AGENDADA | W3SVC | estava Stopped. Iniciando.
+2026-11-16 01:21:32 | AGENDADA | W3SVC | estado apos acao: Running
+2026-11-16 01:21:33 | AGENDADA | HTTP | site respondendo com HTTP 200 apos 1 acao(oes). RECUPERADO.
+
+[6] Estado final
+
+Name   Status
+----   ------
+W3SVC Running
+WAS   Running
+
+
+Pool CitizenTechPool : Started
+
+[7] Resposta HTTP depois
+HTTP 200 (OK)
+
+=== RESULTADO: RECUPERACAO AUTOMATICA COMPROVADA ===
+Mecanismo: Tarefa agendada CitizenTech_Recuperacao (Recupera-Site.ps1)
+Tempo ate voltar: 60.7 s
+**********************
+Windows PowerShell transcript end
+End time: 20261116012135
+**********************

@@ -1,0 +1,13 @@
+﻿# Evidencia: 05-sacl-site
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:46
+# Comando  : Get-Acl -Audit C:\inetpub\citizentech
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+IdentityReference      FileSystemRights       AuditFlags
+-----------------      ----------------       ----------
+Everyone          ReadData, CreateFiles Success, Failure
+
+
+

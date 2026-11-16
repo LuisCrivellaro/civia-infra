@@ -4,7 +4,7 @@ Entrega da disciplina Operating Systems da Global Solution 2026 (Engenharia de S
 
 O objetivo é montar em uma VM um Windows Server que hospede a aplicação web da Civia, com domínio, DNS, IIS, permissões NTFS, compartilhamento de arquivos, GPO, acesso remoto, monitoramento com alertas, auditoria e recuperação automática depois de uma falha provocada.
 
-> Situação atual: scripts e documentação prontos e testados no que dava para testar fora da VM. A configuração do Windows Server ainda não foi executada, então nenhum critério está validado. O status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md).
+> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-012533.txt)). A recuperação automática foi comprovada em dois testes de falha. Faltam alguns prints de telas gráficas, os dados da equipe e o vídeo; o status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md).
 
 ## Ficha da CitizenTech
 
@@ -150,21 +150,23 @@ A lista completa, com o motivo de cada ajuste, está em [docs/analise-requisitos
 
 | Critério (pontos) | Requisito | Script | Validação | Evidência | Status |
 |---|---|---|---|---|---|
-| Rede e identidade (2,0) | hostname, IP fixo, DNS, domínio no AD, usuários e grupos | `Configurar-Rede.ps1`, `Configurar-AD.ps1` | `ipconfig /all`, `nslookup`, `Get-ADDomain`, `Get-DnsServerZone`, `Get-ADUser`, `Get-ADGroupMember` | [evidencias/01-rede](evidencias/01-rede), [evidencias/02-ad-dns](evidencias/02-ad-dns) | Preparado |
-| Aplicação no IIS (2,0) | site, pool, dependências, pasta, NTFS, File Server | `Configurar-IIS.ps1`, `Configurar-Infraestrutura.ps1` | `Get-Website`, `Get-WebAppPoolState`, `Invoke-WebRequest`, `Get-Acl`, `Get-SmbShare` | [evidencias/03-iis](evidencias/03-iis), [evidencias/04-ntfs-gpo](evidencias/04-ntfs-gpo) | Preparado |
-| Monitoramento (2,0) | contadores de CPU, memória e disco, alertas, agendamento | `Configurar-Monitoramento.ps1`, `Monitor-Recursos.ps1` | `logman query`, `Get-Counter`, execução do script, `Get-ScheduledTaskInfo` | [evidencias/05-monitoramento](evidencias/05-monitoramento) | Preparado (script de alerta testado fora da VM) |
-| Tolerância a falhas (1,0) | recuperação configurada, falha provocada, recuperação automática | `Configurar-Recuperacao.ps1`, `Teste-Falha.ps1`, `Recupera-Site.ps1` | `sc.exe qfailure W3SVC`, saída do teste, `recuperacao.log` | [evidencias/06-teste-falha](evidencias/06-teste-falha) | Preparado |
-| Auditoria e logs (1,0) | auditpol, SACL, eventos, logs do IIS | `Configurar-Infraestrutura.ps1` | `auditpol /get`, `Get-WinEvent`, logs do IIS | [evidencias/07-logs](evidencias/07-logs) | Preparado |
-| Funcionamento completo (2,0) | tudo funcionando junto, documentação, vídeo | `Validar-Ambiente.ps1`, `Coletar-Evidencias.ps1` | bloco de validação final (roteiro 8.1) | [evidencias/00-validacao](evidencias/00-validacao), vídeo | Pendente |
+| Rede e identidade (2,0) | hostname, IP fixo, DNS, domínio no AD, usuários e grupos | `Configurar-Rede.ps1`, `Configurar-AD.ps1` | `ipconfig /all`, `nslookup`, `Get-ADDomain`, `Get-DnsServerZone`, `Get-ADUser`, `Get-ADGroupMember` | [evidencias/01-rede](evidencias/01-rede), [evidencias/02-ad-dns](evidencias/02-ad-dns) | Validado |
+| Aplicação no IIS (2,0) | site, pool, dependências, pasta, NTFS, File Server | `Configurar-IIS.ps1`, `Configurar-Infraestrutura.ps1` | `Get-Website`, `Get-WebAppPoolState`, `Invoke-WebRequest`, `Get-Acl`, `Get-SmbShare` | [evidencias/03-iis](evidencias/03-iis), [evidencias/04-ntfs-gpo](evidencias/04-ntfs-gpo) | Validado |
+| Monitoramento (2,0) | contadores de CPU, memória e disco, alertas, agendamento | `Configurar-Monitoramento.ps1`, `Monitor-Recursos.ps1` | `logman query`, `Get-Counter`, execução do script, `Get-ScheduledTaskInfo` | [evidencias/05-monitoramento](evidencias/05-monitoramento) | Validado (alerta real com CPU em 100 %); falta o print do Monitor de Desempenho |
+| Tolerância a falhas (1,0) | recuperação configurada, falha provocada, recuperação automática | `Configurar-Recuperacao.ps1`, `Teste-Falha.ps1`, `Recupera-Site.ps1` | `sc.exe qfailure W3SVC`, saída do teste, `recuperacao.log` | [evidencias/06-teste-falha](evidencias/06-teste-falha) | Validado (Crash: SCM em 15,7 s; Parada: tarefa em 60,7 s) |
+| Auditoria e logs (1,0) | auditpol, SACL, eventos, logs do IIS | `Configurar-Infraestrutura.ps1` | `auditpol /get`, `Get-WinEvent`, logs do IIS | [evidencias/07-logs](evidencias/07-logs) | Validado |
+| Funcionamento completo (2,0) | tudo funcionando junto, documentação, vídeo | `Validar-Ambiente.ps1`, `Coletar-Evidencias.ps1` | bloco de validação final (roteiro 8.1) | [evidencias/00-validacao](evidencias/00-validacao), vídeo | Executado (49/49 na validação); vídeo pendente |
 
 Os status seguem a escala: Pendente, Preparado, Executado, Validado, Falhou. Só mudam depois de rodar na VM e ter a evidência salva.
 
 ## Limitações
 
-- A configuração não foi executada em um Windows Server ainda. Os scripts foram verificados com o parser do PowerShell 5.1 e as partes que só leem dados foram testadas em um Windows 11 em português (detalhes em [docs/testes-realizados.md](docs/testes-realizados.md)).
-- Para ver a GPO em ação é preciso fazer logon com um usuário da OU. Usuários comuns não fazem logon local em um controlador de domínio, então o ideal é uma segunda VM cliente no domínio. O roteiro de configuração explica a alternativa.
-- DFS Replication não foi configurado porque precisa de um segundo servidor. O DFS Namespace é opcional e está no script.
+- A VM foi configurada no Hyper-V do computador de desenvolvimento, em rede de casa (switch externo). O sistema está em inglês porque o Evaluation Center não oferece ISO em português. O registro de cada execução, inclusive as que falharam, está em [docs/testes-realizados.md](docs/testes-realizados.md).
+- No modo Crash, encerrar só o serviço W3SVC não derruba o site: o processo do pool (`w3wp.exe`) continua atendendo. O teste derruba os dois para simular a queda real.
+- A GPO está criada, vinculada e com o valor certo, mas o efeito na tela ainda não foi mostrado: para isso é preciso fazer logon com um usuário da OU. Usuários comuns não fazem logon local em um controlador de domínio, então o ideal é uma segunda VM cliente no domínio. O roteiro de configuração explica a alternativa.
+- DFS Replication não foi configurado porque precisa de um segundo servidor. O DFS Namespace (opcional) foi configurado: `\\citizentech.local\CitizenTechDFS`.
 - Os PDFs da atividade ficam fora do Git para não publicar material da FIAP.
+- Nas evidências, os endereços IPv6 públicos da conexão de internet foram trocados por `[IPv6-publico-removido]`.
 
 ## Uso de IA
 

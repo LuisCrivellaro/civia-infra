@@ -108,8 +108,16 @@ try {
             $permitidos = @('W3SVC', 'WAS', 'IISADMIN', 'W3LOGSVC')
             $outros = $vizinhos | Where-Object { $_ -notin $permitidos }
             if ($outros) { throw "O processo $procId tambem hospeda $($outros -join ', '). Abortado para nao derrubar outros servicos." }
+            # O w3wp.exe do pool atende as requisicoes por conta propria; se so o svchost cair,
+            # o site continua respondendo (observado no primeiro teste em 16/11/2026).
+            # Por isso o crash derruba o servico E o processo de trabalho do pool.
+            $workers = Get-CimInstance Win32_Process -Filter "Name='w3wp.exe'" | Where-Object { $_.CommandLine -match "-ap `"$Pool`"" }
             Stop-Process -Id $procId -Force
-            Write-Host "Processo $procId encerrado a forca (simula queda inesperada do servico)." -ForegroundColor Red
+            Write-Host "Processo $procId (W3SVC/WAS) encerrado a forca." -ForegroundColor Red
+            foreach ($w in $workers) {
+                Stop-Process -Id $w.ProcessId -Force -ErrorAction SilentlyContinue
+                Write-Host "Processo de trabalho w3wp $($w.ProcessId) do pool $Pool encerrado a forca." -ForegroundColor Red
+            }
         }
         'Parada' {
             Stop-Service W3SVC -Force

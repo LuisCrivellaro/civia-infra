@@ -1,0 +1,14 @@
+﻿# Evidencia: 04-usuarios
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-ADUser -Filter * -SearchBase "OU=CitizenTech,DC=citizentech,DC=local"
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+Name        SamAccountName Enabled
+----        -------------- -------
+Ana Souza   ana.souza         True
+Bruno Teste bruno.teste       True
+
+
+

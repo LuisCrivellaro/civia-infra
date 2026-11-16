@@ -1,0 +1,18 @@
+﻿# Evidencia: 02-winver-versao
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:33
+# Comando  : Get-ComputerInfo (versao do Windows)
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+
+OsName                : Microsoft Windows Server 2022 Standard Evaluation
+OsVersion             : 10.0.20348
+OsBuildNumber         : 20348
+WindowsVersion        : 2009
+CsProcessors          : {Intel(R) Core(TM) i5-14600K}
+CsTotalPhysicalMemory : 4293853184
+
+
+
+

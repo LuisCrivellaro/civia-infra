@@ -1,0 +1,68 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261116011852
+Username: CITIZENTECH\Administrator
+RunAs User: CITIZENTECH\Administrator
+Configuration Name: 
+Machine: SRV-CITIZENTECH (Microsoft Windows NT 10.0.20348.0)
+Host Application: powershell.exe -so -NoLogo -NoProfile
+Process ID: 656
+PSVersion: 5.1.20348.558
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.20348.558
+BuildVersion: 10.0.20348.558
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+=== TESTE DE FALHA - CITIZENTECH - modo Crash - 2026-11-16 01:18:52 ===
+
+[1] Estado inicial do servico, pool e site
+
+Name   Status
+----   ------
+W3SVC Running
+WAS   Running
+
+
+Pool CitizenTechPool : Started
+
+[2] Resposta HTTP antes da falha
+HTTP 200 (OK)
+
+[3] Provocando a falha (modo Crash)
+W3SVC roda no processo 3324 junto com: W3SVC, WAS
+Processo 3324 encerrado a forca (simula queda inesperada do servico).
+
+[4] Acessando o site durante a falha
+
+Name   Status
+----   ------
+W3SVC Stopped
+
+
+O site continuou respondendo 200. A indisponibilidade nao foi observada; o teste nao comprova a recuperacao.
+
+[5] Aguardando recuperacao automatica (ate 90 s, sem nenhuma acao deste script)
+  01:19:03  W3SVC=Running  HTTP=200
+
+[6] Estado final
+
+Name   Status
+----   ------
+W3SVC Running
+WAS   Running
+
+
+Pool CitizenTechPool : Started
+
+[7] Resposta HTTP depois
+HTTP 200 (OK)
+
+=== RESULTADO: INCONCLUSIVO (a indisponibilidade nao foi observada) ===
+Tempo ate voltar: 10.8 s
+**********************
+Windows PowerShell transcript end
+End time: 20261116011903
+**********************

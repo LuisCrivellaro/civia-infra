@@ -1,0 +1,13 @@
+﻿# Evidencia: 06-get-dfsnroot
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-DfsnRoot (opcional)
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+Path                               Type      State 
+----                               ----      ----- 
+\\citizentech.local\CitizenTechDFS Domain V2 Online
+
+
+

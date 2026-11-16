@@ -1,0 +1,17 @@
+﻿# Evidencia: 02-get-website
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-Website | Where-Object Name -eq CitizenTech | Format-List
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+
+name            : CitizenTech
+state           : Started
+physicalPath    : C:\inetpub\citizentech
+applicationPool : CitizenTechPool
+bindings        : Microsoft.IIs.PowerShell.Framework.ConfigurationElement
+
+
+
+

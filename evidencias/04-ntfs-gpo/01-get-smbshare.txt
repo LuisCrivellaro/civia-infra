@@ -1,0 +1,23 @@
+﻿# Evidencia: 01-get-smbshare
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-SmbShare / Get-SmbShareAccess
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+
+Name        : CitizenTech
+Path        : C:\Shares\CitizenTech
+ScopeName   : *
+Description : Arquivos do projeto CitizenTech
+
+
+
+
+Name        ScopeName AccountName                       AccessControlType AccessRight
+----        --------- -----------                       ----------------- -----------
+CitizenTech *         CITIZENTECH\GG_CitizenTech_Admins Allow             Full       
+CitizenTech *         CITIZENTECH\Domain Users          Allow             Read       
+
+
+

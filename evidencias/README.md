@@ -6,7 +6,16 @@ Só entram aqui prints e saídas reais da VM. Nada de imagens montadas ou saída
 - Prints de tela são feitos à mão. Nome: `<nn>-<o-que-mostra>.png`, por exemplo `03-iis/06-navegador-site.png`.
 - Se refizer uma evidência, substitua o arquivo antigo para não ficar resultado desatualizado.
 
-Até 14/11/2026 nenhuma evidência da VM foi gerada; as pastas estão vazias.
+Gerado em 16/11/2026 na VM `SRV-CITIZENTECH`:
+- saídas de comando de todas as etapas (`Coletar-Evidencias.ps1`) e o resultado do `Validar-Ambiente.ps1` (49/49);
+- os transcripts dos três testes de falha e os logs dos scripts (`07-logs/logs-scripts/`), copiados de `C:\Scripts\logs`;
+- o log do IIS do dia (`07-logs/u_ex261116.log`);
+- `01-rede/00-winver.png`: captura da tela da VM feita pelo Hyper-V;
+- `03-iis/06-navegador-site-pelo-ip.jpg`: o site aberto no navegador do PC host pelo IP do servidor.
+
+Única alteração nas saídas: os endereços IPv6 públicos da conexão de internet (prefixo da operadora) foram trocados por `[IPv6-publico-removido]`, porque o repositório é público.
+
+Ainda faltam os prints manuais de telas gráficas marcados como pendentes em `docs/checklist-entrega.md`.
 
 ## O que vai em cada pasta
 

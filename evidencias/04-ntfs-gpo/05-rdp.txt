@@ -1,0 +1,21 @@
+﻿# Evidencia: 05-rdp
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Configuracao RDP e firewall
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+
+fDenyTSConnections : 0
+
+
+
+
+DisplayName                         Enabled Direction Profile
+-----------                         ------- --------- -------
+Remote Desktop - Shadow (TCP-In)       True   Inbound     Any
+Remote Desktop - User Mode (TCP-In)    True   Inbound     Any
+Remote Desktop - User Mode (UDP-In)    True   Inbound     Any
+
+
+

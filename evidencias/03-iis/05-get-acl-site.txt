@@ -1,0 +1,23 @@
+﻿# Evidencia: 05-get-acl-site
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-Acl C:\inetpub\citizentech
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+IdentityReference                            FileSystemRights AccessControlType IsInherited
+-----------------                            ---------------- ----------------- -----------
+BUILTIN\IIS_IUSRS                 ReadAndExecute, Synchronize             Allow       False
+CITIZENTECH\GG_CitizenTech_Admins         Modify, Synchronize             Allow       False
+NT SERVICE\TrustedInstaller                       FullControl             Allow        True
+NT SERVICE\TrustedInstaller                         268435456             Allow        True
+NT AUTHORITY\SYSTEM                               FullControl             Allow        True
+NT AUTHORITY\SYSTEM                                 268435456             Allow        True
+BUILTIN\Administrators                            FullControl             Allow        True
+BUILTIN\Administrators                              268435456             Allow        True
+BUILTIN\Users                     ReadAndExecute, Synchronize             Allow        True
+BUILTIN\Users                                     -1610612736             Allow        True
+CREATOR OWNER                                       268435456             Allow        True
+
+
+

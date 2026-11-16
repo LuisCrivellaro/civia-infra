@@ -1,0 +1,26 @@
+﻿# Evidencia: 04-gpo-link-valor
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 01:25:35
+# Comando  : Get-GPInheritance / Get-GPRegistryValue
+# Saida real capturada por scripts\Coletar-Evidencias.ps1
+
+
+DisplayName              Enabled Enforced Target                                
+-----------              ------- -------- ------                                
+GPO_CitizenTech_Usuarios    True    False ou=citizentech,dc=citizentech,dc=local
+
+
+
+
+KeyPath     : Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+FullKeyPath : HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+Hive        : CurrentUser
+PolicyState : Set
+Value       : 1
+Type        : DWord
+ValueName   : NoControlPanel
+HasValue    : True
+
+
+
+

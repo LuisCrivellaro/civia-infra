@@ -107,11 +107,14 @@ function Set-CTRDP {
     Write-CTLog 'Acesso remoto (RDP administrativo com NLA)' -Nivel ETAPA
     Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
     Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
-    $regras = Get-NetFirewallRule -Group '@FirewallAPI.dll,-28752'
-    $regras | Enable-NetFirewallRule
+    # Primeiro restringe, depois liga, e so entao rele as regras. Na primeira versao o
+    # Set-NetFirewallRule regravava o objeto lido antes do Enable e as regras voltavam a
+    # ficar desligadas (encontrado pelo Validar-Ambiente na VM em 16/11/2026).
+    $grupoRdp = '@FirewallAPI.dll,-28752'
     # So aceita conexoes da rede local, nunca da internet
-    $regras | Set-NetFirewallRule -RemoteAddress LocalSubnet
-    $regras | Format-Table DisplayName, Enabled, Profile, Direction -AutoSize | Out-Host
+    Set-NetFirewallRule -Group $grupoRdp -RemoteAddress LocalSubnet
+    Enable-NetFirewallRule -Group $grupoRdp
+    Get-NetFirewallRule -Group $grupoRdp | Format-Table DisplayName, Enabled, Profile, Direction -AutoSize | Out-Host
     Get-Service TermService | Format-Table Name, Status, StartType -AutoSize | Out-Host
     Write-CTLog 'RDP habilitado so para a sub-rede local. Nao crie redirecionamento de porta 3389 no roteador.' -Nivel OK
 }
