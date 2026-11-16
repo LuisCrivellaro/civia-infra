@@ -4,7 +4,7 @@ Status possíveis: Pendente, Preparado (script ou documento pronto, não executa
 
 Um item só vira Validado com o arquivo de evidência correspondente em `evidencias/`.
 
-Última atualização: 16/11/2026, na auditoria final (`docs/auditoria-final.md`). A última execução de `Validar-Ambiente.ps1` terminou com 49 de 49 itens PASSOU (`evidencias/00-validacao/validacao-20261116-123441.txt`). Esse resultado cobre a configuração do servidor; os prints manuais e o envio estão nas linhas abaixo.
+Última atualização: 16/11/2026 às 20h20, depois da auditoria final (`docs/auditoria-final.md`) e dos prints da conexão RDP, da aba Segurança e do compartilhamento. A última execução de `Validar-Ambiente.ps1` terminou com 49 de 49 itens PASSOU (`evidencias/00-validacao/validacao-20261116-123441.txt`). Esse resultado cobre a configuração do servidor; os prints manuais e o envio estão nas linhas abaixo.
 
 ## Infraestrutura (2 pontos)
 
