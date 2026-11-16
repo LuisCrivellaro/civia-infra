@@ -2,9 +2,11 @@
 
 Entrega da disciplina Operating Systems da Global Solution 2026 (Engenharia de Software, FIAP). Civia é a CitizenTech da equipe ASTRO.
 
+**Vídeo de demonstração:** https://www.youtube.com/watch?v=CGmx1JJHYeI
+
 O objetivo é montar em uma VM um Windows Server que hospede a aplicação web da Civia, com domínio, DNS, IIS, permissões NTFS, compartilhamento de arquivos, GPO, acesso remoto, monitoramento com alertas, auditoria e recuperação automática depois de uma falha provocada.
 
-> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-123441.txt)). A recuperação automática foi comprovada em dois testes de falha. A GPO foi demonstrada com um usuário comum. Falta gravar o vídeo; o status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md).
+> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-123441.txt)). A recuperação automática foi comprovada em dois testes de falha. A GPO foi demonstrada com um usuário comum. O vídeo de demonstração foi gravado na mesma VM e está no link acima. O status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md).
 
 ## Ficha da CitizenTech
 
@@ -21,7 +23,7 @@ O objetivo é montar em uma VM um Windows Server que hospede a aplicação web d
 | Hospedagem | Caminho A (site estático HTML, CSS e JavaScript), pool sem código gerenciado |
 | Hostname | `SRV-CITIZENTECH` |
 | Domínio | `citizentech.local` (NetBIOS `CITIZENTECH`) |
-| IP do servidor | `192.168.0.250/24`, gateway `192.168.0.1` (previsto; confirmar depois da configuração) |
+| IP do servidor | `192.168.0.250/24`, gateway `192.168.0.1` |
 | Credenciais de teste | contas fictícias `ana.souza` (grupo GG_CitizenTech_Admins) e `bruno.teste` (GG_CitizenTech_Usuarios). Senhas definidas na hora, fora do repositório |
 | Equipe | ASTRO |
 | Integrantes | Ana Luiza Santana da Rocha (RM561194); Evandro Yuji Kaibara de Oliveira (RM559274); Guilherme Rodrigues Leite (RM560131); Luís Filipe Crivellaro (RM560877); Pedro Henrique Batista Bergamin (RM559443) |
@@ -160,7 +162,7 @@ A lista completa, com o motivo de cada ajuste, está em [docs/analise-requisitos
 | Monitoramento (2,0) | contadores de CPU, memória e disco, alertas, agendamento | `Configurar-Monitoramento.ps1`, `Monitor-Recursos.ps1` | `logman query`, `Get-Counter`, execução do script, `Get-ScheduledTaskInfo` | [evidencias/05-monitoramento](evidencias/05-monitoramento) | Validado (alerta real com CPU em 100 %, gráfico no Monitor de Desempenho) |
 | Tolerância a falhas (1,0) | recuperação configurada, falha provocada, recuperação automática | `Configurar-Recuperacao.ps1`, `Teste-Falha.ps1`, `Recupera-Site.ps1` | `sc.exe qfailure W3SVC`, saída do teste, `recuperacao.log` | [evidencias/06-teste-falha](evidencias/06-teste-falha) | Validado (Crash: SCM em 15,7 s; Parada: tarefa em 60,7 s) |
 | Auditoria e logs (1,0) | auditpol, SACL, eventos, logs do IIS | `Configurar-Infraestrutura.ps1` | `auditpol /get`, `Get-WinEvent`, logs do IIS | [evidencias/07-logs](evidencias/07-logs) | Validado |
-| Funcionamento completo (2,0) | tudo funcionando junto, documentação, vídeo | `Validar-Ambiente.ps1`, `Coletar-Evidencias.ps1` | bloco de validação final (roteiro 8.1) | [evidencias/00-validacao](evidencias/00-validacao), vídeo | Executado (49/49 na validação); vídeo pendente |
+| Funcionamento completo (2,0) | tudo funcionando junto, documentação, vídeo | `Validar-Ambiente.ps1`, `Coletar-Evidencias.ps1` | bloco de validação final (roteiro 8.1) | [evidencias/00-validacao](evidencias/00-validacao), [vídeo](https://www.youtube.com/watch?v=CGmx1JJHYeI) | Validado (49/49 na validação e vídeo gravado) |
 
 Os status seguem a escala: Pendente, Preparado, Executado, Validado, Falhou. Só mudam depois de rodar na VM e ter a evidência salva.
 
