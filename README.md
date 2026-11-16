@@ -87,6 +87,7 @@ scripts/
   Teste-Falha.ps1                  etapa 5: falha controlada e prova da recuperação
   Validar-Ambiente.ps1             verifica todos os critérios (só leitura)
   Coletar-Evidencias.ps1           salva a saída real dos comandos em evidencias/
+  Demo-Video.ps1                   roda a demonstração do vídeo em 8 partes, com pausa entre elas
 evidencias/                prints e saídas reais, uma pasta por etapa
 ```
 

@@ -1,122 +1,88 @@
 # Roteiro do vídeo (até 7 minutos)
 
-Segue a divisão de tempo do roteiro do professor (seção 10). A fala é uma sugestão para ler em voz alta e adaptar; não precisa decorar. Onde aparece `[preencher]`, use o valor que apareceu de verdade na tela. Não fale de resultado que não foi mostrado.
+Segue a divisão de tempo do roteiro do professor (seção 10). Todos os comandos rodam pelo script `C:\Scripts\Demo-Video.ps1`, que mostra cada comando antes de executar e espera ENTER entre as partes. Assim ninguém precisa digitar durante a gravação.
 
-Antes de gravar:
-- rode `Validar-Ambiente.ps1` e confirme que está tudo `PASSOU`;
-- deixe abertos: PowerShell como Administrador (fonte grande, janela maximizada), navegador em `http://<IP>`, `services.msc`, `perfmon`, Agendador de Tarefas, Visualizador de Eventos;
-- confira se a tarefa de monitoramento já rodou algumas vezes (histórico com execuções);
-- feche janelas com dados pessoais.
+As falas abaixo são uma base para falar com as próprias palavras, não um texto para decorar. Os valores citados são os da VM da equipe; confira se continuam iguais na tela na hora de gravar.
 
-## 0:00 a 0:40 · servidor, hostname, IP e domínio
+## Antes de gravar (10 minutos)
 
-Tela: PowerShell.
+1. Feche o navegador, Discord, Steam e outros apps pesados. A VM precisa de 4 GB livres para ligar.
+2. Ligue a VM, se estiver desligada: abra o Gerenciador do Hyper-V, clique com o botão direito em `SRV-CITIZENTECH` e escolha Iniciar. Espere uns 3 minutos.
+3. Conecte por **Área de Trabalho Remota**, que já mostra o acesso remoto funcionando e deixa a tela maior que a janela do Hyper-V:
+   - Win+R > `mstsc` > Computador: `192.168.0.250` > Mostrar opções > Exibição: tela inteira > Conectar;
+   - usuário `CITIZENTECH\Administrator` e a senha.
+4. Dentro da VM, abra o Edge em `http://srv-citizentech.citizentech.local` e deixe a janela à direita. Ele vai mostrar a página da Civia caindo e voltando no teste de falha.
+5. Abra o PowerShell como Administrador à esquerda e aumente a fonte: clique no ícone da janela > Properties > Font > 20.
+6. Ensaie uma vez com `C:\Scripts\Demo-Video.ps1 -Testar`, que roda tudo sem pausas e sem derrubar o IIS.
 
-```powershell
-hostname
-ipconfig /all
-Get-ADDomain | Select-Object Name, DNSRoot, DomainMode
-```
+## Como gravar
 
-Fala:
-> Esta é a infraestrutura de Operating Systems da nossa CitizenTech, [nome da solução]. O servidor é um Windows Server 2022 rodando em [hipervisor]. O nome é SRV-CITIZENTECH, com IP fixo [IP], e o DNS aponta para ele mesmo, porque ele é o controlador do domínio citizentech.local.
+Use uma destas opções:
+- **Barra de Jogo do Windows:** com a janela da Área de Trabalho Remota em foco, aperte **Win+Alt+R** para começar e de novo para parar. O vídeo fica em Vídeos > Capturas. Ela grava só a janela em foco, então tudo precisa estar dentro da Área de Trabalho Remota em tela cheia.
+- **OBS Studio** (gratuito): Fontes > + > Captura de tela > Iniciar gravação. Grava a tela inteira e o microfone.
+- O **Medal**, que já está instalado no PC, também grava a tela, se preferirem.
 
-## 0:40 a 1:30 · Active Directory e DNS
+Ligue o microfone, grave uma parte de teste de 10 segundos e confira o áudio. Se o tempo estourar, corte as pausas na edição (o Clipchamp, que vem no Windows, serve).
 
-```powershell
-nslookup srv-citizentech.citizentech.local
-Get-DnsServerZone
-Get-ADUser -Filter * -SearchBase "OU=CitizenTech,DC=citizentech,DC=local" | Select-Object Name, SamAccountName, Enabled
-Get-ADGroupMember GG_CitizenTech_Admins
-Get-ADGroupMember GG_CitizenTech_Usuarios
-```
-
-Fala:
-> O nslookup resolve o nome do servidor para [IP], e a zona citizentech.local aparece como primária. Criamos uma OU chamada CitizenTech com dois grupos: um de administradores do projeto e um de usuários. As contas ana.souza e bruno.teste são fictícias, só para teste. As permissões que vêm depois são dadas para esses grupos, não para pessoas.
-
-## 1:30 a 2:40 · IIS, site, pool e NTFS
+Para começar, no PowerShell da VM:
 
 ```powershell
-Get-Website -Name CitizenTech | Format-List Name, State, PhysicalPath, ApplicationPool
-Get-WebAppPoolState -Name CitizenTechPool
-Get-ItemProperty IIS:\AppPools\CitizenTechPool | Select-Object managedRuntimeVersion, autoStart
-Invoke-WebRequest http://localhost -UseBasicParsing | Select-Object StatusCode
-(Get-Acl C:\inetpub\citizentech).Access | Format-Table IdentityReference, FileSystemRights, AccessControlType
+C:\Scripts\Demo-Video.ps1
 ```
 
-Mostrar também o navegador com a página e a aba Segurança da pasta.
+Se precisar regravar só uma parte: `C:\Scripts\Demo-Video.ps1 -ComecarNaParte 6`.
 
-Fala:
-> A aplicação está no IIS, no site CitizenTech, com um pool próprio. Usamos o caminho A do roteiro, site estático, então o pool fica sem código gerenciado. O site está Started e responde HTTP [código]. Na pasta, o grupo IIS_IUSRS só tem leitura e execução, porque o site não precisa gravar nada ali. Quem publica conteúdo é o grupo de administradores do projeto.
+## 0:00 a 0:40 · Parte 1: servidor, IP e domínio
 
-Se ainda for a página de demonstração, diga isso: "por enquanto está publicada uma página de demonstração; a aplicação da equipe entra na mesma pasta".
+Na tela: `hostname`, IPv4/máscara/DHCP, gateway, DNS, origem do IP (Manual) e `Get-ADDomain`.
 
-## 2:40 a 3:30 · GPO e File Server
+> Somos a equipe ASTRO e esta é a infraestrutura de Operating Systems da Civia, nossos óculos inteligentes com aplicativo de acessibilidade urbana. O servidor é um Windows Server 2022 rodando no Hyper-V. O nome é SRV-CITIZENTECH e o IP é fixo: 192.168.0.250, com DHCP desligado e gateway 192.168.0.1. O DNS aponta para o próprio servidor, porque ele é o controlador do domínio citizentech.local. A conexão que vocês estão vendo é pela Área de Trabalho Remota.
 
-```powershell
-Get-GPO -All | Select-Object DisplayName, GpoStatus
-Get-GPInheritance -Target "OU=CitizenTech,DC=citizentech,DC=local"
-Get-SmbShare -Name CitizenTech
-Get-SmbShareAccess -Name CitizenTech
-```
+## 0:40 a 1:30 · Parte 2: Active Directory e DNS
 
-Mostrar a sessão do usuário `bruno.teste` tentando abrir o Painel de Controle e o Explorador acessando `\\SRV-CITIZENTECH\CitizenTech`.
+Na tela: `nslookup`, zonas DNS, usuários da OU e membros dos grupos.
 
-Fala:
-> A GPO_CitizenTech_Usuarios está vinculada à OU e bloqueia o Painel de Controle. Aqui está o bruno.teste tentando abrir e recebendo o bloqueio. O compartilhamento CitizenTech dá controle total ao grupo de administradores e só leitura aos usuários do domínio.
+> O nslookup resolve o nome do servidor para 192.168.0.250, e a zona citizentech.local é primária e integrada ao Active Directory. Criamos a OU CitizenTech com dois grupos: GG_CitizenTech_Admins, para quem administra o projeto, e GG_CitizenTech_Usuarios, para usuários comuns. A ana.souza e o bruno.teste são contas fictícias de teste. As permissões que vêm a seguir são dadas aos grupos, não às pessoas.
 
-Se o RDP foi testado, mostre a conexão em poucos segundos aqui mesmo.
+## 1:30 a 2:40 · Parte 3: IIS, pool e NTFS
 
-## 3:30 a 4:30 · monitoramento
+Na tela: site Started em `C:\inetpub\citizentech`, pool `CitizenTechPool` sem código gerenciado, HTTP 200 e permissões da pasta. Mostre o Edge com a página.
 
-Tela: `perfmon` com `CitizenTech_Monitor` e `CitizenTech_Alertas` em execução, gráfico com os três contadores. Depois o PowerShell:
+> A Civia está publicada no IIS, no site CitizenTech, com um pool de aplicativos só dela. Seguimos o caminho A do roteiro, de site estático, por isso o pool não carrega o .NET. O site está Started e responde HTTP 200. Na pasta do site, o IIS_IUSRS tem só leitura e execução, porque o site não precisa gravar nada ali, e o grupo de administradores do projeto pode modificar para publicar o conteúdo. Esta é a página no navegador, ainda uma versão de demonstração da Civia.
 
-```powershell
-C:\Scripts\Monitor-Recursos.ps1
-Get-Content C:\Scripts\logs\monitor.log -Tail 5
-Get-ScheduledTask CitizenTech_Monitor_Alertas | Get-ScheduledTaskInfo
-```
+## 2:40 a 3:30 · Parte 4: GPO e compartilhamento
 
-Fala:
-> O Data Collector Set grava CPU, memória disponível e espaço livre do disco a cada 15 segundos. O segundo conjunto é o alerta do próprio Monitor de Desempenho, com os limites do roteiro: CPU acima de 80 %, menos de 500 MB de memória e menos de 15 GB livres. O script Monitor-Recursos faz a mesma verificação, roda a cada 5 minutos pelo Agendador e grava cada medição no log. Agora ele mostrou [resultado da tela].
+Na tela: GPOs, link na OU, `NoControlPanel = 1`, compartilhamento e permissões. O Explorador abre `\\SRV-CITIZENTECH\CitizenTech`. Mostre também o print `evidencias/04-ntfs-gpo/07-gpo-painel-bloqueado-bruno.png`.
 
-Se mostrar o `-ModoTeste`, diga que os limites foram forçados para demonstrar o alerta e que as medições são reais.
+> A GPO_CitizenTech_Usuarios está vinculada à OU e bloqueia o Painel de Controle. Testamos com o bruno.teste: quando ele tentou abrir o Painel, o Windows mostrou a mensagem de restrição, que está neste print. O compartilhamento CitizenTech dá controle total ao grupo de administradores e só leitura aos usuários do domínio.
 
-## 4:30 a 5:40 · teste de falha e recuperação
+## 3:30 a 4:30 · Parte 5: monitoramento
 
-Tela dividida: PowerShell e navegador na página do site.
+Na tela: os dois Data Collector Sets em Running, execução do script, `monitor.log`, `alertas.log` e a tarefa agendada. O Monitor de Desempenho abre: clique em Data Collector Sets > User Defined para mostrar os dois conjuntos. Se der tempo, mostre o print `evidencias/05-monitoramento/09-perfmon-grafico-3-contadores.png`.
 
-```powershell
-sc.exe qfailure W3SVC
-C:\Scripts\Teste-Falha.ps1
-```
+> O conjunto CitizenTech_Monitor grava CPU, memória disponível e espaço livre do disco a cada 15 segundos. O CitizenTech_Alertas é o alerta do próprio Monitor de Desempenho, com os limites do roteiro: CPU acima de 80 %, menos de 500 MB de memória e menos de 15 GB livres no disco. O script Monitor-Recursos faz a mesma verificação a cada 5 minutos pelo Agendador de Tarefas e grava cada medição. Para testar, colocamos a CPU em 100 % e o alerta foi registrado: está aqui no alertas.log e no gráfico, que mostra o pico.
 
-Fala:
-> O serviço W3SVC está configurado para reiniciar sozinho se cair: 5 segundos na primeira falha, 10 na segunda, 30 na terceira. O teste derruba o processo do serviço de propósito. [Passo 4] O site ficou fora do ar, a página mostra sem resposta. Agora o script só espera, ele não religa nada. [Passo 5] O serviço voltou em [tempo] segundos e o resultado diz [mecanismo]. O evento 7031 no log do sistema confirma que foi o Windows que reiniciou.
+## 4:30 a 5:40 · Parte 6: teste de falha e recuperação
 
-Se houver tempo, mostrar `Get-Content C:\Scripts\logs\recuperacao.log -Tail 5` e explicar que a tarefa a cada 2 minutos cobre o caso em que alguém para o serviço manualmente.
+Na tela: `sc.exe qfailure W3SVC`. Aperte ENTER para provocar a falha e olhe para o Edge.
 
-## 5:40 a 6:40 · auditoria e logs
+> O serviço do IIS está configurado para reiniciar sozinho se cair: 5 segundos na primeira falha, 10 na segunda e 30 na terceira. Agora o script encerra à força o processo do serviço e também o processo que atende o site; se só o serviço cair, o site continua respondendo, então precisamos derrubar os dois. Olhem o passo 4: o site ficou fora do ar. O script não religa nada, só espera. Pronto, voltou em [tempo da tela] segundos, e o resultado diz "recuperação automática comprovada" pelo Service Control Manager. O evento 7031 no log do sistema confirma que foi o Windows que reiniciou o serviço. Também temos uma tarefa a cada 2 minutos que religa o site se alguém parar o serviço manualmente.
 
-```powershell
-auditpol /get /category:* | Select-String "Logon|Sistema de Arquivos|File System"
-Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4624,4663} -MaxEvents 5 | Select-Object TimeCreated, Id
-Get-ChildItem C:\inetpub\logs\LogFiles -Recurse
-```
+## 5:40 a 6:40 · Parte 7: auditoria e logs
 
-Mostrar o Visualizador de Eventos no log Segurança e a pasta de logs do IIS.
+Na tela: `auditpol` com Success and Failure, eventos 4663 e 4624 e a pasta de logs do IIS. O Visualizador de Eventos abre no log Security.
 
-Fala:
-> A auditoria registra logons e acesso a arquivos, com sucesso e falha. A pasta do site e o compartilhamento têm lista de auditoria, então cada leitura gera um evento 4663. O IIS grava cada requisição no log do dia, nesta pasta.
+> A auditoria registra logons e acesso a arquivos, com sucesso e falha. A pasta do site e o compartilhamento têm lista de auditoria, então cada leitura gera um evento 4663; aqui aparecem o index.html e o style.css lidos pelo IIS. Os eventos 4624 são os logons. O IIS também grava cada requisição no log do dia, nesta pasta.
 
-## 6:40 a 7:00 · aplicação e encerramento
+## 6:40 a 7:00 · Parte 8: encerramento
 
-Tela: navegador com a página da CitizenTech.
+Na tela: HTTP 200 pelo nome do servidor e o Edge com a página.
 
-Fala:
-> A aplicação segue no ar depois do teste. Os scripts, o roteiro de configuração e as evidências estão no repositório do GitHub. Obrigado.
+> Depois do teste, a Civia segue no ar. Os scripts, o roteiro de configuração e todas as evidências estão no repositório civia-infra no GitHub. Obrigado!
 
 ## Depois de gravar
 
-- Confira a duração (máximo 7:00).
-- Suba o vídeo (YouTube não listado ou o local que o professor indicar) e coloque o link no README.
+1. Confira a duração: no máximo 7:00.
+2. Suba no YouTube como "Não listado" e copie o link.
+3. Me mande o link: eu coloco uma linha "Vídeo:" no topo do README e publico no GitHub.
+4. Desconecte a Área de Trabalho Remota. A VM pode ficar ligada ou ser desligada pelo Gerenciador do Hyper-V.
