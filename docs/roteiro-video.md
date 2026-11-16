@@ -88,18 +88,18 @@ cls; C:\Scripts\Demo-Video.ps1 -SoParte 3
 cls; C:\Scripts\Demo-Video.ps1 -SoParte 4
 ```
 
-O Explorador abre sozinho no fim. Fale primeiro sobre o PowerShell e depois mostre a janela.
+No fim abrem sozinhas duas janelas: o Explorador e o Paint com o print do teste da GPO. Fale primeiro sobre o PowerShell e depois mostre as janelas.
 
 | Na tela | Fale |
 |---|---|
 | `Get-GPO` → `GPO_CitizenTech_Usuarios` | "Criamos uma política de grupo, a GPO_CitizenTech_Usuarios." |
 | `Get-GPInheritance` → `Enabled True` na OU CitizenTech | "Ela está ligada à nossa unidade organizacional, então vale para os usuários do projeto." |
 | `NoControlPanel` → `Value 1` | "A regra dela é esta: bloqueia o Painel de Controle. O 1 quer dizer ligado." |
-| (opcional) o print `evidencias/04-ntfs-gpo/07-gpo-painel-bloqueado-bruno.png` | "Testamos entrando com o bruno.teste. Ele tentou abrir o Painel de Controle e o Windows bloqueou, como aparece neste print." |
 | `Get-SmbShare` → `CitizenTech`, `C:\Shares\CitizenTech` e as permissões | "Também criamos a pasta compartilhada CitizenTech. O grupo de administradores tem controle total e os usuários do domínio só podem ler." |
 | janela do **Explorador** em `\\SRV-CITIZENTECH\CitizenTech` | "E aqui ela aberta pela rede, pelo caminho do servidor." |
+| janela do **Paint** com o print do teste (mensagem "restrictions") | "Para testar a política, entramos com o bruno.teste. Ele tentou abrir o Painel de Controle e o Windows bloqueou, com esta mensagem de restrição." |
 
-Feche o Explorador depois de parar a gravação.
+Feche o Explorador e o Paint depois de parar a gravação. O print fica em `C:\Scripts\prints` na VM e é o mesmo de `evidencias/04-ntfs-gpo/07-gpo-painel-bloqueado-bruno.png`.
 
 ## Parte 5 (3:30 a 4:30): monitoramento
 
