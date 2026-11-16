@@ -33,7 +33,7 @@ Não testado fora da VM, por depender de Windows Server, AD, IIS ou administrado
 | Virtualização da CPU | Ativa | `HypervisorPresent = True` (segurança baseada em virtualização em execução) |
 | Ativação do Hyper-V (`Enable-WindowsOptionalFeature Microsoft-Hyper-V-All`) | Passou | `State: Enabled`, `RestartNeeded: True` |
 | Parser no `scripts/host/Criar-VM-HyperV.ps1` | Passou | 0 erros; script ainda não executado (precisa do reinício) |
-| Download da ISO `SERVER_EVAL_x64FRE_en-us.iso` | ver `AI_HANDOFF.md` | link oficial do Evaluation Center, 5.044.094.976 bytes |
+| Download da ISO `SERVER_EVAL_x64FRE_en-us.iso` | Passou | link oficial do Evaluation Center; 5.044.094.976 bytes, igual ao tamanho informado pelo servidor; SHA256 `3E4FA6D8507B554856FC9CA6079CC402DF11A8B79344871669F0251535255325` |
 
 ## Na VM
 
