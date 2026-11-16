@@ -25,7 +25,10 @@ param(
     [Parameter(Mandatory)]
     [ValidateSet('InstalarRecurso', 'PromoverDominio', 'CriarObjetos')]
     [string]$Etapa,
-    [string]$ConfigPath
+    [string]$ConfigPath,
+    # Opcionais: permitem rodar sem Read-Host (ex.: PowerShell Direct). Nunca grave senhas em arquivo.
+    [System.Security.SecureString]$SenhaDSRM,
+    [System.Security.SecureString]$SenhaUsuarios
 )
 
 $ErrorActionPreference = 'Stop'
@@ -65,7 +68,7 @@ try {
             }
             Import-Module ADDSDeployment
             Write-CTLog 'Informe a senha do modo de restauracao (DSRM). Guarde em local seguro, fora do repositorio.' -Nivel AVISO
-            $dsrm = Read-Host -AsSecureString 'Senha DSRM'
+            $dsrm = if ($SenhaDSRM) { $SenhaDSRM } else { Read-Host -AsSecureString 'Senha DSRM' }
 
             Write-CTLog 'Rodando Test-ADDSForestInstallation (nao altera nada)' -Nivel ETAPA
             $teste = Test-ADDSForestInstallation -DomainName $cfg.DomainName -DomainNetbiosName $cfg.NetbiosName `
@@ -100,7 +103,7 @@ try {
                 } else { Write-CTLog "Grupo ja existe: $g" }
             }
 
-            $senha = $null
+            $senha = $SenhaUsuarios
             foreach ($u in $cfg.AD.Usuarios) {
                 if (-not (Get-ADUser -Filter "SamAccountName -eq '$($u.Sam)'" -ErrorAction SilentlyContinue)) {
                     if (-not $senha) {

@@ -98,11 +98,19 @@ try {
                 }
             }
             if ($PSCmdlet.ShouldProcess("Interface $InterfaceIndex", "Definir DNS $($cfg.Rede.DnsServers -join ',')")) {
-                Set-DnsClientServerAddress -InterfaceIndex $InterfaceIndex -ServerAddresses $cfg.Rede.DnsServers
-                Write-CTLog "DNS definido: $($cfg.Rede.DnsServers -join ', ')" -Nivel OK
+                # IPv6 tambem aponta para o proprio servidor (::1). Sem isso o Windows usa o DNS IPv6
+                # entregue pelo roteador, que nao conhece a zona do dominio.
+                Set-DnsClientServerAddress -InterfaceIndex $InterfaceIndex -ServerAddresses (@($cfg.Rede.DnsServers) + '::1')
+                Write-CTLog "DNS definido: $($cfg.Rede.DnsServers -join ', '), ::1" -Nivel OK
+            }
+            # Espera o IP sair do estado Tentative (verificacao de duplicidade) antes de testar
+            for ($i = 0; $i -lt 15; $i++) {
+                if ((Get-NetIPAddress -InterfaceIndex $InterfaceIndex -IPAddress $ip -ErrorAction SilentlyContinue).AddressState -eq 'Preferred') { break }
+                Start-Sleep -Seconds 1
             }
             Write-CTLog 'Teste do gateway:'
-            $gw = Test-Connection -ComputerName $cfg.Rede.Gateway -Count 2 -Quiet
+            $gw = $false
+            try { $gw = Test-Connection -ComputerName $cfg.Rede.Gateway -Count 2 -Quiet } catch { }
             if ($gw) { Write-CTLog 'Gateway respondeu.' -Nivel OK } else { Write-CTLog 'Gateway nao respondeu ao ping (pode ser bloqueio de ICMP). Confira a rede.' -Nivel AVISO }
             Write-CTLog 'Evidencia: rode "ipconfig /all" e capture a tela (evidencias/01-rede).' -Nivel INFO
         }
