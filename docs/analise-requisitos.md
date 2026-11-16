@@ -47,7 +47,7 @@ Cada ajuste mantém o objetivo do roteiro. O motivo vem logo depois.
 
 1. `$pool.failure.autoStart = $true`: `autoStart` é propriedade do pool, não do elemento `failure`. Usamos `Set-ItemProperty IIS:\AppPools\CitizenTechPool -Name autoStart -Value $true` e `-Name failure.rapidFailProtection -Value $false`.
 2. `Stop-Service W3SVC` não dispara o `sc.exe failure`. O Service Control Manager só executa as ações de recuperação quando o processo do serviço termina sem avisar (crash). Numa parada limpa o serviço fica parado. No script do PDF, depois dos 30 segundos, o bloco `catch` faz `Start-Service W3SVC`, e o site volta por causa desse comando manual. A saída do teste parece de sucesso, mas não prova a recuperação automática.
-   - Solução: `Teste-Falha.ps1 -Modo Crash` encerra à força o processo `svchost` que hospeda W3SVC/WAS (o script confere antes que nenhum outro serviço roda no mesmo processo). O SCM registra o evento 7031 e reinicia o serviço em 5 s.
+   - Solução: `Teste-Falha.ps1 -Modo Crash` encerra à força o processo `svchost` que hospeda W3SVC/WAS (o script confere antes que nenhum outro serviço roda no mesmo processo). O SCM registra o evento 7031 e reinicia o serviço com o atraso configurado (5 s na primeira falha, 10 s na segunda, 30 s da terceira em diante).
    - `Teste-Falha.ps1 -Modo Parada` repete o teste do PDF, mas espera até 180 s pela tarefa `CitizenTech_Recuperacao` (roda a cada 2 min) e confere no `recuperacao.log` uma linha nova marcada `AGENDADA`.
    - O fallback manual só roda com `-PermitirFallbackManual` e, se usado, o resultado é registrado como `RECUPERACAO MANUAL (NAO AUTOMATICA)`.
 3. Encerrar só o processo do W3SVC/WAS não derruba o site. Na VM, o primeiro teste de crash terminou como inconclusivo: o `w3wp.exe` do pool continuou atendendo a fila do `http.sys` e o site respondeu 200 durante a queda do serviço. O modo Crash passou a encerrar também o `w3wp.exe` do `CitizenTechPool`; com isso o site ficou fora do ar e voltou em 15,7 s pela ação do SCM (evento 7031).
@@ -55,46 +55,46 @@ Cada ajuste mantém o objetivo do roteiro. O motivo vem logo depois.
 
 ### Monitoramento (6.1 e 6.2)
 
-4. Nomes de contadores dependem do idioma. Em um Windows em português, `Get-Counter "\Processor(_Total)\% Processor Time"` retorna "O objeto especificado não foi encontrado no computador" (testado em 14/11/2026, ver `testes-realizados.md`). Os scripts procuram o índice do contador na lista em inglês e pegam o nome com o mesmo índice na lista do idioma instalado (`\Processador(_Total)\% tempo de processador`). Em Windows em inglês nada muda.
-5. No PDF os contadores do Data Collector Set estão escritos com `\\` (`"\\Processor(_Total)\\% Processor Time"`). Em PowerShell a barra invertida não é escape, então o caminho fica com barras duplicadas e vira um nome de computador inválido.
-6. O coletor de contadores do PLA (`IPerformanceCounterDataCollector`) não tem método `AddCounter`. A lista é atribuída na propriedade `PerformanceCounters`.
-7. O PDF pede "alertas de CPU, disco e memória no Monitor de Desempenho". Além do script, criamos um Data Collector Set de alerta (`CitizenTech_Alertas`) com os três limites; cada disparo gera o evento 2031 no log `Microsoft-Windows-Diagnosis-PLA/Operational`.
-8. `Write-EventLog` não existe no PowerShell 7. O script usa `[System.Diagnostics.EventLog]::WriteEntry`, que funciona no 5.1 e no 7.
-9. Um Data Collector Set não volta sozinho depois de reiniciar o servidor. A tarefa `CitizenTech_DCS_Inicio` roda `logman start` no boot.
+5. Nomes de contadores dependem do idioma. Em um Windows em português, `Get-Counter "\Processor(_Total)\% Processor Time"` retorna "O objeto especificado não foi encontrado no computador" (testado em 14/11/2026, ver `testes-realizados.md`). Os scripts procuram o índice do contador na lista em inglês e pegam o nome com o mesmo índice na lista do idioma instalado (`\Processador(_Total)\% tempo de processador`). Em Windows em inglês nada muda.
+6. No PDF os contadores do Data Collector Set estão escritos com `\\` (`"\\Processor(_Total)\\% Processor Time"`). Em PowerShell a barra invertida não é escape, então o caminho fica com barras duplicadas e vira um nome de computador inválido.
+7. O coletor de contadores do PLA (`IPerformanceCounterDataCollector`) não tem método `AddCounter`. A lista é atribuída na propriedade `PerformanceCounters`.
+8. O PDF pede "alertas de CPU, disco e memória no Monitor de Desempenho". Além do script, criamos um Data Collector Set de alerta (`CitizenTech_Alertas`) com os três limites; cada disparo gera o evento 2031 no log `Microsoft-Windows-Diagnosis-PLA/Operational`.
+9. `Write-EventLog` não existe no PowerShell 7. O script usa `[System.Diagnostics.EventLog]::WriteEntry`, que funciona no 5.1 e no 7.
+10. Um Data Collector Set não volta sozinho depois de reiniciar o servidor. A tarefa `CitizenTech_DCS_Inicio` roda `logman start` no boot.
 
 ### IIS (4.2 e 4.4)
 
-10. O Default Web Site já ocupa a porta 80. `New-Website -Port 80` cria o site CitizenTech, mas ele fica `Stopped`. O script para o Default Web Site e desliga o início automático dele.
-11. O módulo `WebAdministration` usado pelos scripts de recuperação vem com `Web-Scripting-Tools`, instalado junto.
+11. O Default Web Site já ocupa a porta 80. `New-Website -Port 80` cria o site CitizenTech, mas ele fica `Stopped`. O script para o Default Web Site e desliga o início automático dele.
+12. O módulo `WebAdministration` usado pelos scripts de recuperação vem com `Web-Scripting-Tools`, instalado junto.
 
 ### Nomes localizados (4.5, 5.2, 5.4)
 
-12. `Domain Users`, `Everyone` e o grupo de firewall "Área de Trabalho Remota" mudam conforme o idioma do Windows. Os scripts resolvem pelo SID (`<SID do domínio>-513`, `S-1-1-0`, `S-1-5-32-568` para IIS_IUSRS) e pelo identificador do grupo de firewall (`@FirewallAPI.dll,-28752`).
-13. `auditpol /subcategory:"Logon"` também depende do idioma. Usamos os GUIDs: Logon `{0CCE9215-69AE-11D9-BED3-505054503030}` e File System `{0CCE921D-69AE-11D9-BED3-505054503030}`.
+13. `Domain Users`, `Everyone` e o grupo de firewall "Área de Trabalho Remota" mudam conforme o idioma do Windows. Os scripts resolvem pelo SID (`<SID do domínio>-513`, `S-1-1-0`, `S-1-5-32-568` para IIS_IUSRS) e pelo identificador do grupo de firewall (`@FirewallAPI.dll,-28752`).
+14. `auditpol /subcategory:"Logon"` também depende do idioma. Usamos os GUIDs: Logon `{0CCE9215-69AE-11D9-BED3-505054503030}` e File System `{0CCE921D-69AE-11D9-BED3-505054503030}`.
 
 ### Acesso remoto (5.2)
 
-14. Usamos só o RDP administrativo. A função RDS Session Host em controlador de domínio não é recomendada pela Microsoft e pede licença depois de 120 dias. O roteiro diz que "para o escopo desta atividade, o RDP atende".
-15. NLA ligado e regras de firewall limitadas à sub-rede local, para o RDP não ficar exposto fora da rede do laboratório.
+15. Usamos só o RDP administrativo. A função RDS Session Host em controlador de domínio não é recomendada pela Microsoft e pede licença depois de 120 dias. O roteiro diz que "para o escopo desta atividade, o RDP atende".
+16. NLA ligado e regras de firewall limitadas à sub-rede local, para o RDP não ficar exposto fora da rede do laboratório.
 
 ### DFS (5.3)
 
-16. `New-DfsnRoot -Path "\\SRV-CITIZENTECH\CitizenTechDFS" -TargetPath "C:\Shares\CitizenTech" -Type DomainV2` falha: o `TargetPath` precisa ser um caminho UNC de um compartilhamento da raiz, e um namespace de domínio é acessado por `\\citizentech.local\CitizenTechDFS`. O script cria `C:\DFSRoots\CitizenTechDFS`, compartilha, cria a raiz e publica `\\SRV-CITIZENTECH\CitizenTech` como a pasta `Arquivos`.
-17. DFS Replication (`FS-DFS-Replication`) precisa de pelo menos dois servidores. Não foi configurado.
+17. `New-DfsnRoot -Path "\\SRV-CITIZENTECH\CitizenTechDFS" -TargetPath "C:\Shares\CitizenTech" -Type DomainV2` falha: o `TargetPath` precisa ser um caminho UNC de um compartilhamento da raiz, e um namespace de domínio é acessado por `\\citizentech.local\CitizenTechDFS`. O script cria `C:\DFSRoots\CitizenTechDFS`, compartilha, cria a raiz e publica `\\SRV-CITIZENTECH\CitizenTech` como a pasta `Arquivos`.
+18. DFS Replication (`FS-DFS-Replication`) precisa de pelo menos dois servidores. Não foi configurado.
 
 ### Rede (3.2)
 
-18. `New-NetIPAddress -DefaultGateway` falha se a interface já tem um gateway vindo do DHCP. O script desliga o DHCP e remove o IP e a rota padrão antigos antes.
-19. O PDF sugere modo Bridge. Em casa isso coloca o controlador de domínio na mesma rede de outros aparelhos. Funciona, mas o IP fixo precisa estar fora da faixa do DHCP do roteador. O script testa se o IP já responde antes de aplicar. Se a equipe não precisar acessar a VM de outra máquina física, uma rede host-only isola melhor.
+19. `New-NetIPAddress -DefaultGateway` falha se a interface já tem um gateway vindo do DHCP. O script desliga o DHCP e remove o IP e a rota padrão antigos antes.
+20. O PDF sugere modo Bridge. Em casa isso coloca o controlador de domínio na mesma rede de outros aparelhos. Funciona, mas o IP fixo precisa estar fora da faixa do DHCP do roteador. O script testa se o IP já responde antes de aplicar. Se a equipe não precisar acessar a VM de outra máquina física, uma rede host-only isola melhor. Na VM da entrega usamos o switch externo do Hyper-V (equivale ao Bridge), com o IP `192.168.0.250` livre na rede de casa.
 
 ### GPO (5.1)
 
-20. Para mostrar o usuário sem acesso ao Painel de Controle é preciso fazer logon com uma conta da OU. Em controlador de domínio, usuários comuns não têm o direito "Permitir logon local". O caminho limpo é uma VM cliente (Windows 10/11) no domínio. A alternativa, só para laboratório, está no roteiro de configuração.
+21. Para mostrar o usuário sem acesso ao Painel de Controle é preciso fazer logon com uma conta da OU. Em controlador de domínio, usuários comuns não têm o direito "Permitir logon local". O caminho limpo é uma VM cliente (Windows 10/11) no domínio. A alternativa, só para laboratório, está no roteiro de configuração.
 
-## O que depende de ação humana
+## O que dependeu de ação humana
 
-- Criar a VM e instalar o Windows Server.
-- Escolher o IP de acordo com a rede real.
-- Digitar as senhas (DSRM e contas de teste) quando os scripts pedirem.
-- Prints de telas gráficas: `winver`, navegador, aba Segurança, `services.msc`, Monitor de Desempenho, Agendador de Tarefas, Visualizador de Eventos, RDP de outra máquina, usuário com a GPO aplicada.
-- Gravar o vídeo e enviar o link no Teams.
+- Autorizar cada etapa feita pela IA no PC host e na VM (Hyper-V, ISO, licença, testes de falha, mudança temporária na política dos controladores de domínio).
+- Digitar as senhas (Administrator, DSRM e contas de teste) nas janelas do Windows.
+- Fazer logon com o `bruno.teste` para o teste da GPO.
+- Gravar, narrar, editar e publicar o vídeo.
+- Ainda pendente: prints da conexão RDP de outra máquina, do compartilhamento acessado de um cliente e da aba Segurança da pasta do site; envio do link no Teams.

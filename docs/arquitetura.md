@@ -83,7 +83,7 @@ O `Teste-Falha.ps1` não religa nada por conta própria. Ele só provoca a falha
 
 ## Segurança do laboratório
 
-- Senhas nunca entram no repositório; os scripts pedem com `Read-Host -AsSecureString`.
+- Senhas nunca entram no repositório; os scripts pedem com `Read-Host -AsSecureString` ou recebem um `SecureString` por parâmetro (usado no PowerShell Direct).
 - As contas de teste são fictícias.
-- O servidor fica na rede local ou host-only, sem redirecionamento de portas no roteador.
+- O servidor fica só na rede local (switch externo do Hyper-V), sem redirecionamento de portas no roteador.
 - O teste de falha recusa rodar fora de Windows Server e pede confirmação.

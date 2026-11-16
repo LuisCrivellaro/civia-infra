@@ -6,7 +6,7 @@ Entrega da disciplina Operating Systems da Global Solution 2026 (Engenharia de S
 
 O objetivo é montar em uma VM um Windows Server que hospede a aplicação web da Civia, com domínio, DNS, IIS, permissões NTFS, compartilhamento de arquivos, GPO, acesso remoto, monitoramento com alertas, auditoria e recuperação automática depois de uma falha provocada.
 
-> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-123441.txt)). A recuperação automática foi comprovada em dois testes de falha. A GPO foi demonstrada com um usuário comum. O vídeo de demonstração foi gravado na mesma VM e está no link acima. O status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md).
+> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-123441.txt)). A recuperação automática foi comprovada em dois testes de falha. A GPO foi demonstrada com um usuário comum. O vídeo de demonstração foi gravado na mesma VM e está no link acima. Ainda faltam três prints pedidos no roteiro (conexão RDP, acesso ao compartilhamento a partir de um cliente e aba Segurança da pasta do site). O status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md) e a revisão final em [docs/auditoria-final.md](docs/auditoria-final.md).
 
 ## Ficha da CitizenTech
 
@@ -31,17 +31,17 @@ O objetivo é montar em uma VM um Windows Server que hospede a aplicação web d
 
 A ficha completa, com ODS e indicador de impacto, fica em [docs/ficha-citizentech.md](docs/ficha-citizentech.md).
 
-Sobre a aplicação: não encontramos a aplicação web da equipe neste repositório. A pasta [app/](app/) tem uma página estática de demonstração, marcada como tal na própria tela, que serve só para provar a hospedagem no IIS. Quando a aplicação real estiver pronta, basta trocar o conteúdo de `app/` e rodar `Configurar-IIS.ps1` de novo. Se ela tiver backend (Node.js, Python ou .NET), o caminho passa a ser o B do roteiro e o pool precisa de outro runtime.
+Sobre a aplicação: o roteiro pede a aplicação web desenvolvida em outra disciplina, mas ela não estava disponível para este repositório. A pasta [app/](app/) tem uma página estática de demonstração com os dados da Civia, marcada como tal na própria tela, que serve para provar a hospedagem no IIS. Ela não é a aplicação final da equipe. Quando a aplicação real estiver pronta, basta trocar o conteúdo de `app/` e rodar `Configurar-IIS.ps1` de novo. Se ela tiver backend (Node.js, Python ou .NET), o caminho passa a ser o B do roteiro e o pool precisa de outro runtime.
 
 ## Arquitetura
 
 ```
  Cliente da rede local (navegador, RDP, \\SRV-CITIZENTECH)
                     |
-        rede da VM (bridge ou host-only)
+  switch externo do Hyper-V (equivale ao Bridge)
                     |
  +---------------------------------------------------------------+
- | SRV-CITIZENTECH  (Windows Server 2022, IP fixo)               |
+ | SRV-CITIZENTECH  (Windows Server 2022, IP fixo 192.168.0.250) |
  |  AD DS + DNS ...... citizentech.local, OU CitizenTech,        |
  |                     grupos GG_CitizenTech_Admins/_Usuarios    |
  |  IIS .............. site CitizenTech :80 -> pool              |
@@ -66,12 +66,13 @@ prompts.md                 registro do uso de IA (exigência da GS)
 app/                       página estática de demonstração (Caminho A)
 docs/
   roteiro-configuracao.md  passo a passo na VM, na ordem certa
-  ficha-citizentech.md     ficha da solução (preencher)
+  ficha-citizentech.md     ficha da solução e da parte de Operating Systems
   arquitetura.md           desenho, decisões e conceitos para a apresentação
   analise-requisitos.md    requisitos do roteiro e ajustes nos comandos do PDF
   checklist-entrega.md     status real de cada item
   roteiro-video.md         roteiro do vídeo de até 7 minutos
   testes-realizados.md     o que já foi testado, onde e com qual resultado
+  auditoria-final.md       revisão final contra os PDFs, riscos e pendências
   AI_HANDOFF.md            ponto de retomada do trabalho
   referencias/             PDFs da atividade (fora do Git, ver .gitignore)
 scripts/
@@ -158,11 +159,11 @@ A lista completa, com o motivo de cada ajuste, está em [docs/analise-requisitos
 | Critério (pontos) | Requisito | Script | Validação | Evidência | Status |
 |---|---|---|---|---|---|
 | Rede e identidade (2,0) | hostname, IP fixo, DNS, domínio no AD, usuários e grupos | `Configurar-Rede.ps1`, `Configurar-AD.ps1` | `ipconfig /all`, `nslookup`, `Get-ADDomain`, `Get-DnsServerZone`, `Get-ADUser`, `Get-ADGroupMember` | [evidencias/01-rede](evidencias/01-rede), [evidencias/02-ad-dns](evidencias/02-ad-dns) | Validado |
-| Aplicação no IIS (2,0) | site, pool, dependências, pasta, NTFS, File Server | `Configurar-IIS.ps1`, `Configurar-Infraestrutura.ps1` | `Get-Website`, `Get-WebAppPoolState`, `Invoke-WebRequest`, `Get-Acl`, `Get-SmbShare` | [evidencias/03-iis](evidencias/03-iis), [evidencias/04-ntfs-gpo](evidencias/04-ntfs-gpo) | Validado |
+| Aplicação no IIS (2,0) | site, pool, dependências, pasta, NTFS, File Server | `Configurar-IIS.ps1`, `Configurar-Infraestrutura.ps1` | `Get-Website`, `Get-WebAppPoolState`, `Invoke-WebRequest`, `Get-Acl`, `Get-SmbShare` | [evidencias/03-iis](evidencias/03-iis), [evidencias/04-ntfs-gpo](evidencias/04-ntfs-gpo) | Validado; faltam os prints da aba Segurança e do acesso ao compartilhamento por um cliente |
 | Monitoramento (2,0) | contadores de CPU, memória e disco, alertas, agendamento | `Configurar-Monitoramento.ps1`, `Monitor-Recursos.ps1` | `logman query`, `Get-Counter`, execução do script, `Get-ScheduledTaskInfo` | [evidencias/05-monitoramento](evidencias/05-monitoramento) | Validado (alerta real com CPU em 100 %, gráfico no Monitor de Desempenho) |
 | Tolerância a falhas (1,0) | recuperação configurada, falha provocada, recuperação automática | `Configurar-Recuperacao.ps1`, `Teste-Falha.ps1`, `Recupera-Site.ps1` | `sc.exe qfailure W3SVC`, saída do teste, `recuperacao.log` | [evidencias/06-teste-falha](evidencias/06-teste-falha) | Validado (Crash: SCM em 15,7 s; Parada: tarefa em 60,7 s) |
 | Auditoria e logs (1,0) | auditpol, SACL, eventos, logs do IIS | `Configurar-Infraestrutura.ps1` | `auditpol /get`, `Get-WinEvent`, logs do IIS | [evidencias/07-logs](evidencias/07-logs) | Validado |
-| Funcionamento completo (2,0) | tudo funcionando junto, documentação, vídeo | `Validar-Ambiente.ps1`, `Coletar-Evidencias.ps1` | bloco de validação final (roteiro 8.1) | [evidencias/00-validacao](evidencias/00-validacao), [vídeo](https://www.youtube.com/watch?v=CGmx1JJHYeI) | Validado (49/49 na validação e vídeo gravado) |
+| Funcionamento completo (2,0) | tudo funcionando junto, GPO, RDP, documentação, vídeo | `Validar-Ambiente.ps1`, `Coletar-Evidencias.ps1`, `Configurar-Infraestrutura.ps1` | bloco de validação final (roteiro 8.1), `Get-GPO -All`, logon do `bruno.teste` | [evidencias/00-validacao](evidencias/00-validacao), [evidencias/04-ntfs-gpo](evidencias/04-ntfs-gpo), [vídeo](https://www.youtube.com/watch?v=CGmx1JJHYeI) | Validado (49/49, GPO com usuário comum, vídeo gravado); falta o print da conexão RDP |
 
 Os status seguem a escala: Pendente, Preparado, Executado, Validado, Falhou. Só mudam depois de rodar na VM e ter a evidência salva.
 
@@ -177,4 +178,8 @@ Os status seguem a escala: Pendente, Preparado, Executado, Validado, Falhou. Só
 
 ## Uso de IA
 
-O desenvolvimento teve apoio do Claude Code. Os prompts e o que foi feito com eles estão em [prompts.md](prompts.md).
+O desenvolvimento teve apoio do Claude Code, que escreveu os scripts e documentos e executou a configuração e os testes na VM com autorização do aluno. Os prompts, a cronologia e a divisão entre o que a IA fez e o que a equipe fez estão em [prompts.md](prompts.md).
+
+## Entrega
+
+Link do repositório na tarefa de Operating Systems do Teams, enviado por um único integrante, até 19/11/2026 às 23h55 (prazo do roteiro e do documento geral da GS).

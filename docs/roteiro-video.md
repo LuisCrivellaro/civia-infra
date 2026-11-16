@@ -51,7 +51,7 @@ cls; C:\Scripts\Demo-Video.ps1 -SoParte 1
 | `hostname` → `SRV-CITIZENTECH` | "O nome do servidor é SRV-CITIZENTECH." |
 | linhas do `ipconfig`: `DHCP Enabled: No`, `IPv4 Address 192.168.0.250`, `Subnet Mask 255.255.255.0` | "O IP é fixo, 192.168.0.250, com máscara 255.255.255.0. O DHCP está desligado." |
 | `Get-NetRoute` → `NextHop 192.168.0.1` | "O gateway, que é o nosso roteador, é o 192.168.0.1." |
-| `Get-DnsClientServerAddress` → `192.168.0.250` | "O DNS aponta para o próprio servidor, porque ele mesmo é o servidor de DNS do domínio." |
+| `Get-DnsClientServerAddress` → `127.0.0.1` (o próprio servidor; a promoção do AD troca o IP pelo endereço de loopback) | "O DNS aponta para o próprio servidor, porque ele mesmo é o servidor de DNS do domínio." |
 | `Get-NetIPAddress` → `PrefixOrigin Manual` | "Aqui aparece Manual, ou seja, o IP foi configurado à mão." |
 | `Get-ADDomain` → `citizentech.local` | "E o domínio é o citizentech.local, criado com o Active Directory." |
 

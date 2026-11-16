@@ -9,7 +9,7 @@ Modelo sugerido no documento geral da GS (slide "A Ficha da CitizenTech"). Os da
 | Cidadão beneficiado | pessoas com deficiência visual ou auditiva que se deslocam pela cidade |
 | Problema, em uma frase | avisos de mobilidade urbana (placas, painéis, comunicados sonoros) não chegam a quem não vê ou não ouve, e uma mudança de plataforma ou de caminho vira uma dificuldade |
 | Como funciona | óculos inteligentes com câmera e microfone captam o ambiente, uma IA interpreta e o aplicativo comunica por áudio, legendas e vibração; o app oferece rotas acessíveis, avisos em tempo real e pedido de ajuda |
-| O que cada parte faz | a preencher (a parte de Operating Systems está abaixo) |
+| O que cada parte faz | cada disciplina tem a sua entrega; este repositório cobre só a parte de Operating Systems, descrita abaixo |
 | Link do repositório | https://github.com/LuisCrivellaro/civia-infra |
 | Indicador de impacto | percentual de trajetos que o usuário conclui sem precisar pedir ajuda a outra pessoa (medido pelo aplicativo, que registra quando a função de pedir ajuda é acionada) |
 | ODS conectados | ODS 10 (Redução das desigualdades): pessoas com deficiência visual ou auditiva passam a receber as mesmas informações de mobilidade que os demais passageiros. ODS 11 (Cidades e comunidades sustentáveis): contribui com a meta 11.2, transporte acessível para todos, com atenção às pessoas com deficiência |
@@ -30,11 +30,11 @@ Modelo sugerido no documento geral da GS (slide "A Ficha da CitizenTech"). Os da
 |---|---|
 | Função na solução | servidor que hospeda a aplicação web da CitizenTech, com contas, permissões, monitoramento e recuperação de falhas |
 | Forma de hospedagem | Caminho A: site estático no IIS, pool sem código gerenciado |
-| Aplicação hospedada | página de demonstração em `app/` até a equipe entregar a aplicação web |
-| Servidor | `SRV-CITIZENTECH` |
-| Domínio | `citizentech.local` |
-| IP | a confirmar depois da configuração na VM |
-| URL de acesso | `http://<IP>` ou `http://srv-citizentech.citizentech.local` (de máquinas que usam o servidor como DNS) |
+| Aplicação hospedada | página estática de demonstração em `app/`, com os dados da Civia; não é a aplicação web final da equipe |
+| Servidor | `SRV-CITIZENTECH`, Windows Server 2022 Standard Evaluation em VM do Hyper-V |
+| Domínio | `citizentech.local` (NetBIOS `CITIZENTECH`) |
+| IP | `192.168.0.250/24`, gateway `192.168.0.1`, DNS no próprio servidor (`127.0.0.1` e `::1`, ajustados pela promoção do AD; conferido em `evidencias/01-rede/03-ipconfig-all.txt`) |
+| URL de acesso | `http://192.168.0.250` ou `http://srv-citizentech.citizentech.local` (de máquinas que usam o servidor como DNS) |
 | Credenciais de teste | `ana.souza` e `bruno.teste`, contas fictícias. Senhas fora do repositório |
 
 Se a aplicação final tiver backend (Node.js, Python ou .NET), registre aqui o runtime e mude a hospedagem para o Caminho B do roteiro (seção 4.3).

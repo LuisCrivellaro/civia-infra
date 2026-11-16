@@ -4,7 +4,7 @@ Status possíveis: Pendente, Preparado (script ou documento pronto, não executa
 
 Um item só vira Validado com o arquivo de evidência correspondente em `evidencias/`.
 
-Última atualização: 16/11/2026 12:35, depois do teste da GPO com usuário e da revalidação após reiniciar a VM. `Validar-Ambiente.ps1` terminou com 49 de 49 itens PASSOU (`evidencias/00-validacao/validacao-20261116-123441.txt`).
+Última atualização: 16/11/2026, na auditoria final (`docs/auditoria-final.md`). A última execução de `Validar-Ambiente.ps1` terminou com 49 de 49 itens PASSOU (`evidencias/00-validacao/validacao-20261116-123441.txt`). Esse resultado cobre a configuração do servidor; os prints manuais e o envio estão nas linhas abaixo.
 
 ## Infraestrutura (2 pontos)
 
@@ -17,18 +17,18 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 | Active Directory instalado | Validado | `00-validacao/00-ficha-infraestrutura.txt` (AD-Domain-Services Installed) |
 | Domínio criado | Validado | `02-ad-dns/01-get-addomain.txt` |
 | Usuários e grupos cadastrados | Validado | `02-ad-dns/04-usuarios.txt`, `02-ad-dns/05-grupos.txt` |
-| Evidências capturadas | Validado (texto) | prints de tela do terminal ainda opcionais |
+| Evidências capturadas | Validado | saídas de comando em `01-rede/` e `02-ad-dns/` (o documento geral aceita "prints e saídas de comandos"), `01-rede/00-winver.png` |
 
 ## IIS (2 pontos)
 
 | Item | Status | Evidência |
 |---|---|---|
 | IIS instalado | Validado | `03-iis/01-windowsfeature-web.txt` |
-| Aplicação CitizenTech disponível | Validado | página de demonstração da Civia; `03-iis/06-navegador-site-pelo-ip.jpg` (aberta do PC host pelo IP) |
+| Aplicação CitizenTech disponível | Validado, com ressalva | a página publicada é a de demonstração em `app/`, não a aplicação web final da equipe; `03-iis/06-navegador-site-pelo-ip.jpg` (aberta do PC host pelo IP) |
 | Application pool configurado | Validado | `03-iis/03-get-webapppoolstate.txt` |
 | Permissões NTFS aplicadas | Validado | `03-iis/05-get-acl-site.txt`, `04-ntfs-gpo/02-get-acl-share.txt` |
 | Site responde HTTP | Validado | `03-iis/04-invoke-webrequest.txt` (200) |
-| Evidências capturadas | Validado | falta só o print opcional da aba Segurança |
+| Evidências capturadas | Validado, com pendência | falta o print da aba Segurança da pasta do site, pedido na seção 4.4 do roteiro (não está no checklist de prints da seção 9) |
 
 ## Monitoramento (2 pontos)
 
@@ -69,19 +69,20 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 |---|---|---|
 | Aplicação funcionando | Validado | `03-iis/06-navegador-site-pelo-ip.jpg` |
 | Serviços validados | Validado | `00-validacao/validacao-20261116-123441.txt` (49/49) |
-| Scripts testados | Validado | todos rodaram na VM; dois bugs encontrados e corrigidos (ver `docs/testes-realizados.md`) |
+| Scripts testados | Validado | todos rodaram na VM; quatro problemas encontrados e corrigidos (teste do gateway, DNS IPv6, regras de firewall do RDP e o `w3wp.exe` no modo Crash) (ver `docs/testes-realizados.md`) |
 | README completo | Validado | ficha, integrantes, cidade, ODS, indicador, tecnologias, hospedagem, IP, domínio e rastreabilidade |
 | Repositório organizado | Validado | https://github.com/LuisCrivellaro/civia-infra |
 | Ficha CitizenTech | Validado | `docs/ficha-citizentech.md` completa |
 | Evidências associadas aos critérios | Validado | tabela de rastreabilidade no README |
 | Vídeo demonstrativo de até sete minutos | Validado | https://www.youtube.com/watch?v=CGmx1JJHYeI (YouTube, não listado), gravado com `scripts/Demo-Video.ps1` seguindo `docs/roteiro-video.md` |
-| Link de entrega preparado | Executado | link pronto; envio no Teams não feito |
+| Link de entrega preparado | Executado | link pronto: https://github.com/LuisCrivellaro/civia-infra |
+| Envio no Teams | Pendente | um integrante envia até 19/11/2026 às 23h55 e confere se ficou como entregue |
 
 ## Extras
 
 | Item | Status | Evidência |
 |---|---|---|
-| GPO aplicada e verificada com usuário | Validado | `04-ntfs-gpo/07-gpo-painel-bloqueado-bruno.png` (bruno.teste bloqueado no Painel de Controle), `08-gpresult-bruno.txt` |
-| Acesso remoto validado | Executado | RDP ativo, firewall só na rede local, porta 3389 aberta a partir do PC host; falta a conexão RDP com print |
-| Compartilhamento acessado | Validado | `04-ntfs-gpo/01-get-smbshare.txt`; acesso pelo namespace DFS testado |
+| GPO aplicada e verificada com usuário | Validado | `04-ntfs-gpo/07-gpo-painel-bloqueado-bruno.png` (bruno.teste bloqueado no Painel de Controle), `08-gpresult-bruno.txt`, relatório HTML `09-relatorio-gpo.html` |
+| Acesso remoto validado | Executado, falta print | RDP ativo com NLA, firewall só na rede local (`04-ntfs-gpo/05-rdp.txt`), porta 3389 aberta a partir do PC host. O vídeo foi gravado numa sessão RDP do PC host, mas falta o print pedido na seção 5.2 (conexão de outra máquina com `hostname` na tela) |
+| Compartilhamento acessado | Executado, falta print | `04-ntfs-gpo/01-get-smbshare.txt`; acesso pelo namespace DFS testado no próprio servidor. Falta o print do acesso a `\\SRV-CITIZENTECH\CitizenTech` a partir de um cliente (seção 4.5) |
 | DFS Namespace | Validado | `04-ntfs-gpo/06-get-dfsnroot.txt` (`\\citizentech.local\CitizenTechDFS` Online) |

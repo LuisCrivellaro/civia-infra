@@ -1,13 +1,13 @@
 # Ponto de retomada
 
-Atualizado em 14/11/2026. Prazo da entrega: 19/11/2026, 23h55 (Teams).
+Atualizado em 16/11/2026, depois da auditoria final (`docs/auditoria-final.md`). Prazo da entrega: 19/11/2026, 23h55 (Teams).
 
 ## Estado
 
 - Repositório local em `C:\Projetos\OS GS`, publicado em https://github.com/LuisCrivellaro/civia-infra (público).
 - VM `SRV-CITIZENTECH` no Hyper-V do PC (switch externo `Civia-Externo`, IP 192.168.0.250), Windows Server 2022 Standard Evaluation em inglês, domínio `citizentech.local`.
 - Todas as etapas executadas na VM em 16/11/2026; `Validar-Ambiente.ps1` = 49/49. Recuperação automática comprovada (Crash e Parada).
-- Evidências de texto em `evidencias/`; faltam prints manuais de telas gráficas, a ficha da equipe e o vídeo.
+- Evidências de texto e prints em `evidencias/`; ficha da equipe completa; vídeo publicado. Faltam os prints da conexão RDP, do compartilhamento acessado de um cliente e da aba Segurança da pasta do site.
 - Registro completo das execuções: `docs/testes-realizados.md`.
 - Comandos na VM foram executados por PowerShell Direct a partir do host (`Invoke-Command -VMName SRV-CITIZENTECH`). Para repetir à mão, use a janela da VM ou o mesmo método com `Get-Credential`.
 
@@ -33,7 +33,9 @@ Atualizado em 14/11/2026. Prazo da entrega: 19/11/2026, 23h55 (Teams).
 | `scripts/Validar-Ambiente.ps1` | 49 verificações, só leitura |
 | `scripts/Coletar-Evidencias.ps1` | salva saídas reais em `evidencias/` |
 | `docs/*.md` | roteiro de configuração, arquitetura, análise de requisitos, ficha, checklist, roteiro do vídeo, testes |
-| `evidencias/` | pastas vazias com `.gitkeep` e `README.md` explicando o que vai em cada uma |
+| `scripts/Demo-Video.ps1` | demonstração do vídeo em 8 partes (`-SoParte`, `-Testar`) |
+| `evidencias/` | saídas de comando e prints da VM, uma pasta por etapa, e `README.md` explicando o que vai em cada uma |
+| `docs/auditoria-final.md` | revisão final contra os PDFs, riscos, pendências e parecer |
 
 Fora do repositório: as quatro skills de escrita foram instaladas em `%USERPROFILE%\.claude\skills\` (`humanizer`, `humanizer-pt-br`, `no-ai-slop`, `avoid-ai-writing`), só com `SKILL.md`, licença e referências.
 
@@ -53,12 +55,15 @@ Fora do repositório: as quatro skills de escrita foram instaladas em `%USERPROF
 
 ## Pendências (em ordem)
 
-1. Prints de telas gráficas: feitos em 16/11 (Monitor de Desempenho, Agendador, Recovery, Event Viewer, logs do IIS). Falta só a aba Security da pasta do site (opcional).
+1. Prints de telas gráficas: feitos em 16/11 (Monitor de Desempenho, Agendador, Recovery, Event Viewer, logs do IIS). Falta a aba Security da pasta do site (pedida na seção 4.4).
 2. GPO na prática: feito em 16/11 12:33.
-3. RDP de outra máquina (ou do host: `mstsc /v:192.168.0.250`) com `hostname` na tela.
-4. Ficha da Civia: completa (equipe ASTRO, cidade, ODS 10 e 11, indicador) em 16/11.
-5. Vídeo: feito em 16/11, https://www.youtube.com/watch?v=CGmx1JJHYeI (link no README e no checklist).
-6. Commit e push finais; um integrante envia o link no Teams até 19/11 às 23h55.
+3. RDP de outra máquina (ou do host: `mstsc /v:192.168.0.250`) com `hostname` na tela: falta o print.
+4. Acesso a `\\SRV-CITIZENTECH\CitizenTech` a partir de um cliente: falta o print.
+5. Ficha da Civia: completa (equipe ASTRO, cidade, ODS 10 e 11, indicador) em 16/11.
+6. Vídeo: feito em 16/11, https://www.youtube.com/watch?v=CGmx1JJHYeI (link no README e no checklist).
+7. Revisar e publicar as mudanças da auditoria final; um integrante envia o link no Teams até 19/11 às 23h55.
+
+Os passos exatos de cada print estão na seção "Pendências humanas" de `docs/auditoria-final.md`.
 
 ## Comandos para continuar
 
@@ -75,6 +80,6 @@ Na VM: ver `docs/roteiro-configuracao.md`.
 
 ## Riscos conhecidos
 
-- `Configurar-Monitoramento.ps1` usa a API COM do PLA; não foi testado (precisa de administrador). Se a atribuição de `PerformanceCounters` ou `AlertThresholds` falhar, a alternativa é `logman create counter CitizenTech_Monitor -c <contadores> -si 15 -f bin -o C:\PerfLogs\CitizenTech\Recursos` e `logman create alert`.
-- Em controlador de domínio a política de auditoria pode ser sobrescrita pela Default Domain Controllers Policy; conferir depois de `gpupdate /force`.
+- `Configurar-Monitoramento.ps1` usa a API COM do PLA. Funcionou na VM em 16/11; se precisar recriar em outro servidor e a atribuição de `PerformanceCounters` ou `AlertThresholds` falhar, a alternativa é `logman create counter` e `logman create alert`.
+- Em controlador de domínio a política de auditoria pode ser sobrescrita pela Default Domain Controllers Policy. Conferido depois de `gpupdate /force` em 16/11: continuou com Success and Failure.
 - O modo `Crash` encerra o `svchost` do grupo `iissvcs`. O script aborta se houver serviço fora de W3SVC/WAS/IISADMIN/W3LOGSVC no mesmo processo.

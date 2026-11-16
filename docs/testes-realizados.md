@@ -60,14 +60,17 @@ VM `SRV-CITIZENTECH` no Hyper-V do PC de desenvolvimento, Windows Server 2022 St
 | 16/11 01:24 | `Validar-Ambiente.ps1` | 48 PASSOU, 1 FALHOU | regras de firewall do RDP desligadas: o `Set-NetFirewallRule` regravava o objeto lido antes do `Enable`. Script corrigido e componente rodado de novo |
 | 16/11 01:25 | Porta 3389 a partir do PC host | Passou | `Test-NetConnection 192.168.0.250 -Port 3389` = True |
 | 16/11 01:25 | `Validar-Ambiente.ps1` | 49 PASSOU | primeira validação completa (substituída pela de 12:34) |
+| 16/11 01:25 | `Coletar-Evidencias.ps1` | Passou | 40 saídas sem erro em `evidencias/` |
 | 16/11 01:31-01:39 | Prints das telas gráficas | Feito | Monitor de Desempenho com os 3 contadores, Agendador com histórico, aba Recovery, Event Viewer, pasta de logs do IIS |
 | 16/11 ~01:45 | Liberação temporária de logon local | Aplicada | "Allow log on locally" para `GG_CitizenTech_Usuarios` na Default Domain Controllers Policy, com backup do arquivo original |
-| 16/11 12:21 | VM religada no dia seguinte | Passou | depois de liberar RAM no host (a VM não iniciava com 5 GB livres); os dois Data Collector Sets voltaram sozinhos pela tarefa `CitizenTech_DCS_Inicio` |
+| 16/11 12:21 | VM religada depois de ficar desligada desde a madrugada | Passou | depois de liberar RAM no host (a VM não iniciava com 5 GB livres); os dois Data Collector Sets voltaram sozinhos pela tarefa `CitizenTech_DCS_Inicio` |
 | 16/11 12:33 | GPO com usuário comum | Passou | `bruno.teste` recebeu "This operation has been cancelled due to restrictions" ao abrir o Painel de Controle; `gpresult` mostra `GPO_CitizenTech_Usuarios` aplicada |
 | 16/11 12:34 | Liberação de logon local desfeita | Passou | arquivo original restaurado, versão da GPO 6; `secedit` mostra o direito sem o grupo |
 | 16/11 12:34 | `Validar-Ambiente.ps1` | 49 PASSOU | `00-validacao/validacao-20261116-123441.txt` |
 | 16/11 12:41 | `Demo-Video.ps1 -Testar` | Passou | as 8 partes rodaram sem erro na VM; ajustados a exibição do gateway/DNS e o `nslookup` só em IPv4 para não mostrar o IPv6 público no vídeo |
 | 16/11 18:17 | `Demo-Video.ps1 -Testar -SoParte 3` e `-SoParte 8` | Passou | cada um rodou só a parte pedida e terminou com código 0 |
-| 16/11 01:25 | `Coletar-Evidencias.ps1` | Passou | 40 saídas sem erro em `evidencias/` |
+| 16/11 19:03 | `Demo-Video.ps1 -Testar -SoParte 4` com o relatório da GPO | Passou | `Get-GPOReport` gerou o HTML com "Prohibit access to Control Panel", o link na OU e "Enabled"; cópia em `04-ntfs-gpo/09-relatorio-gpo.html` |
+| 16/11 entre 19:22 e 19:59 | Gravação do vídeo com `Demo-Video.ps1 -SoParte 1` a `8` | Executado pelo aluno | inclui um teste de falha real no modo Crash (parte 6). O resultado aparece no vídeo; o transcript desse teste ficou em `C:\Scripts\logs` na VM e não foi copiado para o repositório |
+| 16/11 20:00 | Link do vídeo no YouTube | Passou | o oEmbed do YouTube devolveu o título "Civia \| Infraestrutura Windows Server - GS 2026 Operating Systems \| Equipe ASTRO", então o vídeo abre pelo link sem login |
 
 Nas evidências, os endereços IPv6 públicos da conexão de internet (prefixo da operadora) foram trocados por `[IPv6-publico-removido]`, porque o repositório é público. Nenhum outro conteúdo foi alterado.
