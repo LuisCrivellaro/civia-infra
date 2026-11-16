@@ -41,7 +41,7 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 | Script de alerta | Validado | alerta real com CPU em 100 %: `05-monitoramento/07-alertas.txt` (evento 9001) |
 | Agendamento | Validado | `05-monitoramento/05-tarefa-agendada.txt` (resultado 0) |
 | Logs | Validado | `07-logs/logs-scripts/monitor.log`, `alertas.log`, `05-monitoramento/08-alertas-perfmon.txt` (evento 2031) |
-| Evidências capturadas | Executado | falta o print do Monitor de Desempenho com o gráfico e do Agendador com histórico |
+| Evidências capturadas | Validado | `05-monitoramento/09-perfmon-grafico-3-contadores.png` (pico de CPU do teste de carga), `10-agendador-historico.png` |
 
 ## Recuperação (1 ponto)
 
@@ -52,7 +52,7 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 | Indisponibilidade comprovada | Validado | passo [4] com timeout nos testes Crash 01:19:51 e Parada 01:20:34 |
 | Recuperação automática comprovada | Validado | Crash: SCM, evento 7031, 15,7 s. Parada: tarefa agendada, 60,7 s (`03-teste-falha-resumo.txt`) |
 | Aplicação novamente disponível | Validado | passo [7] HTTP 200 nos dois testes |
-| Evidências capturadas | Executado | falta o print da aba Recuperação no `services.msc` e do navegador caindo e voltando |
+| Evidências capturadas | Validado | `06-teste-falha/06-services-recovery-w3svc.png`; o navegador caindo e voltando fica para o vídeo |
 
 ## Auditoria (1 ponto)
 
@@ -61,7 +61,7 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 | Auditoria configurada | Validado | `07-logs/01-auditpol.txt` (Logon e File System com Success and Failure, mantido após `gpupdate /force`) |
 | Eventos disponíveis | Validado | `07-logs/03-logon-4624-4625.txt`, `07-logs/04-acesso-arquivo-4663.txt` |
 | Logs do IIS | Validado | `07-logs/u_ex261116.log`, `07-logs/06-logs-iis.txt` |
-| Evidências capturadas | Executado | falta o print do Visualizador de Eventos |
+| Evidências capturadas | Validado | `07-logs/07-event-viewer-security.png`, `07-logs/08-pasta-logs-iis.png` |
 
 ## Funcionamento completo (2 pontos)
 

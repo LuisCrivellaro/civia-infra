@@ -47,7 +47,7 @@ Fora do repositório: as quatro skills de escrita foram instaladas em `%USERPROF
 
 ## Pendências (em ordem)
 
-1. Prints manuais na janela da VM (logon como `CITIZENTECH\Administrator`): Monitor de Desempenho com os dois conjuntos e o gráfico; Agendador de Tarefas com histórico; aba Recovery do World Wide Web Publishing Service; Event Viewer > Security; pasta `C:\inetpub\logs\LogFiles`; aba Security de `C:\inetpub\citizentech`.
+1. Prints de telas gráficas: feitos em 16/11 (Monitor de Desempenho, Agendador, Recovery, Event Viewer, logs do IIS). Falta só a aba Security da pasta do site (opcional).
 2. GPO na prática: logon como `bruno.teste` (alternativa de laboratório no roteiro de configuração, passo 7) e print do Painel de Controle bloqueado.
 3. RDP de outra máquina (ou do host: `mstsc /v:192.168.0.250`) com `hostname` na tela.
 4. Ficha da Civia: problema, cidadão, cidade, ODS, integrantes e RM.
