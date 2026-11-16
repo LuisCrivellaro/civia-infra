@@ -1,0 +1,59 @@
+﻿# Evidencia: gpresult do usuario bruno.teste
+# Servidor : SRV-CITIZENTECH
+# Data     : 2026-11-16 12:34:15
+# Comando  : gpresult /r /scope user /user CITIZENTECH\bruno.teste
+
+
+Microsoft (R) Windows (R) Operating System Group Policy Result tool v2.0
+c Microsoft Corporation. All rights reserved.
+
+Created on ?11/?16/?2026 at 12:34:14 PM
+
+
+
+RSOP data for CITIZENTECH\bruno.teste on SRV-CITIZENTECH : Logging Mode
+------------------------------------------------------------------------
+
+OS Configuration:            Primary Domain Controller
+OS Version:                  10.0.20348
+Site Name:                   N/A
+Roaming Profile:             N/A
+Local Profile:               C:\Users\bruno.teste
+Connected over a slow link?: No
+
+
+USER SETTINGS
+--------------
+    CN=Bruno Teste,OU=CitizenTech,DC=citizentech,DC=local
+    Last time Group Policy was applied: 11/16/2026 at 12:33:02 PM
+    Group Policy was applied from:      SRV-CITIZENTECH.citizentech.local
+    Group Policy slow link threshold:   500 kbps
+    Domain Name:                        CITIZENTECH
+    Domain Type:                        Windows 2008 or later
+    
+    Applied Group Policy Objects
+    -----------------------------
+        GPO_CitizenTech_Usuarios
+
+    The following GPOs were not applied because they were filtered out
+    -------------------------------------------------------------------
+        Local Group Policy
+            Filtering:  Not Applied (Empty)
+
+    The user is a part of the following security groups
+    ---------------------------------------------------
+        Domain Users
+        Everyone
+        BUILTIN\Users
+        BUILTIN\Pre-Windows 2000 Compatible Access
+        NT AUTHORITY\INTERACTIVE
+        CONSOLE LOGON
+        NT AUTHORITY\Authenticated Users
+        This Organization
+        LOCAL
+        GG_CitizenTech_Usuarios
+        Authentication authority asserted identity
+        Medium Plus Mandatory Level
+        
+
+

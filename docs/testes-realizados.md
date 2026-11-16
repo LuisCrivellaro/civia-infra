@@ -59,7 +59,13 @@ VM `SRV-CITIZENTECH` no Hyper-V do PC de desenvolvimento, Windows Server 2022 St
 | 16/11 01:24 | `Configurar-Infraestrutura.ps1 -Componentes DFS` | Passou | `\\citizentech.local\CitizenTechDFS` Online, pasta acessível |
 | 16/11 01:24 | `Validar-Ambiente.ps1` | 48 PASSOU, 1 FALHOU | regras de firewall do RDP desligadas: o `Set-NetFirewallRule` regravava o objeto lido antes do `Enable`. Script corrigido e componente rodado de novo |
 | 16/11 01:25 | Porta 3389 a partir do PC host | Passou | `Test-NetConnection 192.168.0.250 -Port 3389` = True |
-| 16/11 01:25 | `Validar-Ambiente.ps1` | 49 PASSOU | `00-validacao/validacao-20261116-012533.txt` |
+| 16/11 01:25 | `Validar-Ambiente.ps1` | 49 PASSOU | primeira validação completa (substituída pela de 12:34) |
+| 16/11 01:31-01:39 | Prints das telas gráficas | Feito | Monitor de Desempenho com os 3 contadores, Agendador com histórico, aba Recovery, Event Viewer, pasta de logs do IIS |
+| 16/11 ~01:45 | Liberação temporária de logon local | Aplicada | "Allow log on locally" para `GG_CitizenTech_Usuarios` na Default Domain Controllers Policy, com backup do arquivo original |
+| 16/11 12:21 | VM religada no dia seguinte | Passou | depois de liberar RAM no host (a VM não iniciava com 5 GB livres); os dois Data Collector Sets voltaram sozinhos pela tarefa `CitizenTech_DCS_Inicio` |
+| 16/11 12:33 | GPO com usuário comum | Passou | `bruno.teste` recebeu "This operation has been cancelled due to restrictions" ao abrir o Painel de Controle; `gpresult` mostra `GPO_CitizenTech_Usuarios` aplicada |
+| 16/11 12:34 | Liberação de logon local desfeita | Passou | arquivo original restaurado, versão da GPO 6; `secedit` mostra o direito sem o grupo |
+| 16/11 12:34 | `Validar-Ambiente.ps1` | 49 PASSOU | `00-validacao/validacao-20261116-123441.txt` |
 | 16/11 01:25 | `Coletar-Evidencias.ps1` | Passou | 40 saídas sem erro em `evidencias/` |
 
 Nas evidências, os endereços IPv6 públicos da conexão de internet (prefixo da operadora) foram trocados por `[IPv6-publico-removido]`, porque o repositório é público. Nenhum outro conteúdo foi alterado.

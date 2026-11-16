@@ -4,7 +4,7 @@ Status possíveis: Pendente, Preparado (script ou documento pronto, não executa
 
 Um item só vira Validado com o arquivo de evidência correspondente em `evidencias/`.
 
-Última atualização: 16/11/2026, depois da configuração completa da VM. `Validar-Ambiente.ps1` terminou com 49 de 49 itens PASSOU (`evidencias/00-validacao/validacao-20261116-012533.txt`).
+Última atualização: 16/11/2026 12:35, depois do teste da GPO com usuário e da revalidação após reiniciar a VM. `Validar-Ambiente.ps1` terminou com 49 de 49 itens PASSOU (`evidencias/00-validacao/validacao-20261116-123441.txt`).
 
 ## Infraestrutura (2 pontos)
 
@@ -68,11 +68,11 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 | Item | Status | Evidência |
 |---|---|---|
 | Aplicação funcionando | Validado | `03-iis/06-navegador-site-pelo-ip.jpg` |
-| Serviços validados | Validado | `00-validacao/validacao-20261116-012533.txt` (49/49) |
+| Serviços validados | Validado | `00-validacao/validacao-20261116-123441.txt` (49/49) |
 | Scripts testados | Validado | todos rodaram na VM; dois bugs encontrados e corrigidos (ver `docs/testes-realizados.md`) |
-| README completo | Executado | faltam descrição da Civia, ODS e integrantes |
+| README completo | Executado | integrantes e descrição da Civia preenchidos; faltam ODS, cidade e indicador de impacto (não constam da apresentação da equipe) |
 | Repositório organizado | Validado | https://github.com/LuisCrivellaro/civia-infra |
-| Ficha CitizenTech | Pendente | campos da equipe em `docs/ficha-citizentech.md` |
+| Ficha CitizenTech | Executado | `docs/ficha-citizentech.md` com equipe ASTRO e dados da apresentação; faltam ODS, cidade e indicador |
 | Evidências associadas aos critérios | Validado | tabela de rastreabilidade no README |
 | Vídeo demonstrativo de até sete minutos | Pendente | roteiro pronto em `docs/roteiro-video.md`; vídeo não gravado |
 | Link de entrega preparado | Executado | link pronto; envio no Teams não feito |
@@ -81,7 +81,7 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 
 | Item | Status | Evidência |
 |---|---|---|
-| GPO aplicada e verificada com usuário | Executado | GPO vinculada e com `NoControlPanel=1` (`04-ntfs-gpo/04-gpo-link-valor.txt`); falta o logon do `bruno.teste` |
+| GPO aplicada e verificada com usuário | Validado | `04-ntfs-gpo/07-gpo-painel-bloqueado-bruno.png` (bruno.teste bloqueado no Painel de Controle), `08-gpresult-bruno.txt` |
 | Acesso remoto validado | Executado | RDP ativo, firewall só na rede local, porta 3389 aberta a partir do PC host; falta a conexão RDP com print |
 | Compartilhamento acessado | Validado | `04-ntfs-gpo/01-get-smbshare.txt`; acesso pelo namespace DFS testado |
 | DFS Namespace | Validado | `04-ntfs-gpo/06-get-dfsnroot.txt` (`\\citizentech.local\CitizenTechDFS` Online) |

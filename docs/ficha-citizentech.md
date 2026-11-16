@@ -1,24 +1,28 @@
 # Ficha da CitizenTech
 
-Modelo sugerido no documento geral da GS (slide "A Ficha da CitizenTech"). Os campos da solução são da equipe e ainda não foram informados; preencha antes da entrega e copie o resumo para o README.
+Modelo sugerido no documento geral da GS (slide "A Ficha da CitizenTech"). Os dados da solução vêm da apresentação da equipe ASTRO (Apresentação_GS_CIVIA.pdf). Cidade/bairro, indicador de impacto e ODS não constam da apresentação e precisam ser preenchidos pela equipe.
 
 | Campo | Valor |
 |---|---|
 | Nome da CitizenTech | Civia |
 | Cidade e bairro | a preencher |
-| Cidadão beneficiado | a preencher |
-| Problema, em uma frase | a preencher |
-| Como funciona | a preencher |
+| Cidadão beneficiado | pessoas com deficiência visual ou auditiva que se deslocam pela cidade |
+| Problema, em uma frase | avisos de mobilidade urbana (placas, painéis, comunicados sonoros) não chegam a quem não vê ou não ouve, e uma mudança de plataforma ou de caminho vira uma dificuldade |
+| Como funciona | óculos inteligentes com câmera e microfone captam o ambiente, uma IA interpreta e o aplicativo comunica por áudio, legendas e vibração; o app oferece rotas acessíveis, avisos em tempo real e pedido de ajuda |
 | O que cada parte faz | a preencher (a parte de Operating Systems está abaixo) |
 | Link do repositório | https://github.com/LuisCrivellaro/civia-infra |
 | Indicador de impacto | a preencher |
 | ODS conectados | a preencher, com uma frase sobre como a solução contribui para cada um |
 
-## Integrantes
+## Integrantes (equipe ASTRO)
 
 | Nome | RM |
 |---|---|
-| a preencher | a preencher |
+| Ana Luiza Santana da Rocha | RM561194 |
+| Evandro Yuji Kaibara de Oliveira | RM559274 |
+| Guilherme Rodrigues Leite | RM560131 |
+| Luís Filipe Crivellaro | RM560877 |
+| Pedro Henrique Batista Bergamin | RM559443 |
 
 ## Parte de Operating Systems
 

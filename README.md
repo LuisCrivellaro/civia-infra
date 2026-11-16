@@ -1,18 +1,18 @@
 # Civia: infraestrutura Windows Server
 
-Entrega da disciplina Operating Systems da Global Solution 2026 (Engenharia de Software, FIAP). Civia é a CitizenTech da equipe.
+Entrega da disciplina Operating Systems da Global Solution 2026 (Engenharia de Software, FIAP). Civia é a CitizenTech da equipe ASTRO.
 
 O objetivo é montar em uma VM um Windows Server que hospede a aplicação web da Civia, com domínio, DNS, IIS, permissões NTFS, compartilhamento de arquivos, GPO, acesso remoto, monitoramento com alertas, auditoria e recuperação automática depois de uma falha provocada.
 
-> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-012533.txt)). A recuperação automática foi comprovada em dois testes de falha. Faltam alguns prints de telas gráficas, os dados da equipe e o vídeo; o status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md).
+> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-123441.txt)). A recuperação automática foi comprovada em dois testes de falha. Faltam alguns prints de telas gráficas, os dados da equipe e o vídeo; o status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md).
 
 ## Ficha da CitizenTech
 
 | Campo | Valor |
 |---|---|
-| Nome da solução | Civia |
-| Problema que resolve | a preencher pela equipe |
-| Cidadão beneficiado | a preencher pela equipe |
+| Nome da solução | Civia: óculos inteligentes e aplicativo de acessibilidade urbana ("a cidade se adapta a você") |
+| Problema que resolve | avisos de mobilidade urbana (placas, painéis, comunicados sonoros) não chegam a pessoas com deficiência visual ou auditiva |
+| Cidadão beneficiado | pessoas com deficiência visual ou auditiva |
 | Virtualização | Hyper-V do Windows 11 Pro, VM geração 2 (4 GB de RAM, 2 vCPUs, 60 GB), switch externo (equivalente ao Bridge) |
 | Tecnologias da infraestrutura | Windows Server 2022 Standard Evaluation (inglês), AD DS, DNS, IIS 10, File Server, GPO, RDP, Performance Monitor (PLA), Agendador de Tarefas, PowerShell 5.1 |
 | Hospedagem | Caminho A (site estático HTML, CSS e JavaScript), pool sem código gerenciado |
@@ -20,7 +20,8 @@ O objetivo é montar em uma VM um Windows Server que hospede a aplicação web d
 | Domínio | `citizentech.local` (NetBIOS `CITIZENTECH`) |
 | IP do servidor | `192.168.0.250/24`, gateway `192.168.0.1` (previsto; confirmar depois da configuração) |
 | Credenciais de teste | contas fictícias `ana.souza` (grupo GG_CitizenTech_Admins) e `bruno.teste` (GG_CitizenTech_Usuarios). Senhas definidas na hora, fora do repositório |
-| Integrantes | a preencher (nome e RM) |
+| Equipe | ASTRO |
+| Integrantes | Ana Luiza Santana da Rocha (RM561194); Evandro Yuji Kaibara de Oliveira (RM559274); Guilherme Rodrigues Leite (RM560131); Luís Filipe Crivellaro (RM560877); Pedro Henrique Batista Bergamin (RM559443) |
 | Repositório | https://github.com/LuisCrivellaro/civia-infra |
 
 A ficha completa, com ODS e indicador de impacto, fica em [docs/ficha-citizentech.md](docs/ficha-citizentech.md).
@@ -163,7 +164,7 @@ Os status seguem a escala: Pendente, Preparado, Executado, Validado, Falhou. Só
 
 - A VM foi configurada no Hyper-V do computador de desenvolvimento, em rede de casa (switch externo). O sistema está em inglês porque o Evaluation Center não oferece ISO em português. O registro de cada execução, inclusive as que falharam, está em [docs/testes-realizados.md](docs/testes-realizados.md).
 - No modo Crash, encerrar só o serviço W3SVC não derruba o site: o processo do pool (`w3wp.exe`) continua atendendo. O teste derruba os dois para simular a queda real.
-- A GPO está criada, vinculada e com o valor certo, mas o efeito na tela ainda não foi mostrado: para isso é preciso fazer logon com um usuário da OU. Usuários comuns não fazem logon local em um controlador de domínio, então o ideal é uma segunda VM cliente no domínio. O roteiro de configuração explica a alternativa.
+- Para mostrar a GPO, o `bruno.teste` precisou fazer logon no próprio controlador de domínio. Isso exigiu liberar "Allow log on locally" para o grupo `GG_CitizenTech_Usuarios` na Default Domain Controllers Policy só durante o teste; a mudança foi desfeita logo depois e conferida com `secedit` (ver [docs/testes-realizados.md](docs/testes-realizados.md)). Usuários comuns não fazem logon local em um controlador de domínio, então o ideal é uma segunda VM cliente no domínio. O roteiro de configuração explica a alternativa.
 - DFS Replication não foi configurado porque precisa de um segundo servidor. O DFS Namespace (opcional) foi configurado: `\\citizentech.local\CitizenTechDFS`.
 - Os PDFs da atividade ficam fora do Git para não publicar material da FIAP.
 - Nas evidências, os endereços IPv6 públicos da conexão de internet foram trocados por `[IPv6-publico-removido]`.

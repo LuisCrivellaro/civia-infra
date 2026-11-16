@@ -50,7 +50,7 @@ h2 { margin-top: 0; font-size: 1.25rem; }
 
 .ficha { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; }
 .ficha dt { font-weight: 600; }
-.ficha dd { margin: 0; color: var(--suave); font-style: italic; }
+.ficha dd { margin: 0; color: var(--suave); }
 
 .status { padding-left: 20px; }
 .ok { color: var(--ok); }

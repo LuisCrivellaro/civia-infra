@@ -1,4 +1,4 @@
-﻿Validacao CitizenTech - SRV-CITIZENTECH - 2026-11-16 01:25:33
+﻿Validacao CitizenTech - SRV-CITIZENTECH - 2026-11-16 12:34:41
 Executado como administrador: True
 Resumo: PASSOU=49
 
@@ -38,22 +38,22 @@ Criterio          Item                               Status Detalhe
 6-GPO/RDP/DFS     DFS (opcional)                     PASSOU \\citizentech.local\CitizenTechDFS Online                                                                                                                                                     
 3-Monitoramento   DCS CitizenTech_Monitor            PASSOU status=1 (1=rodando) contadores=\Processor(_Total)\% Processor Time ; \Memory\Available MBytes ; \LogicalDisk(C:)\% Free Space                                                                
 3-Monitoramento   DCS CitizenTech_Alertas            PASSOU status=1 limites=\Processor(_Total)\% Processor Time>80 ; \Memory\Available MBytes<500 ; \LogicalDisk(C:)\Free Megabytes<15360                                                                
-3-Monitoramento   Arquivos .blg                      PASSOU 1 arquivo(s), mais recente 11/16/2026 01:16:09                                                                                                                                                
-3-Monitoramento   Leitura dos 3 contadores           PASSOU % processor time=60.8 ; available mbytes=2,311.0 ; % free space=80.5                                                                                                                          
+3-Monitoramento   Arquivos .blg                      PASSOU 3 arquivo(s), mais recente 11/16/2026 12:23:51                                                                                                                                                
+3-Monitoramento   Leitura dos 3 contadores           PASSOU % processor time=1.0 ; available mbytes=2,410.0 ; % free space=80.6                                                                                                                           
 3-Monitoramento   Script em C:\Scripts               PASSOU C:\Scripts\Monitor-Recursos.ps1                                                                                                                                                               
 3-Monitoramento   Fonte de eventos                   PASSOU CitizenTechMonitor                                                                                                                                                                            
-3-Monitoramento   Tarefa de monitoramento            PASSOU ultima=11/16/2026 01:22:22 resultado=0 proxima=11/16/2026 01:27:27                                                                                                                            
-3-Monitoramento   monitor.log atualizado             PASSOU 2026-11-16 01:22:51 | ALERTA | CPU=100% | RAM livre=2567 MB | Disco livre C:=48.2 GB (81.2%) | fontes CPU=Get-Counter RAM=Get-Counter                                                         
+3-Monitoramento   Tarefa de monitoramento            PASSOU ultima=11/16/2026 12:32:32 resultado=0 proxima=11/16/2026 12:37:37                                                                                                                            
+3-Monitoramento   monitor.log atualizado             PASSOU 2026-11-16 12:32:11 | NORMAL | CPU=5.8% | RAM livre=2672 MB | Disco livre C:=48 GB (80.9%) | fontes CPU=Get-Counter RAM=Get-Counter                                                           
 4-Recuperacao     sc failure W3SVC                   PASSOU reset=86400s acoes=restart/5000,restart/10000,restart/30000                                                                                                                                   
 4-Recuperacao     Pool rapidFail/autoStart           PASSOU rapidFailProtection=False autoStart=True                                                                                                                                                      
-4-Recuperacao     Tarefa de recuperacao              PASSOU ultima=11/16/2026 01:25:25 resultado=0                                                                                                                                                        
+4-Recuperacao     Tarefa de recuperacao              PASSOU ultima=11/16/2026 12:33:33 resultado=0                                                                                                                                                        
 4-Recuperacao     Teste de falha registrado          PASSOU 2026-11-16 01:21:35 | modo=Parada | RECUPERACAO AUTOMATICA COMPROVADA | mecanismo=Tarefa agendada CitizenTech_Recuperacao (Recupera-Site.ps1) | tempo=60.7s |                                 
                                                             transcript=C:\Scripts\logs\teste-falha-Parada-20261116-012034.log                                                                                                                             
 5-Auditoria/Logs  auditpol Logon                     PASSOU Success and Failure                                                                                                                                                                           
 5-Auditoria/Logs  auditpol File System               PASSOU Success and Failure                                                                                                                                                                           
 5-Auditoria/Logs  SACL na pasta do site              PASSOU Everyone:ReadData, CreateFiles:Success, Failure                                                                                                                                               
-5-Auditoria/Logs  Eventos de logon (4624)            PASSOU ultimo em 11/16/2026 01:25:31                                                                                                                                                                 
-5-Auditoria/Logs  Eventos de acesso a arquivo (4663) PASSOU ultimo em 11/16/2026 01:24:10                                                                                                                                                                 
+5-Auditoria/Logs  Eventos de logon (4624)            PASSOU ultimo em 11/16/2026 12:34:39                                                                                                                                                                 
+5-Auditoria/Logs  Eventos de acesso a arquivo (4663) PASSOU ultimo em 11/16/2026 12:31:10                                                                                                                                                                 
 5-Auditoria/Logs  Logs do IIS                        PASSOU 1 arquivo(s)                                                                                                                                                                                  
 
 
