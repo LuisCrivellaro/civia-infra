@@ -128,7 +128,7 @@ Feche o Monitor de Desempenho depois de parar a gravação.
 cls; C:\Scripts\Demo-Video.ps1 -SoParte 6
 ```
 
-Antes de gravar, deixe o Edge visível ao lado do PowerShell. Esta parte espera um ENTER para provocar a falha.
+Antes de gravar, deixe o Edge visível ao lado do PowerShell. Depois do `sc.exe qfailure` o script fica esperando um ENTER para provocar a falha, sem mostrar aviso nenhum na tela.
 
 | Na tela | Fale |
 |---|---|

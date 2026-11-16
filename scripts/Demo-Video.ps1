@@ -109,9 +109,9 @@ if ($ComecarNaParte -le 5) {
 if ($ComecarNaParte -le 6) {
     Titulo 6 '4:30-5:40' 'Teste de falha e recuperacao automatica'
     Cmd 'sc.exe qfailure W3SVC' { sc.exe qfailure W3SVC }
-    Write-Host "`nDeixe o navegador aberto em http://192.168.0.250 ao lado desta janela." -ForegroundColor Magenta
     if ($Testar) { Write-Host '(modo -Testar: teste de falha nao executado)' } else {
-        Write-Host '[ENTER para provocar a falha]' -ForegroundColor DarkGray -NoNewline; [void](Read-Host)
+        # espera o ENTER sem mostrar nenhum aviso na tela
+        [void](Read-Host)
         & C:\Scripts\Teste-Falha.ps1 -Modo Crash -Confirmar
     }
     Cmd 'Eventos 7031 do Service Control Manager (ultimos 5 min)' {
