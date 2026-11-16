@@ -1,0 +1,8 @@
+# Material da FIAP: fica so na copia local, nao vai para o GitHub
+docs/referencias/*.pdf
+
+# Arquivos temporarios
+*.tmp
+Thumbs.db
+desktop.ini
+.vscode/

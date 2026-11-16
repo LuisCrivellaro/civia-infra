@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Civia - página de demonstração</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="aviso" role="note">
+    Página de demonstração da infraestrutura (disciplina Operating Systems).
+    Ela será trocada pela aplicação web da equipe quando a versão final estiver pronta.
+  </div>
+
+  <header>
+    <h1>Civia</h1>
+    <p class="sub">Hospedado no IIS do servidor SRV-CITIZENTECH (domínio citizentech.local)</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Sobre o projeto</h2>
+      <p>
+        A Global Solution 2026 pede uma CitizenTech: uma solução tecnológica para um problema
+        real da cidade, pensada para quem convive com ele.
+      </p>
+      <dl class="ficha">
+        <dt>Solução da equipe</dt><dd id="solucao">Civia (descrição a preencher pela equipe)</dd>
+        <dt>Problema</dt><dd>a preencher pela equipe</dd>
+        <dt>Cidadão beneficiado</dt><dd>a preencher pela equipe</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Estado do servidor web</h2>
+      <p>A página consulta <code>/health.txt</code> no mesmo servidor e mostra o resultado.</p>
+      <ul class="status">
+        <li>Resposta do servidor: <strong id="st-http">verificando...</strong></li>
+        <li>Tempo de resposta: <strong id="st-tempo">-</strong></li>
+        <li>Última verificação: <strong id="st-hora">-</strong></li>
+      </ul>
+      <button id="btn-verificar" type="button">Verificar de novo</button>
+    </section>
+  </main>
+
+  <footer>
+    <p>FIAP · Engenharia de Software · Global Solution 2026 · Operating Systems</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
