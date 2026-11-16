@@ -45,6 +45,19 @@ Fora do repositório: as quatro skills de escrita foram instaladas em `%USERPROF
 - RDP sem a função RDS; NLA e firewall restrito à sub-rede local.
 - DFS opcional, só Namespace.
 
+## Ponto exato de parada (16/11/2026, ~01:45)
+
+- Passo em andamento: demonstrar a GPO com o usuário `bruno.teste`.
+- MUDANÇA TEMPORÁRIA ATIVA na VM: a Default Domain Controllers Policy foi editada para dar "Allow log on locally" ao grupo `GG_CitizenTech_Usuarios` (SID `...-1104`). Versão da GPO passou para 5. Backup do arquivo original: `C:\Scripts\logs\GptTmpl-DDCP-original.inf` (na VM).
+- A sessão do Administrator foi encerrada; a VM está na tela de login.
+- Próximos passos ao retomar:
+  1. Na janela da VM: Other user > `CITIZENTECHruno.teste` > senha das contas de teste.
+  2. Abrir o Painel de Controle na sessão do bruno e capturar a mensagem de restrição (`evidencias/04-ntfs-gpo/07-gpo-painel-bloqueado.png`). Rodar `gpresult /r` na sessão dele.
+  3. Desfazer a mudança: copiar o backup de volta para `C:\Windows\SYSVOL\domain\Policies\{6AC1786C-016F-11D2-945F-00C04fB984F9}\MACHINE\Microsoft\Windows NT\SecEdit\GptTmpl.inf`, subir a versão da GPO (AD `versionNumber` e `GPT.INI`) para 6 e rodar `gpupdate /target:computer /force`. Conferir com `secedit /export /areas USER_RIGHTS`.
+  4. Registrar em `docs/testes-realizados.md` e no checklist.
+- Controle da VM: o host usa um processo auxiliar elevado (PowerShell Direct) que encerra sozinho em algumas horas. Para retomar, ele precisa ser aberto de novo (UAC + senha do Administrator digitada pelo aluno).
+- Depois da GPO: ficha da Civia (dados da equipe), vídeo e envio no Teams até 19/11 às 23h55.
+
 ## Pendências (em ordem)
 
 1. Prints de telas gráficas: feitos em 16/11 (Monitor de Desempenho, Agendador, Recovery, Event Viewer, logs do IIS). Falta só a aba Security da pasta do site (opcional).
