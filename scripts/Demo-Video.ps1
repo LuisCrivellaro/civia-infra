@@ -38,7 +38,7 @@ function Cmd([string]$texto, [scriptblock]$bloco) {
 }
 function Abrir([string]$exe, [string]$arg) { if (-not $Testar) { if ($arg) { Start-Process $exe $arg } else { Start-Process $exe } } }
 function Proxima {
-    if ($SoParte) { Write-Host "`n[Fim da parte $SoParte]" -ForegroundColor DarkGray; exit 0 }
+    if ($SoParte) { exit 0 }
     if ($Testar) { return }; Write-Host "`n[ENTER para a proxima parte]" -ForegroundColor DarkGray -NoNewline; [void](Read-Host) }
 
 if ($ComecarNaParte -le 1) {
