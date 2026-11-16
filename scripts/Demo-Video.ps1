@@ -82,6 +82,11 @@ if ($ComecarNaParte -le 4) {
     Cmd 'Get-SmbShare CitizenTech + Get-SmbShareAccess' { Get-SmbShare CitizenTech | Format-List Name, Path; Get-SmbShareAccess CitizenTech | Format-Table AccountName, AccessRight -AutoSize }
     Write-Host "`nAbrindo \\SRV-CITIZENTECH\CitizenTech no Explorador..." -ForegroundColor Yellow
     Abrir explorer.exe '\\SRV-CITIZENTECH\CitizenTech'
+    $relatorio = 'C:\Scripts\prints\relatorio-gpo.html'
+    New-Item (Split-Path $relatorio) -ItemType Directory -Force | Out-Null
+    Get-GPOReport -Name GPO_CitizenTech_Usuarios -ReportType Html -Path $relatorio
+    Write-Host "Abrindo o relatorio da GPO no Edge..." -ForegroundColor Yellow
+    Abrir 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe' "--new-window `"$relatorio`""
     $print = 'C:\Scripts\prints\gpo-painel-bloqueado-bruno.png'
     if (Test-Path $print) {
         Write-Host "Abrindo o print do teste da GPO com o bruno.teste..." -ForegroundColor Yellow

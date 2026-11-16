@@ -88,7 +88,7 @@ cls; C:\Scripts\Demo-Video.ps1 -SoParte 3
 cls; C:\Scripts\Demo-Video.ps1 -SoParte 4
 ```
 
-No fim abrem sozinhas duas janelas: o Explorador e o Paint com o print do teste da GPO. Fale primeiro sobre o PowerShell e depois mostre as janelas.
+No fim abrem sozinhas três janelas: o Explorador, o Edge com o relatório da GPO e o Paint com o print do teste. Fale primeiro sobre o PowerShell e depois mostre as janelas, na ordem da tabela.
 
 | Na tela | Fale |
 |---|---|
@@ -97,9 +97,10 @@ No fim abrem sozinhas duas janelas: o Explorador e o Paint com o print do teste 
 | `NoControlPanel` → `Value 1` | "A regra dela é esta: bloqueia o Painel de Controle. O 1 quer dizer ligado." |
 | `Get-SmbShare` → `CitizenTech`, `C:\Shares\CitizenTech` e as permissões | "Também criamos a pasta compartilhada CitizenTech. O grupo de administradores tem controle total e os usuários do domínio só podem ler." |
 | janela do **Explorador** em `\\SRV-CITIZENTECH\CitizenTech` | "E aqui ela aberta pela rede, pelo caminho do servidor." |
+| **Edge** com o relatório da GPO: role até "Links" (mostra `citizentech.local/CitizenTech`) e até "User Configuration", onde está "Prohibit access to Control Panel and PC settings: Enabled" | "Este é o relatório da política, gerado pelo próprio Windows. Aqui mostra onde ela está ligada, na unidade CitizenTech, e aqui a regra: proibir acesso ao Painel de Controle, ativada." |
 | janela do **Paint** com o print do teste (mensagem "restrictions") | "Para testar a política, entramos com o bruno.teste. Ele tentou abrir o Painel de Controle e o Windows bloqueou, com esta mensagem de restrição." |
 
-Feche o Explorador e o Paint depois de parar a gravação. O print fica em `C:\Scripts\prints` na VM e é o mesmo de `evidencias/04-ntfs-gpo/07-gpo-painel-bloqueado-bruno.png`.
+Feche o Explorador, a janela do relatório e o Paint depois de parar a gravação. O print fica em `C:\Scripts\prints` na VM e é o mesmo de `evidencias/04-ntfs-gpo/07-gpo-painel-bloqueado-bruno.png`.
 
 ## Parte 5 (3:30 a 4:30): monitoramento
 
