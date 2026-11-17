@@ -16,9 +16,7 @@
 [CmdletBinding()]
 param(
     [int]$ComecarNaParte = 1,
-    # Roda so esta parte e para (para gravar o video em trechos)
     [ValidateRange(0, 8)][int]$SoParte = 0,
-    # Sem pausas, sem abrir janelas e sem rodar o teste de falha (para conferir o script)
     [switch]$Testar
 )
 

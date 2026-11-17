@@ -1,239 +1,164 @@
-# Roteiro de configuração na VM
+Configuração da infraestrutura da Civia
+Este arquivo reúne a configuração do Windows Server usado na parte de Operating Systems do projeto Civia. A aplicação publicada nessa VM é uma página estática de demonstração. O foco aqui é a infraestrutura: rede, domínio, hospedagem no IIS, permissões, monitoramento e recuperação de falhas.
 
-Ordem de execução, o que cada passo faz e o que conferir antes de seguir. Os números de seção entre parênteses são do roteiro do professor.
+A VM foi criada no computador principal com Hyper-V. A maior parte da configuração do servidor foi feita pelo PowerShell, com uma conta administrativa. As seções entre parênteses indicam a parte correspondente do roteiro da atividade.
+0. Preparação do ambiente
+Máquina virtual (seção 3.1)
+Utilizei o Hyper-V do Windows 11 Pro, que já estava disponível no computador. A imagem escolhida foi SERVER_EVAL_x64FRE_en-us.iso, do Windows Server 2022 Standard Evaluation, com a opção Desktop Experience. O sistema ficou em inglês e o teclado foi configurado como Portuguese (Brazil ABNT2).
 
-Tudo é feito no console da VM, em um PowerShell aberto como Administrador. Mudanças de rede podem derrubar uma sessão remota, então não use RDP até o passo 9.
-
-## 0. Antes de começar
-
-Anote em um lugar fora do repositório: IP escolhido, gateway, senha do Administrator, senha DSRM e senha das contas de teste. Nenhuma senha vai para o Git.
-
-### Criar a VM (3.1)
-
-Usamos o Hyper-V do Windows 11 Pro, que está na lista de hipervisores aceitos pelo roteiro (VirtualBox, VMware, Hyper-V ou Azure). No computador usado, a segurança baseada em virtualização do Windows já ocupa o hipervisor, e o VirtualBox rodaria mais lento.
-
-ISO: `SERVER_EVAL_x64FRE_en-us.iso`, avaliação de 180 dias do Microsoft Evaluation Center. Não há ISO em português; o sistema fica em inglês, e os scripts funcionam igual (nomes de grupos, contadores e auditoria são resolvidos independentemente do idioma).
-
-No host, em um PowerShell como Administrador, depois de ativar o Hyper-V e reiniciar:
-
-```powershell
-cd C:\Projetos\OS GS\scripts\host
+A criação da VM partiu do script Criar-VM-HyperV.ps1, executado no computador principal:
+cd 'C:\Projetos\OS GS\scripts\host'
 Set-ExecutionPolicy -Scope Process Bypass
 .\Criar-VM-HyperV.ps1 -IsoPath "$env:USERPROFILE\Downloads\SERVER_EVAL_x64FRE_en-us.iso"
 Start-VM -Name SRV-CITIZENTECH
 vmconnect.exe localhost SRV-CITIZENTECH
-```
+O script cria o switch externo Civia-Externo, conectado à rede local, e uma VM de geração 2 com 4 GB de RAM, 2 processadores virtuais e disco de 60 GB. A criação do switch pode interromper a conexão de rede do computador por alguns segundos.
 
-O script cria o switch externo `Civia-Externo` (equivalente ao modo Bridge: a VM recebe um IP da rede de casa; a rede do host cai por alguns segundos na criação), e a VM geração 2 com 4 GB de RAM fixa, 2 vCPUs e disco de 60 GB, dando boot pela ISO.
+A instalação foi feita pelo boot da ISO, na opção Custom: Install Microsoft Server Operating System only, usando o disco virtual de 60 GB. A senha do Administrator ficou fora do repositório. O mesmo cuidado foi adotado com a senha DSRM e com as senhas das contas de teste.
 
-Instalação:
-1. Na janela da VM, aperte uma tecla quando aparecer "Press any key to boot from CD or DVD". Se passar do tempo, desligue e ligue a VM de novo.
-2. Idioma: English. Em "Keyboard or input method", escolha **Portuguese (Brazil ABNT2)** para o teclado funcionar certo nas senhas.
-3. Edição: **Windows Server 2022 Standard Evaluation (Desktop Experience)**.
-4. "Custom: Install Microsoft Server Operating System only", disco de 60 GB, avançar.
-5. Defina a senha do Administrator. Para fazer login na janela do Hyper-V, use o botão Ctrl+Alt+Del da barra da janela.
-6. Print: área de trabalho com `winver` aberto. Salve como `evidencias/01-rede/00-winver.png`.
-
-### Levar o repositório para a VM
-
-Na VM, abra o Edge, baixe o ZIP de `https://github.com/LuisCrivellaro/civia-infra` (Code > Download ZIP) e extraia em `C:\civia-infra`. Faça isso antes do passo 3, enquanto a VM ainda tem internet pelo DHCP.
-
-```powershell
+A versão do Windows Server foi registrada com winver, na evidência evidencias/01-rede/00-winver.png.
+Arquivos do projeto na VM
+O repositório foi levado para a VM como ZIP, baixado do GitHub e extraído em C:\civia-infra. Essa cópia aconteceu antes da configuração do IP fixo, enquanto a internet ainda funcionava pelo DHCP.
 Set-ExecutionPolicy -Scope Process Bypass
 cd C:\civia-infra\scripts
-Get-ChildItem -Recurse | Unblock-File      # tira a marca de "baixado da internet"
-```
+Get-ChildItem -Recurse | Unblock-File
+O Unblock-File retira a marca de bloqueio dos arquivos baixados. Depois da mudança do DNS para o próprio servidor, a resolução de sites externos pode ficar indisponível até a configuração do serviço DNS.
 
-Sistema em inglês: onde este roteiro cita telas em português, o nome em inglês é: Visualizador de Eventos = Event Viewer, log Segurança = Security, log Sistema = System, Agendador de Tarefas = Task Scheduler, "Serviço de Publicação na World Wide Web" = World Wide Web Publishing Service, aba Recuperação = Recovery, Monitor de Desempenho = Performance Monitor, Conjuntos de Coletores de Dados > Definido pelo Usuário = Data Collector Sets > User Defined, aba Segurança = Security.
-
-## 1. Rede: diagnóstico (3.2)
-
-```powershell
+Como o Windows Server está em inglês, alguns nomes encontrados nas telas são: Event Viewer (Visualizador de Eventos), Security (Segurança), System (Sistema), Task Scheduler (Agendador de Tarefas), World Wide Web Publishing Service (serviço W3SVC), Recovery (Recuperação), Performance Monitor (Monitor de Desempenho) e Data Collector Sets > User Defined (Conjuntos de Coletores de Dados > Definido pelo Usuário).
+1. Verificação inicial da rede (seção 3.2)
+O primeiro script de rede faz somente a leitura da configuração existente. Ele mostra os adaptadores disponíveis, o ifIndex da interface, o IP recebido, o gateway e os servidores DNS.
 .\Configurar-Rede.ps1
-```
-
-Só lê. Mostra os adaptadores, o `ifIndex`, o IP atual, gateway e DNS. Com isso, ajuste em `config\CitizenTech.config.psd1` os campos `Rede.IPAddress`, `PrefixLength`, `Gateway` e `DnsServers` (DNS = o próprio IP). O IP precisa estar na mesma sub-rede do gateway e fora da faixa do DHCP do roteador.
-
-## 2. Hostname (3.2)
-
-```powershell
+Esses dados serviram de referência para o arquivo config\CitizenTech.config.psd1, que concentra Rede.IPAddress, PrefixLength, Gateway e DnsServers. O IP escolhido precisa pertencer à mesma sub-rede do gateway e não pode entrar em conflito com os endereços distribuídos pelo roteador. O DNS foi definido para apontar para o próprio servidor.
+2. Nome do servidor (seção 3.2)
+O hostname usado no projeto é SRV-CITIZENTECH. A alteração foi organizada no mesmo script de rede, com reinicialização ao final.
 .\Configurar-Rede.ps1 -Acao Renomear -Reiniciar
-```
-
-Pede confirmação e reinicia. Depois do reboot, `hostname` deve mostrar `SRV-CITIZENTECH`.
-
-## 3. IP fixo (3.2)
-
-```powershell
+Depois que o Windows reinicia, o comando hostname permite confirmar o nome configurado.
+3. Endereço IP fixo (seção 3.2)
+Com o índice da interface identificado na primeira etapa, o script de rede aplica o IP estático. O parâmetro <ifIndex> representa o índice correspondente à placa de rede da VM.
 .\Configurar-Rede.ps1 -Acao IPFixo -InterfaceIndex <ifIndex>
 ipconfig /all
-```
+Antes de aplicar os valores, a rotina verifica se o endereço já está sendo utilizado. Em seguida, desativa o DHCP e configura IP, máscara, gateway e DNS. O registro completo da rede ficou na pasta evidencias/01-rede/, incluindo a saída de ipconfig /all.
 
-O script testa se o IP já está em uso, desliga o DHCP, aplica IP, máscara, gateway e DNS. Print do `ipconfig /all` em `evidencias/01-rede/`.
-
-Antes da promoção do domínio o DNS aponta para um servidor que ainda não existe, então a VM fica sem resolver nomes da internet. É esperado. Se precisar da internet nesse meio-tempo (para baixar o repositório, por exemplo), faça isso antes deste passo.
-
-## 4. Active Directory e DNS (3.3)
-
-```powershell
+Nesse ponto da configuração, o DNS já pode estar apontando para a VM mesmo sem o serviço instalado. Por isso, a resolução de nomes externos pode parar temporariamente. Essa parte é resolvida na etapa de Active Directory e DNS.
+4. Active Directory e DNS (seção 3.3)
+A instalação do Active Directory e a promoção do servidor foram separadas em duas chamadas do script Configurar-AD.ps1.
 .\Configurar-AD.ps1 -Etapa InstalarRecurso
 .\Configurar-AD.ps1 -Etapa PromoverDominio
-```
+A rotina verifica o hostname e o IP, utiliza Test-ADDSForestInstallation antes da promoção e solicita a senha DSRM. O domínio adotado foi citizentech.local, com nome NetBIOS CITIZENTECH. Depois da promoção, o Windows reinicia e passa a aceitar o login de domínio CITIZENTECH\Administrator.
 
-A promoção confere hostname e IP fixo, roda `Test-ADDSForestInstallation`, pede a senha DSRM e reinicia a VM sozinha. Depois do reboot, faça logon como `CITIZENTECH\Administrator`.
-
-Opcional: para a VM voltar a resolver nomes da internet, adicione um encaminhador no DNS com o gateway ou um DNS público: `Add-DnsServerForwarder -IPAddress <gateway>`.
-
-## 5. Validar domínio e DNS (3.4) e criar OU, grupos e usuários (3.5)
-
-```powershell
+O encaminhamento de consultas DNS externas ficou como ajuste opcional. Quando necessário, o comando previsto é:
+Add-DnsServerForwarder -IPAddress <gateway>
+Nesse caso, <gateway> corresponde a um endereço que efetivamente ofereça resolução DNS. O encaminhador não interfere na zona interna citizentech.local.
+5. Domínio, usuários e grupos (seções 3.4 e 3.5)
+Depois da promoção, a configuração continua com os objetos do Active Directory. A rotina cria a unidade organizacional CitizenTech, os grupos GG_CitizenTech_Admins e GG_CitizenTech_Usuarios e as contas de teste ana.souza e bruno.teste.
 .\Configurar-AD.ps1 -Etapa CriarObjetos
 Get-ADDomain | Select-Object Name, DNSRoot, DomainMode
 nslookup srv-citizentech.citizentech.local
 Get-DnsServerZone
-```
+A senha inicial das contas segue a política de complexidade do domínio e não foi colocada no GitHub. O script também verifica a existência dos objetos para evitar duplicações em novas execuções.
 
-O script cria a OU `CitizenTech`, os grupos `GG_CitizenTech_Admins` e `GG_CitizenTech_Usuarios` e as contas fictícias `ana.souza` e `bruno.teste`. Pede uma senha inicial (precisa atender à complexidade padrão: 7+ caracteres com maiúscula, minúscula, número ou símbolo). No fim mostra as duas validações do roteiro. Rodar de novo não duplica nada.
-
-Prints: `Get-ADDomain`, `nslookup`, `Get-DnsServerZone`, usuários e grupos em `evidencias/02-ad-dns/`.
-
-## 6. IIS e aplicação (4.1, 4.2, 4.4)
-
-```powershell
+As consultas confirmam os dados do domínio, a resolução do nome do servidor e a zona DNS criada. Os registros de domínio, usuários e grupos estão organizados em evidencias/02-ad-dns/.
+6. Publicação da aplicação no IIS (seções 4.1, 4.2 e 4.4)
+A Civia foi hospedada pelo Caminho A do roteiro: uma aplicação estática no IIS, sem runtime de backend. A página utilizada está na pasta app/ e serve para demonstrar a hospedagem da solução, não sendo a aplicação final de todas as disciplinas.
 .\Configurar-IIS.ps1
-```
+Esse script instala o IIS, copia os arquivos da aplicação para C:\inetpub\citizentech e interrompe o Default Web Site para liberar a porta 80. Depois cria o site CitizenTech e o pool CitizenTechPool, sem código gerenciado.
 
-Instala IIS e ferramentas, copia `app\` para `C:\inetpub\citizentech`, para o Default Web Site (ele ocupa a porta 80), cria o pool `CitizenTechPool` sem código gerenciado e o site `CitizenTech`, aplica NTFS (`IIS_IUSRS` leitura, admins do projeto modificar), libera a regra HTTP do firewall e testa `http://localhost/`.
+Também são aplicadas as permissões NTFS: IIS_IUSRS com acesso de leitura e os administradores do projeto com permissão para modificar os arquivos. A regra HTTP é liberada no firewall e a resposta local do site é conferida em http://localhost/.
 
-Prints em `evidencias/03-iis/`:
-- `Get-Website` e `Get-WebAppPoolState` (o script mostra os dois);
-- navegador de outra máquina (ou do host) em `http://<IP do servidor>` com a página carregada;
-- `Get-Acl C:\inetpub\citizentech | Format-List` e a aba Segurança da pasta.
-
-## 7. File Server, GPO, RDP e auditoria (4.5, 5.1, 5.2, 5.4)
-
-```powershell
+A pasta evidencias/03-iis/ reúne o estado do site e do pool (Get-Website e Get-WebAppPoolState), a página aberta pelo endereço IP e as permissões da pasta, inclusive a saída de Get-Acl C:\inetpub\citizentech | Format-List.
+7. Compartilhamento, GPO, acesso remoto e auditoria (seções 4.5, 5.1, 5.2 e 5.4)
+A configuração desses recursos foi reunida em Configurar-Infraestrutura.ps1. Os componentes são tratados separadamente, para que uma falha em um deles não impeça a configuração dos demais. O script também aceita a execução de um componente específico.
 .\Configurar-Infraestrutura.ps1
-```
+.\Configurar-Infraestrutura.ps1 -Componentes GPO
+Compartilhamento de arquivos
+O compartilhamento da Civia utiliza o caminho \\SRV-CITIZENTECH\CitizenTech. O grupo GG_CitizenTech_Admins recebe controle total, enquanto Domain Users fica com acesso de leitura. Essas permissões são consideradas tanto no compartilhamento quanto no NTFS.
 
-Cada componente roda separado; se um falhar, os outros continuam e o erro aparece no fim. Para rodar só um: `-Componentes GPO`.
+A verificação envolve a saída de Get-SmbShare e o acesso à pasta pelo Explorador de Arquivos, a partir de uma máquina da rede ou do próprio servidor. Os registros ficaram junto às evidências de infraestrutura, em evidencias/04-ntfs-gpo/.
+Política de grupo
+A política criada para os usuários é GPO_CitizenTech_Usuarios. Ela fica vinculada à unidade organizacional CitizenTech e utiliza a configuração NoControlPanel = 1, que bloqueia o Painel de Controle para os usuários atingidos pela política. O relatório HTML é gerado em C:\Scripts\logs\GPO_Report.html.
 
-### Compartilhamento
+A verificação do bloqueio foi planejada para a conta bruno.teste. O cenário mais adequado é uma VM cliente Windows 10/11 ingressada no domínio, com o DNS apontando para o servidor. Nesse cliente, o ingresso no domínio pode ser feito com Add-Computer -DomainName citizentech.local -Restart. Após o login como CITIZENTECH\bruno.teste, o gpupdate /force atualiza as políticas e a tentativa de abrir o Painel de Controle mostra o efeito da GPO.
 
-Cria `\\SRV-CITIZENTECH\CitizenTech` com controle total para `GG_CitizenTech_Admins` e leitura para `Domain Users`, nas permissões de compartilhamento e no NTFS. Print do `Get-SmbShare` e do acesso a `\\SRV-CITIZENTECH\CitizenTech` pelo Explorador de Arquivos de um cliente (ou pelo próprio servidor, se não houver cliente).
+Também existe uma alternativa restrita ao laboratório, quando não há uma segunda VM. Ela utiliza temporariamente a opção Allow log on locally na Default Domain Controllers Policy, em Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > User Rights Assignment, com o grupo GG_CitizenTech_Usuarios. Essa alteração precisa ser desfeita depois do teste, pois não é apropriada como configuração permanente do controlador de domínio. Caso tenha sido usada, o procedimento deve constar no README.
 
-### GPO
+As consultas utilizadas na conferência da GPO são:
+Get-GPO -All
+Get-GPInheritance -Target "OU=CitizenTech,DC=citizentech,DC=local"
+gpresult /r
+O resultado de gpresult /r corresponde à sessão do usuário em que o comando foi executado.
+Acesso remoto
+O acesso remoto utiliza RDP com autenticação em nível de rede (NLA). As regras de firewall ficam limitadas à rede local, sem redirecionamento da porta 3389 no roteador.
 
-Cria `GPO_CitizenTech_Usuarios`, vincula à OU e define `NoControlPanel = 1`. O relatório HTML fica em `C:\Scripts\logs\GPO_Report.html`.
+A conexão é identificada pelo comando mstsc /v:<IP> em outra máquina. Dentro da sessão remota, hostname mostra o nome do servidor conectado. O registro dessa conexão está associado às evidências de infraestrutura.
+Auditoria
+A auditoria acompanha sucessos e falhas de logon e de acesso a arquivos. Foram previstas regras SACL de leitura e escrita para Everyone nas pastas C:\inetpub\citizentech e C:\Shares\CitizenTech.
 
-Para o print do usuário sem Painel de Controle é preciso fazer logon com `bruno.teste`:
-- Caminho recomendado: uma VM cliente Windows 10/11 na mesma rede, com DNS apontando para o servidor, ingressada no domínio (`Add-Computer -DomainName citizentech.local -Restart`). Logon como `CITIZENTECH\bruno.teste`, `gpupdate /force`, tentar abrir o Painel de Controle.
-- Alternativa só de laboratório, sem segunda VM: no servidor, abra o Gerenciamento de Política de Grupo, edite a `Default Domain Controllers Policy` em Configuração do Computador > Políticas > Configurações do Windows > Configurações de Segurança > Políticas Locais > Atribuição de Direitos de Usuário > "Permitir logon local" (em inglês: Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > User Rights Assignment > "Allow log on locally"), e adicione `GG_CitizenTech_Usuarios` (mantendo os grupos que já estão lá). `gpupdate /force`, troque de usuário e entre como `bruno.teste`. Depois da gravação, desfaça a mudança. Isso não é configuração de produção; registre no README se usar.
-
-Evidência por comando: `Get-GPO -All`, `Get-GPInheritance -Target "OU=CitizenTech,DC=citizentech,DC=local"` e `gpresult /r` na sessão do usuário.
-
-### RDP
-
-Liga o RDP com NLA e limita as regras de firewall à sub-rede local. Não abra a porta 3389 no roteador. Print: conexão RDP de outra máquina (`mstsc /v:<IP>`) com `hostname` digitado no terminal remoto.
-
-### Auditoria
-
-Liga sucesso e falha para Logon e File System (por GUID) e coloca SACL de leitura e escrita para Everyone em `C:\inetpub\citizentech` e `C:\Shares\CitizenTech`. Para gerar eventos de acesso a arquivo, abra o site no navegador e um arquivo do compartilhamento.
-
-Em controlador de domínio a `Default Domain Controllers Policy` é reaplicada periodicamente. Depois de um `gpupdate /force`, confira com `auditpol /get /category:*` se as duas subcategorias continuam com sucesso e falha. Se uma voltar para "Sem auditoria", configure a mesma coisa em Configuração Avançada de Política de Auditoria dentro dessa GPO.
-
-### DFS (opcional)
-
-Só depois que o resto estiver validado:
-
-```powershell
+O acesso ao site e aos arquivos compartilhados permite gerar eventos para consulta no Visualizador de Eventos. Como a VM é um controlador de domínio, as definições de auditoria também podem ser afetadas pela Default Domain Controllers Policy após a atualização das políticas. A verificação foi feita com:
+auditpol /get /category:*
+Se uma subcategoria de auditoria for desativada pela política de domínio, a configuração correspondente fica na seção Advanced Audit Policy Configuration da GPO.
+DFS (opcional)
+O DFS foi tratado como recurso adicional, separado dos itens principais. A configuração utiliza o mesmo script de infraestrutura, com o componente DFS.
 .\Configurar-Infraestrutura.ps1 -Componentes DFS
 Get-DfsnRoot
-```
-
-## 8. Monitoramento (6.1 a 6.3)
-
-```powershell
+A saída de Get-DfsnRoot serve para verificar se o namespace DFS foi publicado. Essa etapa é opcional no roteiro da atividade.
+8. Monitoramento de recursos (seções 6.1 a 6.3)
+O monitoramento foi organizado para acompanhar CPU, memória e espaço em disco, com coleta de desempenho e geração de alertas.
 .\Configurar-Monitoramento.ps1
-```
+O script configura o conjunto CitizenTech_Monitor com três contadores, coleta a cada 15 segundos e registros .blg em C:\PerfLogs\CitizenTech. Também configura CitizenTech_Alertas, a fonte de eventos CitizenTechMonitor e a tarefa agendada CitizenTech_Monitor_Alertas, executada a cada cinco minutos. Os scripts usados nessa parte são copiados para C:\Scripts.
 
-Cria os Data Collector Sets `CitizenTech_Monitor` (3 contadores, a cada 15 s, arquivos `.blg` em `C:\PerfLogs\CitizenTech`) e `CitizenTech_Alertas` (limites de CPU, memória e disco), a fonte de eventos `CitizenTechMonitor`, copia os scripts para `C:\Scripts` e registra a tarefa `CitizenTech_Monitor_Alertas` a cada 5 minutos. No fim roda o script de alerta uma vez.
+Os registros em evidencias/05-monitoramento/ mostram os coletores no Performance Monitor, o gráfico dos três recursos, a execução do Monitor-Recursos.ps1 e o histórico da tarefa no Agendador de Tarefas.
+Verificação dos alertas
+O script de monitoramento tem um modo de teste que mantém as medições reais, mas altera temporariamente os limites de disparo. Dessa forma, o registro pode ser gerado sem depender de CPU ou memória realmente sobrecarregadas.
+C:\Scripts\Monitor-Recursos.ps1 -ModoTeste
+Esse tipo de execução fica identificado como [TESTE] no arquivo alertas-teste.log e no evento 9100. Portanto, o alerta simulado não é apresentado como se fosse um pico real de utilização.
 
-Prints em `evidencias/05-monitoramento/`:
-- `perfmon` > Conjuntos de Coletores de Dados > Definido pelo Usuário, com os dois conjuntos em execução;
-- o gráfico com os três contadores (Monitor de Desempenho > adicionar os contadores, ou abrir o `.blg`);
-- execução de `powershell -ExecutionPolicy Bypass -File C:\Scripts\Monitor-Recursos.ps1`;
-- Agendador de Tarefas com a tarefa e a aba Histórico, depois de pelo menos 10 minutos.
-
-Para mostrar o caminho do alerta sem estressar a VM: `C:\Scripts\Monitor-Recursos.ps1 -ModoTeste`. As medições continuam reais, mas os limites são trocados por valores que sempre disparam, e tudo fica marcado como `[TESTE]` em `alertas-teste.log` e no evento 9100. Diga isso no vídeo.
-
-Para um alerta real de CPU, dá para gerar carga por um minuto e deixar a tarefa ou o Data Collector Set de alerta pegar:
-
-```powershell
+O projeto também prevê um teste curto de carga de CPU, limitado à VM de laboratório, para observar a geração de um alerta real quando o limiar é atingido:
 $fim = (Get-Date).AddSeconds(90)
 1..([Environment]::ProcessorCount) | ForEach-Object { Start-Job { param($f) while ((Get-Date) -lt $f) { } } -ArgumentList $fim } | Out-Null
-C:\Scripts\Monitor-Recursos.ps1      # deve mostrar "CPU alta" em amarelo
+C:\Scripts\Monitor-Recursos.ps1
 Get-Job | Remove-Job -Force
-```
-
-## 9. Recuperação automática (7.1 e 7.3)
-
-```powershell
+O resultado desse teste depende da leitura efetiva dos contadores e do registro no log. A existência da carga, por si só, não comprova que um alerta foi disparado.
+9. Recuperação automática do IIS (seções 7.1 e 7.3)
+A recuperação automática foi configurada tanto no pool da aplicação quanto nos serviços envolvidos na publicação do site.
 .\Configurar-Recuperacao.ps1
 sc.exe qfailure W3SVC
-```
+No pool CitizenTechPool, a configuração utiliza rapidFailProtection=false e autoStart=true. Nos serviços W3SVC e WAS, as tentativas de reinício são previstas após 5, 10 e 30 segundos, com reinicialização do contador de falhas a cada 24 horas.
 
-Configura `rapidFailProtection=false` e `autoStart=true` no pool, `sc.exe failure` no W3SVC e no WAS (`restart/5000/restart/10000/restart/30000`, reset de 1 dia) e a tarefa `CitizenTech_Recuperacao` a cada 2 minutos.
-
-Prints em `evidencias/06-teste-falha/`: `sc.exe qfailure W3SVC` e a aba Recuperação do serviço "Serviço de Publicação na World Wide Web" no `services.msc`.
-
-## 10. Teste de falha (7.2)
-
-Só na VM. Deixe o navegador aberto na página do site (ela consulta o servidor a cada 5 s e mostra quando cai e quando volta).
-
-```powershell
-C:\Scripts\Teste-Falha.ps1                 # modo Crash: SCM recupera
-C:\Scripts\Teste-Falha.ps1 -Modo Parada    # Stop-Service: a tarefa recupera (até 2 min)
+Além disso, a tarefa CitizenTech_Recuperacao faz verificações a cada dois minutos. As evidências dessa etapa incluem a saída de sc.exe qfailure W3SVC e a aba Recovery do serviço no services.msc, em evidencias/06-teste-falha/.
+10. Teste de falha e recuperação (seção 7.2)
+O teste de falha foi separado da configuração para permitir observar o comportamento do site antes, durante e depois da interrupção do serviço. Essa verificação ocorre somente na VM de laboratório, com a página da Civia aberta no navegador.
+C:\Scripts\Teste-Falha.ps1
+C:\Scripts\Teste-Falha.ps1 -Modo Parada
 Get-Content C:\Scripts\logs\recuperacao.log -Tail 10
 Get-Content C:\Scripts\logs\teste-falha-resumo.log
-```
+O primeiro modo testa uma falha do tipo Crash, cuja recuperação depende do Service Control Manager. O segundo utiliza uma parada controlada do serviço e verifica a atuação da tarefa agendada, que pode levar até dois minutos para executar.
 
-O script pede que você digite `SIM`. Ele mostra os passos [1] a [7] e termina com uma destas linhas:
-- `RECUPERACAO AUTOMATICA COMPROVADA`, com o mecanismo (Service Control Manager ou tarefa agendada) e o tempo até voltar;
-- `INCONCLUSIVO`, se a queda não foi observada;
-- `FALHA`, se não voltou.
+O script solicita a confirmação SIM, registra as etapas do teste e apresenta um resultado final:
+- RECUPERACAO AUTOMATICA COMPROVADA: retorno do serviço sem intervenção manual, com indicação do mecanismo e do tempo de recuperação.
+- INCONCLUSIVO: não foi possível confirmar a indisponibilidade durante a verificação.
+- FALHA: o serviço não retornou no período observado.
+A opção -PermitirFallbackManual existe apenas para restabelecer o serviço caso a recuperação automática falhe. Quando ela é usada, o resultado fica identificado como recuperação manual, não automática.
 
-O resultado só conta para o critério se for o primeiro. Não use `-PermitirFallbackManual` na gravação; ele existe só para religar o serviço se algo der errado e marca o resultado como manual.
-
-Prints: o terminal com os passos, o navegador fora do ar e voltando, o `recuperacao.log` e o evento 7031 no Visualizador de Eventos (log Sistema).
-
-## 11. Logs e auditoria (5.4)
-
-```powershell
+As evidências em evidencias/06-teste-falha/ incluem o registro do terminal, a indisponibilidade e o retorno da página, o arquivo recuperacao.log e os eventos do sistema relacionados ao serviço, como o evento 7031 quando gerado.
+11. Logs do Windows e do IIS (seção 5.4)
+Os registros do Windows foram consultados no log de Segurança, e os acessos à aplicação ficaram disponíveis nos arquivos de log do IIS.
 auditpol /get /category:*
 Get-WinEvent -LogName Security -MaxEvents 20 | Select-Object TimeCreated, Id, Message
 Get-ChildItem "C:\inetpub\logs\LogFiles" -Recurse | Select-Object FullName, Length
-```
-
-Prints em `evidencias/07-logs/`: Visualizador de Eventos no log Segurança (filtre 4624 e 4663) e a pasta de logs do IIS aberta.
-
-## 12. Validação final e coleta (8.1)
-
-```powershell
+A pasta evidencias/07-logs/ reúne a configuração de auditoria, os registros do Event Viewer e os arquivos de log do IIS. Entre os eventos de interesse estão o 4624, relacionado a logon, e o 4663, relacionado a acesso a objeto, quando presentes.
+12. Validação geral e organização das evidências (seção 8.1)
+Ao final da configuração, os scripts de validação e coleta centralizam os resultados do ambiente.
 cd C:\civia-infra\scripts
 .\Validar-Ambiente.ps1
 .\Coletar-Evidencias.ps1
-```
+O Validar-Ambiente.ps1 identifica cada verificação com os estados PASSOU, FALHOU ou ERRO, registrando os resultados em arquivos TXT e CSV na pasta evidencias/00-validacao/. O Coletar-Evidencias.ps1 reúne as saídas dos comandos nas pastas correspondentes. A ficha geral da infraestrutura é registrada em evidencias/00-validacao/00-ficha-infraestrutura.txt.
 
-`Validar-Ambiente.ps1` mostra `PASSOU`, `FALHOU` ou `ERRO` em cada item e salva TXT e CSV em `evidencias/00-validacao/`. Corrija o que falhou e rode de novo. `Coletar-Evidencias.ps1` salva a saída real dos comandos em cada pasta de `evidencias/`, inclusive o bloco de validação final do roteiro em `evidencias/00-validacao/00-ficha-infraestrutura.txt`.
+A validação da seção 8.1 também conta com uma captura da saída completa dos comandos no PowerShell. O TXT permanece como registro complementar, junto aos prints e demais arquivos de evidência.
 
-O roteiro pede o print do bloco de validação final inteiro. Rode os comandos da seção 8.1 em uma janela maximizada e capture.
+Os arquivos publicados no GitHub não incluem as senhas administrativas, a senha DSRM ou as senhas das contas usadas nos testes.
+13. Fechamento do projeto
+A entrega reúne os scripts de configuração, a página de demonstração da Civia, a documentação e as evidências coletadas na VM. A pasta evidencias/ fica no repositório principal, enquanto o README.md apresenta o ambiente e relaciona cada critério de avaliação aos respectivos registros.
 
-Antes de publicar, abra os `.txt` e confira se não há nada que não deva ir para o GitHub.
+A identificação da solução e dos integrantes está em docs/ficha-citizentech.md. O vídeo de apresentação, com duração máxima de sete minutos, cobre a rede e o domínio, o IIS, as permissões e a GPO, o compartilhamento de arquivos, o monitoramento, o teste de recuperação e os logs, encerrando com a página da Civia acessível no navegador.
 
-## 13. Fechamento
-
-1. Copie a pasta `evidencias/` da VM para o repositório no computador principal.
-2. Atualize os status no `README.md` e em `docs/checklist-entrega.md` com base no que a validação mostrou.
-3. Preencha a ficha da CitizenTech e os integrantes.
-4. Grave o vídeo seguindo `docs/roteiro-video.md`.
+A entrega da disciplina é feita pelo link do repositório GitHub no Teams.

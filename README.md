@@ -1,185 +1,193 @@
-# Civia: infraestrutura Windows Server
 
-Entrega da disciplina Operating Systems da Global Solution 2026 (Engenharia de Software, FIAP). Civia é a CitizenTech da equipe ASTRO.
+# Civia — Infraestrutura Windows Server
 
-**Vídeo de demonstração:** https://www.youtube.com/watch?v=CGmx1JJHYeI
+Este repositório reúne a parte de Operating Systems da Global Solution 2026, do curso de Engenharia de Software da FIAP. O projeto da nossa equipe, ASTRO, se chama **Civia** e tem como proposta tornar os deslocamentos pela cidade mais acessíveis para pessoas com deficiência visual ou auditiva.
 
-O objetivo é montar em uma VM um Windows Server que hospede a aplicação web da Civia, com domínio, DNS, IIS, permissões NTFS, compartilhamento de arquivos, GPO, acesso remoto, monitoramento com alertas, auditoria e recuperação automática depois de uma falha provocada.
+Nesta etapa, trabalhamos na infraestrutura de um servidor Windows para hospedar uma demonstração web da Civia. O ambiente inclui domínio, DNS, IIS, controle de acesso, compartilhamento de arquivos, monitoramento, auditoria e recuperação de serviços.
 
-> Situação em 16/11/2026: a infraestrutura foi configurada na VM `SRV-CITIZENTECH` (Hyper-V) e `Validar-Ambiente.ps1` terminou com 49 de 49 itens aprovados ([resultado](evidencias/00-validacao/validacao-20261116-123441.txt)). A recuperação automática foi comprovada em dois testes de falha. A GPO foi demonstrada com um usuário comum. O vídeo de demonstração foi gravado na mesma VM e está no link acima. O status de cada item está em [docs/checklist-entrega.md](docs/checklist-entrega.md) e a revisão final em [docs/auditoria-final.md](docs/auditoria-final.md).
+## Links do projeto
 
-## Ficha da CitizenTech
+- [Página da Civia](https://civiaglass.vercel.app/)
+- [Vídeo de apresentação da Civia](https://youtu.be/1Sq9_qKbIO8)
+- [Demonstração de Operating Systems](https://www.youtube.com/watch?v=CGmx1JJHYeI)
 
-| Campo | Valor |
+## Sobre a Civia
+
+A Civia combina óculos inteligentes e um aplicativo para ajudar na identificação de informações durante o trajeto. A ideia é captar avisos e elementos do ambiente com câmera e microfone e apresentar essas informações por áudio, legendas ou vibração.
+
+O projeto foi pensado para a mobilidade urbana de São Paulo, especialmente metrô, trem e ônibus. A proposta inicial considera as estações da Avenida Paulista, por fazerem parte do deslocamento da equipe até a FIAP.
+
+| Informação | Dados do projeto |
 |---|---|
-| Nome da solução | Civia: óculos inteligentes e aplicativo de acessibilidade urbana ("a cidade se adapta a você") |
-| Problema que resolve | avisos de mobilidade urbana (placas, painéis, comunicados sonoros) não chegam a pessoas com deficiência visual ou auditiva |
-| Cidadão beneficiado | pessoas com deficiência visual ou auditiva |
-| Cidade | São Paulo (SP), em toda a rede de metrô, trem e ônibus, começando pelas estações da Avenida Paulista, que a equipe usa no caminho até a FIAP |
-| ODS | 10 (Redução das desigualdades) e 11 (Cidades e comunidades sustentáveis, meta 11.2) |
-| Indicador de impacto | percentual de trajetos que o usuário conclui sem precisar pedir ajuda a outra pessoa |
-| Virtualização | Hyper-V do Windows 11 Pro, VM geração 2 (4 GB de RAM, 2 vCPUs, 60 GB), switch externo (equivalente ao Bridge) |
-| Tecnologias da infraestrutura | Windows Server 2022 Standard Evaluation (inglês), AD DS, DNS, IIS 10, File Server, GPO, RDP, Performance Monitor (PLA), Agendador de Tarefas, PowerShell 5.1 |
-| Hospedagem | Caminho A (site estático HTML, CSS e JavaScript), pool sem código gerenciado |
-| Hostname | `SRV-CITIZENTECH` |
-| Domínio | `citizentech.local` (NetBIOS `CITIZENTECH`) |
-| IP do servidor | `192.168.0.250/24`, gateway `192.168.0.1` |
-| Credenciais de teste | contas fictícias `ana.souza` (grupo GG_CitizenTech_Admins) e `bruno.teste` (GG_CitizenTech_Usuarios). Senhas definidas na hora, fora do repositório |
+| Solução | Civia — óculos inteligentes e aplicativo de acessibilidade urbana |
+| Público | Pessoas com deficiência visual ou auditiva |
+| Problema | Dificuldade de acesso a avisos visuais e sonoros durante o deslocamento |
+| Cidade | São Paulo (SP) |
+| ODS | 10 — Redução das Desigualdades; 11 — Cidades e Comunidades Sustentáveis (meta 11.2) |
+| Indicador de impacto | Percentual de trajetos concluídos sem acionar a função de pedir ajuda |
 | Equipe | ASTRO |
-| Integrantes | Ana Luiza Santana da Rocha (RM561194); Evandro Yuji Kaibara de Oliveira (RM559274); Guilherme Rodrigues Leite (RM560131); Luís Filipe Crivellaro (RM560877); Pedro Henrique Batista Bergamin (RM559443) |
-| Repositório | https://github.com/LuisCrivellaro/civia-infra |
 
-A ficha completa, com ODS e indicador de impacto, fica em [docs/ficha-citizentech.md](docs/ficha-citizentech.md).
+A descrição da solução e os dados da equipe também estão em [docs/ficha-citizentech.md](docs/ficha-citizentech.md).
 
-Sobre a aplicação: o roteiro pede a aplicação web desenvolvida em outra disciplina, mas ela não estava disponível para este repositório. A pasta [app/](app/) tem uma página estática de demonstração com os dados da Civia, marcada como tal na própria tela, que serve para provar a hospedagem no IIS. Ela não é a aplicação final da equipe. Quando a aplicação real estiver pronta, basta trocar o conteúdo de `app/` e rodar `Configurar-IIS.ps1` de novo. Se ela tiver backend (Node.js, Python ou .NET), o caminho passa a ser o B do roteiro e o pool precisa de outro runtime.
+### Integrantes
 
-## Arquitetura
+| Nome | RM |
+|---|---|
+| Ana Luiza Santana da Rocha | RM561194 |
+| Evandro Yuji Kaibara de Oliveira | RM559274 |
+| Guilherme Rodrigues Leite | RM560131 |
+| Luís Filipe Crivellaro | RM560877 |
+| Pedro Henrique Batista Bergamin | RM559443 |
 
-```
- Cliente da rede local (navegador, RDP, \\SRV-CITIZENTECH)
-                    |
-  switch externo do Hyper-V (equivale ao Bridge)
-                    |
- +---------------------------------------------------------------+
- | SRV-CITIZENTECH  (Windows Server 2022, IP fixo 192.168.0.250) |
- |  AD DS + DNS ...... citizentech.local, OU CitizenTech,        |
- |                     grupos GG_CitizenTech_Admins/_Usuarios    |
- |  IIS .............. site CitizenTech :80 -> pool              |
- |                     CitizenTechPool -> C:\inetpub\citizentech |
- |  File Server ...... \\SRV-CITIZENTECH\CitizenTech             |
- |  GPO .............. GPO_CitizenTech_Usuarios (OU CitizenTech) |
- |  Monitoramento .... DCS CitizenTech_Monitor e _Alertas,       |
- |                     tarefa Monitor-Recursos.ps1 (5 min)       |
- |  Recuperação ...... sc failure W3SVC/WAS + tarefa             |
- |                     Recupera-Site.ps1 (2 min)                 |
- |  Auditoria ........ auditpol Logon/File System, SACL, logs IIS|
- +---------------------------------------------------------------+
-```
+## Ambiente utilizado
 
-Detalhes e o motivo de cada decisão: [docs/arquitetura.md](docs/arquitetura.md).
+Montamos a máquina virtual no Hyper-V do Windows 11 Pro, com um switch externo para permitir o acesso pela rede local. O servidor utiliza Windows Server 2022 Standard Evaluation, em inglês.
+
+| Item | Configuração |
+|---|---|
+| Virtualização | Hyper-V, VM geração 2 |
+| Recursos da VM | 4 GB de RAM, 2 vCPUs e disco de 60 GB |
+| Sistema operacional | Windows Server 2022 Standard Evaluation |
+| Hostname | `SRV-CITIZENTECH` |
+| IP fixo | `192.168.0.250/24` |
+| Gateway | `192.168.0.1` |
+| Domínio | `citizentech.local` |
+| NetBIOS | `CITIZENTECH` |
+| Recursos | AD DS, DNS, IIS 10, File Server, GPO, RDP e Performance Monitor |
+| Automação | PowerShell 5.1 e Agendador de Tarefas |
+| Hospedagem | Caminho A — site estático em HTML, CSS e JavaScript |
+| Contas de teste | `ana.souza` e `bruno.teste` |
+
+As contas são fictícias. As senhas não foram incluídas no repositório.
+
+### Aplicação no IIS
+
+Como a aplicação web final da equipe não fazia parte desta entrega, usamos a página estática que está em [`app/`](app/). Ela apresenta a Civia e permite verificar a hospedagem no IIS, mas não substitui o aplicativo completo.
+
+O site foi publicado em `C:\inetpub\citizentech`, na porta 80, com o nome `CitizenTech` e o pool `CitizenTechPool`, configurado sem código gerenciado. Essa configuração corresponde ao Caminho A. Uma futura aplicação com backend exigiria a instalação do runtime correspondente e outra configuração de hospedagem.
+
+Endereços utilizados na rede local:
+
+- `http://192.168.0.250`
+- `http://srv-citizentech.citizentech.local` (para máquinas que utilizam o DNS do servidor)
 
 ## Estrutura do repositório
 
-```
-README.md                  este arquivo
-prompts.md                 registro do uso de IA (exigência da GS)
-app/                       página estática de demonstração (Caminho A)
-docs/
-  roteiro-configuracao.md  passo a passo na VM, na ordem certa
-  ficha-citizentech.md     ficha da solução e da parte de Operating Systems
-  arquitetura.md           desenho, decisões e conceitos para a apresentação
-  analise-requisitos.md    requisitos do roteiro e ajustes nos comandos do PDF
-  checklist-entrega.md     status real de cada item
-  roteiro-video.md         roteiro do vídeo de até 7 minutos
-  testes-realizados.md     o que já foi testado, onde e com qual resultado
-  auditoria-final.md       revisão final contra os PDFs, riscos e pendências
-  AI_HANDOFF.md            ponto de retomada do trabalho
-  referencias/             PDFs da atividade (fora do Git, ver .gitignore)
-scripts/
-  config/CitizenTech.config.psd1   valores do ambiente (hostname, IP, nomes, limites)
-  lib/CitizenTech.Common.psm1      funções compartilhadas
-  host/Criar-VM-HyperV.ps1         cria a VM no Hyper-V do computador host
-  Configurar-Rede.ps1              etapa 1: diagnóstico, hostname, IP fixo
-  Configurar-AD.ps1                etapa 1: AD DS, domínio, OU, grupos, usuários
-  Configurar-IIS.ps1               etapa 2: IIS, pool, site, NTFS
-  Configurar-Infraestrutura.ps1    etapa 3: File Server, GPO, RDP, auditoria, DFS
-  Configurar-Monitoramento.ps1     etapa 4: Data Collector Sets e tarefa agendada
-  Monitor-Recursos.ps1             etapa 4: script de alerta por limiar
-  Configurar-Recuperacao.ps1       etapa 5: sc failure, pool, tarefa de recuperação
-  Recupera-Site.ps1                etapa 5: verifica e recupera W3SVC, pool, site
-  Teste-Falha.ps1                  etapa 5: falha controlada e prova da recuperação
-  Validar-Ambiente.ps1             verifica todos os critérios (só leitura)
-  Coletar-Evidencias.ps1           salva a saída real dos comandos em evidencias/
-  Demo-Video.ps1                   roda a demonstração do vídeo em 8 partes, com pausa entre elas
-evidencias/                prints e saídas reais, uma pasta por etapa
+```text
+civia-infra/
+├── README.md
+├── app/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+├── docs/
+│   ├── ficha-citizentech.md
+│   └── roteiro-configuracao.md
+├── scripts/
+│   ├── config/CitizenTech.config.psd1
+│   ├── lib/CitizenTech.Common.psm1
+│   ├── host/Criar-VM-HyperV.ps1
+│   ├── Configurar-Rede.ps1
+│   ├── Configurar-AD.ps1
+│   ├── Configurar-IIS.ps1
+│   ├── Configurar-Infraestrutura.ps1
+│   ├── Configurar-Monitoramento.ps1
+│   ├── Monitor-Recursos.ps1
+│   ├── Configurar-Recuperacao.ps1
+│   ├── Recupera-Site.ps1
+│   ├── Teste-Falha.ps1
+│   ├── Validar-Ambiente.ps1
+│   ├── Coletar-Evidencias.ps1
+│   └── Demo-Video.ps1
+└── evidencias/
+    ├── 00-validacao/
+    ├── 01-rede/
+    ├── 02-ad-dns/
+    ├── 03-iis/
+    ├── 04-ntfs-gpo/
+    ├── 05-monitoramento/
+    ├── 06-teste-falha/
+    └── 07-logs/
 ```
 
-## Como executar
+A pasta `docs/` reúne a ficha do projeto e o registro da configuração. Os scripts ficam separados por função, e `evidencias/` contém as capturas e saídas dos testes. A árvore acima mostra os arquivos principais; arquivos adicionais de log podem aparecer nas pastas de evidências.
 
-Tudo roda na VM, em um PowerShell aberto como Administrador, a partir da pasta do repositório copiada para o servidor (por exemplo `C:\civia-infra`). O passo a passo completo, com o que conferir em cada etapa, está em [docs/roteiro-configuracao.md](docs/roteiro-configuracao.md). Resumo:
+## Configuração do servidor
+
+A configuração foi feita pelo PowerShell, com privilégios de administrador na VM. Os parâmetros usados pelos scripts foram centralizados em `scripts/config/CitizenTech.config.psd1`, incluindo IP, nomes do ambiente e limites de monitoramento.
+
+Esta foi a sequência de comandos de configuração e validação:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
 cd C:\civia-infra\scripts
 
-.\Configurar-Rede.ps1                                  # só mostra a rede; ajuste a config
+.\Configurar-Rede.ps1
 .\Configurar-Rede.ps1 -Acao Renomear -Reiniciar
-.\Configurar-Rede.ps1 -Acao IPFixo -InterfaceIndex <n>
+.\Configurar-Rede.ps1 -Acao IPFixo -InterfaceIndex <ifIndex>
 .\Configurar-AD.ps1 -Etapa InstalarRecurso
-.\Configurar-AD.ps1 -Etapa PromoverDominio             # reinicia a VM
+.\Configurar-AD.ps1 -Etapa PromoverDominio
 .\Configurar-AD.ps1 -Etapa CriarObjetos
 .\Configurar-IIS.ps1
-.\Configurar-Infraestrutura.ps1                        # -Componentes DFS é opcional
+.\Configurar-Infraestrutura.ps1
 .\Configurar-Monitoramento.ps1
 .\Configurar-Recuperacao.ps1
-C:\Scripts\Teste-Falha.ps1                             # só na VM; pede confirmação
+C:\Scripts\Teste-Falha.ps1
 .\Validar-Ambiente.ps1
 .\Coletar-Evidencias.ps1
 ```
 
-Os valores do ambiente ficam todos em `scripts/config/CitizenTech.config.psd1`. Antes de começar, confira IP, máscara e gateway com `Configurar-Rede.ps1` (sem parâmetros ele só lê) e ajuste o arquivo.
+O índice da interface de rede depende da configuração de cada VM. A sequência detalhada, incluindo reinicializações, testes e registros, ficou em [docs/roteiro-configuracao.md](docs/roteiro-configuracao.md).
 
-## Configurações principais
+### Serviços e permissões
 
-| Item | Valor |
+| Componente | Configuração aplicada |
 |---|---|
-| OU | `OU=CitizenTech,DC=citizentech,DC=local` |
-| Grupos | `GG_CitizenTech_Admins`, `GG_CitizenTech_Usuarios` (globais, segurança) |
-| Site IIS | `CitizenTech`, porta 80, `C:\inetpub\citizentech` |
-| Pool | `CitizenTechPool`, sem código gerenciado, `autoStart` ligado, rapid fail protection desligado |
-| NTFS do site | `IIS_IUSRS` leitura e execução; `GG_CitizenTech_Admins` modificar |
-| Compartilhamento | `\\SRV-CITIZENTECH\CitizenTech` em `C:\Shares\CitizenTech`: admins controle total, Domain Users leitura, enumeração baseada em acesso |
-| GPO | `GPO_CitizenTech_Usuarios`, vinculada à OU, bloqueia o Painel de Controle (`NoControlPanel=1`) |
-| RDP | habilitado com NLA, firewall restrito à sub-rede local, sem a função RDS |
-| Limites de alerta | CPU acima de 80 %, memória disponível abaixo de 500 MB, disco C: abaixo de 15 GB livres |
-| Recuperação W3SVC/WAS | `reset= 86400 actions= restart/5000/restart/10000/restart/30000` |
-| Tarefas agendadas | `CitizenTech_Monitor_Alertas` (5 min), `CitizenTech_Recuperacao` (2 min), `CitizenTech_DCS_Inicio` (no boot) |
-| Logs | `C:\Scripts\logs` (monitor, alertas, recuperação, teste de falha), `C:\PerfLogs\CitizenTech` (.blg), `C:\inetpub\logs\LogFiles` (IIS) |
+| Active Directory | OU `CitizenTech`, com os grupos `GG_CitizenTech_Admins` e `GG_CitizenTech_Usuarios` |
+| DNS | Zona `citizentech.local` e resolução do hostname do servidor |
+| IIS | Site `CitizenTech`, porta 80, pool `CitizenTechPool` |
+| NTFS do site | `IIS_IUSRS` com leitura e execução; administradores do projeto com permissão de modificação |
+| Compartilhamento | `\\SRV-CITIZENTECH\CitizenTech`, em `C:\Shares\CitizenTech` |
+| Acesso ao compartilhamento | Administradores com controle total; `Domain Users` com leitura |
+| GPO | `GPO_CitizenTech_Usuarios`, vinculada à OU, com `NoControlPanel=1` |
+| RDP | Acesso habilitado com NLA e firewall limitado à rede local |
+| Auditoria | Logon e File System, com registros no Event Viewer e nos logs do IIS |
 
-## Ajustes em relação aos comandos do roteiro
+### Monitoramento
 
-Seguimos o roteiro do professor, mas alguns comandos do PDF não funcionam como estão ou não provam o que o critério pede. Os principais:
+Criamos os conjuntos `CitizenTech_Monitor` e `CitizenTech_Alertas` no Monitor de Desempenho. O primeiro coleta informações sobre CPU, memória e disco, enquanto o segundo está ligado aos alertas definidos para o ambiente.
 
-- Recuperação automática: o PDF para o W3SVC com `Stop-Service` e espera a recuperação do `sc.exe failure`. O Windows só aplica essas ações quando o serviço termina inesperadamente, não numa parada limpa. No teste do PDF, quem religa o serviço acaba sendo o `Start-Service` manual do próprio script. Por isso o `Teste-Falha.ps1` tem o modo `Crash` (encerra o processo do serviço, o SCM recupera) e o modo `Parada` (a tarefa `CitizenTech_Recuperacao` recupera), e só declara recuperação automática quando nenhuma ação do script foi necessária.
-- Contadores: em um Windows em português, `Get-Counter "\Processor(_Total)\% Processor Time"` falha (testamos: "O objeto especificado não foi encontrado no computador"). Os scripts traduzem o nome para o idioma do sistema. No Data Collector Set o PDF ainda usa `\\` (que em PowerShell fica duplicado) e um método `AddCounter` que o coletor do PLA não tem.
-- Nomes que mudam com o idioma (`Domain Users`, `Everyone`, grupo de firewall "Área de Trabalho Remota", subcategorias do `auditpol`) são tratados por SID ou GUID.
-- O site novo na porta 80 conflita com o Default Web Site, que é parado.
-- `New-DfsnRoot` no PDF recebe um caminho local como destino; o correto é um compartilhamento UNC.
+Os limites utilizados foram CPU acima de 80%, memória disponível abaixo de 500 MB e espaço livre na unidade C: abaixo de 15 GB. A tarefa `CitizenTech_Monitor_Alertas` executa o script de verificação a cada cinco minutos. Os registros ficam em `C:\Scripts\logs\` e as coletas de desempenho em `C:\PerfLogs\CitizenTech\`.
 
-A lista completa, com o motivo de cada ajuste, está em [docs/analise-requisitos.md](docs/analise-requisitos.md).
+Também foi configurada a tarefa `CitizenTech_DCS_Inicio` para iniciar a coleta com o sistema.
 
-## Validação
+### Recuperação dos serviços
 
-`Validar-Ambiente.ps1` confere 49 itens ligados aos seis critérios e grava o resultado em `evidencias/00-validacao/` (TXT e CSV), com `PASSOU`, `FALHOU` ou `ERRO` em cada linha. Ele não altera nada no servidor.
+No IIS, o pool ficou com inicialização automática. Para os serviços W3SVC e WAS, configuramos as ações de recuperação do Windows com tentativas de reinício. A tarefa `CitizenTech_Recuperacao` também faz uma verificação a cada dois minutos, usando `Recupera-Site.ps1`.
 
-`Coletar-Evidencias.ps1` roda os comandos que o roteiro pede para printar e salva a saída real em `evidencias/<etapa>/`. Os prints de tela (navegador, `services.msc`, Monitor de Desempenho, Visualizador de Eventos, logon de usuário com a GPO) são manuais; a lista de cada pasta está em [evidencias/README.md](evidencias/README.md).
+Foram utilizados dois tipos de teste:
 
-## Rastreabilidade
+- **Crash:** interrupção inesperada, com recuperação pelo Service Control Manager (SCM).
+- **Parada:** parada controlada, com recuperação pela tarefa agendada.
 
-| Critério (pontos) | Requisito | Script | Validação | Evidência | Status |
-|---|---|---|---|---|---|
-| Rede e identidade (2,0) | hostname, IP fixo, DNS, domínio no AD, usuários e grupos | `Configurar-Rede.ps1`, `Configurar-AD.ps1` | `ipconfig /all`, `nslookup`, `Get-ADDomain`, `Get-DnsServerZone`, `Get-ADUser`, `Get-ADGroupMember` | [evidencias/01-rede](evidencias/01-rede), [evidencias/02-ad-dns](evidencias/02-ad-dns) | Validado |
-| Aplicação no IIS (2,0) | site, pool, dependências, pasta, NTFS, File Server | `Configurar-IIS.ps1`, `Configurar-Infraestrutura.ps1` | `Get-Website`, `Get-WebAppPoolState`, `Invoke-WebRequest`, `Get-Acl`, `Get-SmbShare` | [evidencias/03-iis](evidencias/03-iis), [evidencias/04-ntfs-gpo](evidencias/04-ntfs-gpo) | Validado |
-| Monitoramento (2,0) | contadores de CPU, memória e disco, alertas, agendamento | `Configurar-Monitoramento.ps1`, `Monitor-Recursos.ps1` | `logman query`, `Get-Counter`, execução do script, `Get-ScheduledTaskInfo` | [evidencias/05-monitoramento](evidencias/05-monitoramento) | Validado (alerta real com CPU em 100 %, gráfico no Monitor de Desempenho) |
-| Tolerância a falhas (1,0) | recuperação configurada, falha provocada, recuperação automática | `Configurar-Recuperacao.ps1`, `Teste-Falha.ps1`, `Recupera-Site.ps1` | `sc.exe qfailure W3SVC`, saída do teste, `recuperacao.log` | [evidencias/06-teste-falha](evidencias/06-teste-falha) | Validado (Crash: SCM em 15,7 s; Parada: tarefa em 60,7 s) |
-| Auditoria e logs (1,0) | auditpol, SACL, eventos, logs do IIS | `Configurar-Infraestrutura.ps1` | `auditpol /get`, `Get-WinEvent`, logs do IIS | [evidencias/07-logs](evidencias/07-logs) | Validado |
-| Funcionamento completo (2,0) | tudo funcionando junto, GPO, RDP, documentação, vídeo | `Validar-Ambiente.ps1`, `Coletar-Evidencias.ps1`, `Configurar-Infraestrutura.ps1` | bloco de validação final (roteiro 8.1), `Get-GPO -All`, logon do `bruno.teste` | [evidencias/00-validacao](evidencias/00-validacao), [evidencias/04-ntfs-gpo](evidencias/04-ntfs-gpo), [vídeo](https://www.youtube.com/watch?v=CGmx1JJHYeI) | Validado (49/49, GPO com usuário comum, conexão RDP, vídeo gravado) |
+Essa separação foi necessária porque uma parada normal por `Stop-Service` não aciona as mesmas ações do Windows previstas para uma falha inesperada. No teste de Crash, também foi necessário interromper o processo do pool para que o site realmente ficasse indisponível.
 
-Os status seguem a escala: Pendente, Preparado, Executado, Validado, Falhou. Só mudam depois de rodar na VM e ter a evidência salva.
+## Ajustes feitos durante a configuração
 
-## Limitações
+Algumas partes precisaram de ajustes durante a montagem do ambiente:
 
-- A VM foi configurada no Hyper-V do computador de desenvolvimento, em rede de casa (switch externo). O sistema está em inglês porque o Evaluation Center não oferece ISO em português. O registro de cada execução, inclusive as que falharam, está em [docs/testes-realizados.md](docs/testes-realizados.md).
-- No modo Crash, encerrar só o serviço W3SVC não derruba o site: o processo do pool (`w3wp.exe`) continua atendendo. O teste derruba os dois para simular a queda real.
-- Para mostrar a GPO, o `bruno.teste` precisou fazer logon no próprio controlador de domínio. Isso exigiu liberar "Allow log on locally" para o grupo `GG_CitizenTech_Usuarios` na Default Domain Controllers Policy só durante o teste; a mudança foi desfeita logo depois e conferida com `secedit` (ver [docs/testes-realizados.md](docs/testes-realizados.md)). Usuários comuns não fazem logon local em um controlador de domínio, então o ideal é uma segunda VM cliente no domínio. O roteiro de configuração explica a alternativa.
-- DFS Replication não foi configurado porque precisa de um segundo servidor. O DFS Namespace (opcional) foi configurado: `\\citizentech.local\CitizenTechDFS`.
-- Os PDFs da atividade ficam fora do Git para não publicar material da FIAP.
-- Nas evidências, os endereços IPv6 públicos da conexão de internet foram trocados por `[IPv6-publico-removido]`.
+- Os contadores do `Get-Counter` podem mudar de nome conforme o idioma do Windows. Os scripts tratam essa diferença.
+- Grupos, regras de firewall e categorias de auditoria que dependem do idioma foram tratados por SID ou GUID.
+- O `Default Web Site` foi interrompido para liberar a porta 80 para a Civia.
+- O DFS Namespace foi configurado usando um compartilhamento de rede como destino. O DFS Replication não foi utilizado, pois o ambiente possui apenas um servidor.
+- Os testes de falha foram separados para identificar quando a recuperação ocorreu automaticamente e quando seria necessária uma ação manual.
 
-## Uso de IA
+## Observações do ambiente
 
-O desenvolvimento teve apoio do Claude Code, que escreveu os scripts e documentos e executou a configuração e os testes na VM com autorização do aluno. Os prompts, a cronologia e a divisão entre o que a IA fez e o que a equipe fez estão em [prompts.md](prompts.md).
+A VM ficou no Hyper-V de um computador da equipe e foi conectada à rede local por um switch externo. O endereço `192.168.0.250` é dessa rede, então o site não fica disponível publicamente por esse IP.
 
-## Entrega
+Para verificar a política de bloqueio do Painel de Controle, a conta `bruno.teste` foi utilizada em um teste de logon no controlador de domínio. A permissão temporária de logon local foi retirada após o teste, e a configuração foi conferida com `secedit`. Em um ambiente com mais máquinas, esse teste poderia ser feito em uma VM cliente ingressada no domínio.
 
-Link do repositório na tarefa de Operating Systems do Teams, enviado por um único integrante, até 19/11/2026 às 23h55 (prazo do roteiro e do documento geral da GS).
+O DFS Namespace foi configurado em `\\citizentech.local\CitizenTechDFS`, mas não houve replicação entre servidores. Os PDFs de referência ficaram fora do Git, e os endereços IPv6 públicos identificados nas evidências foram ocultados antes da publicação.
+
+A página hospedada nesta entrega continua sendo uma demonstração estática da Civia, não o aplicativo final da equipe.

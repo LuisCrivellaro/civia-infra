@@ -1,23 +1,3 @@
-<#
-.SYNOPSIS
-    Etapa 2: IIS, pool, site CitizenTech (Caminho A - estatico) e permissoes NTFS.
-
-.DESCRIPTION
-    Roteiro do professor, secoes 4.1, 4.2 e 4.4.
-
-    Ajustes em relacao ao roteiro:
-      - O "Default Web Site" ja usa a porta 80. Se ele continuar ativo, o site
-        CitizenTech e criado mas fica Stopped (conflito de binding). O script para
-        o Default Web Site e desliga o inicio automatico dele.
-      - Instala Web-Scripting-Tools, que traz o modulo WebAdministration usado
-        nos scripts de recuperacao e validacao.
-      - IIS_IUSRS e resolvido pelo SID (S-1-5-32-568), entao funciona em qualquer idioma.
-      - O grupo GG_CitizenTech_Admins recebe Modify na pasta para publicar conteudo.
-
-.EXAMPLE
-    .\Configurar-IIS.ps1
-    .\Configurar-IIS.ps1 -OrigemApp C:\Temp\citizentech
-#>
 [CmdletBinding()]
 param(
     [string]$OrigemApp,
@@ -25,7 +5,6 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-# $PSScriptRoot fica vazio no valor padrao de parametros no PowerShell 5.1
 if (-not $OrigemApp) { $OrigemApp = Join-Path (Split-Path $PSScriptRoot -Parent) 'app' }
 Import-Module (Join-Path $PSScriptRoot 'lib\CitizenTech.Common.psm1') -Force
 $cfg = if ($ConfigPath) { Import-CTConfig -Path $ConfigPath } else { Import-CTConfig }
@@ -56,7 +35,6 @@ try {
 
     Write-CTLog "Pool de aplicativos $($iis.PoolName)" -Nivel ETAPA
     if (-not (Test-Path "IIS:\AppPools\$($iis.PoolName)")) { New-WebAppPool -Name $iis.PoolName | Out-Null }
-    # Vazio = "Sem codigo gerenciado". Obrigatorio para site estatico (evita erro 500.19)
     Set-ItemProperty "IIS:\AppPools\$($iis.PoolName)" -Name managedRuntimeVersion -Value $iis.ManagedRuntimeVersion
     Set-ItemProperty "IIS:\AppPools\$($iis.PoolName)" -Name autoStart -Value $true
 

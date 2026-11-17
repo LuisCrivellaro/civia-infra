@@ -1,31 +1,3 @@
-<#
-.SYNOPSIS
-    Etapa 3: File Server, GPO, acesso remoto (RDP), auditoria e DFS (opcional).
-
-.DESCRIPTION
-    Roteiro do professor, secoes 4.5 e 5.1 a 5.4. Requer o dominio ja criado.
-
-    Ajustes em relacao ao roteiro:
-      - "Domain Users", "Everyone" e o grupo de firewall "Area de Trabalho Remota"
-        mudam de nome conforme o idioma do Windows. O script usa SIDs e o
-        identificador interno do grupo de firewall (@FirewallAPI.dll,-28752).
-      - auditpol usa os GUIDs das subcategorias (Logon e File System) pelo mesmo motivo.
-      - RDP: usa so o RDP administrativo, sem a funcao RDS. RDS Session Host em
-        controlador de dominio nao e recomendado e exige licenca depois de 120 dias.
-        Exige NLA e limita as regras de firewall a sub-rede local.
-      - DFS: no roteiro, New-DfsnRoot recebe "C:\Shares\CitizenTech" como TargetPath.
-        O TargetPath precisa ser um caminho UNC de um compartilhamento proprio da raiz,
-        e um namespace DomainV2 usa o nome do dominio (\\citizentech.local\...).
-        O script cria a raiz certa e publica a pasta CitizenTech dentro dela.
-        DFS Replication nao e configurado: precisa de um segundo servidor.
-
-.PARAMETER Componentes
-    FileServer, GPO, RDP, Auditoria, DFS. Padrao: todos menos DFS.
-
-.EXAMPLE
-    .\Configurar-Infraestrutura.ps1
-    .\Configurar-Infraestrutura.ps1 -Componentes DFS
-#>
 [CmdletBinding()]
 param(
     [ValidateSet('FileServer', 'GPO', 'RDP', 'Auditoria', 'DFS')]
@@ -37,7 +9,6 @@ $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'lib\CitizenTech.Common.psm1') -Force
 $cfg = if ($ConfigPath) { Import-CTConfig -Path $ConfigPath } else { Import-CTConfig }
 
-# GUIDs das subcategorias de auditoria (iguais em qualquer idioma)
 $GuidLogon      = '{0CCE9215-69AE-11D9-BED3-505054503030}'
 $GuidFileSystem = '{0CCE921D-69AE-11D9-BED3-505054503030}'
 
@@ -51,7 +22,6 @@ function Set-CTFileServer {
     $admins = "$($cfg.NetbiosName)\$($cfg.AD.GrupoAdmins)"
     $domainUsers = Get-CTDomainUsersName
 
-    # NTFS: admins do projeto modificam, usuarios do dominio so leem
     $acl = Get-Acl $path
     $h = [System.Security.AccessControl.InheritanceFlags]'ContainerInherit,ObjectInherit'
     $p = [System.Security.AccessControl.PropagationFlags]::None
@@ -59,7 +29,6 @@ function Set-CTFileServer {
     $acl.SetAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule($domainUsers, 'ReadAndExecute', $h, $p, 'Allow')))
     Set-Acl -Path $path -AclObject $acl
 
-    # Compartilhamento: mesmas regras do roteiro (Full para admins, Read para Domain Users)
     if (-not (Get-SmbShare -Name $cfg.Share.Nome -ErrorAction SilentlyContinue)) {
         New-SmbShare -Name $cfg.Share.Nome -Path $path -FullAccess $admins -ReadAccess $domainUsers `
             -FolderEnumerationMode AccessBased -Description 'Arquivos do projeto CitizenTech' | Out-Null
@@ -69,7 +38,6 @@ function Set-CTFileServer {
         Grant-SmbShareAccess -Name $cfg.Share.Nome -AccountName $domainUsers -AccessRight Read -Force | Out-Null
         Write-CTLog 'Compartilhamento ja existia. Permissoes reaplicadas.'
     }
-    # Remove o acesso "Everyone" que o Windows poderia ter adicionado
     $everyone = Resolve-CTSid -Sid 'S-1-1-0'
     if (Get-SmbShareAccess -Name $cfg.Share.Nome | Where-Object AccountName -eq $everyone) {
         Revoke-SmbShareAccess -Name $cfg.Share.Nome -AccountName $everyone -Force | Out-Null
@@ -107,11 +75,7 @@ function Set-CTRDP {
     Write-CTLog 'Acesso remoto (RDP administrativo com NLA)' -Nivel ETAPA
     Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
     Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
-    # Primeiro restringe, depois liga, e so entao rele as regras. Na primeira versao o
-    # Set-NetFirewallRule regravava o objeto lido antes do Enable e as regras voltavam a
-    # ficar desligadas (encontrado pelo Validar-Ambiente na VM em 16/11/2026).
     $grupoRdp = '@FirewallAPI.dll,-28752'
-    # So aceita conexoes da rede local, nunca da internet
     Set-NetFirewallRule -Group $grupoRdp -RemoteAddress LocalSubnet
     Enable-NetFirewallRule -Group $grupoRdp
     Get-NetFirewallRule -Group $grupoRdp | Format-Table DisplayName, Enabled, Profile, Direction -AutoSize | Out-Host
@@ -127,7 +91,6 @@ function Set-CTAuditoria {
     if ($LASTEXITCODE -ne 0) { throw 'auditpol falhou ao configurar File System.' }
     & auditpol.exe /get /subcategory:"$GuidLogon,$GuidFileSystem" | Out-Host
 
-    # SACL na pasta do site e no compartilhamento (roteiro 5.4)
     $everyone = Resolve-CTSid -Sid 'S-1-1-0'
     $h = [System.Security.AccessControl.InheritanceFlags]'ContainerInherit,ObjectInherit'
     $p = [System.Security.AccessControl.PropagationFlags]::None
@@ -181,7 +144,6 @@ try {
                 'DFS'        { Set-CTDFS }
             }
         } catch {
-            # Um componente com erro nao impede os outros
             Write-CTLog "[$c] $($_.Exception.Message)" -Nivel ERRO
             $falhou = $true
         }

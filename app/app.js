@@ -1,5 +1,3 @@
-// Consulta /health.txt no mesmo servidor e mostra codigo HTTP e tempo de resposta.
-// Serve para ver no navegador, durante o teste de falha, quando o site cai e quando volta.
 (function () {
   var elHttp = document.getElementById('st-http');
   var elTempo = document.getElementById('st-tempo');

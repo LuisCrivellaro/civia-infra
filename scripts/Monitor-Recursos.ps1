@@ -1,36 +1,3 @@
-<#
-.SYNOPSIS
-    Etapa 4: le CPU, memoria e disco, compara com os limites e registra alertas.
-
-.DESCRIPTION
-    Baseado no script do roteiro (secao 6.2). Roda a cada 5 minutos pela tarefa
-    CitizenTech_Monitor_Alertas, como SYSTEM.
-
-    O que ele faz a cada execucao:
-      1. Mede CPU (media de 3 amostras de 1 s), memoria disponivel (MB) e espaco livre em C: (GB).
-      2. Compara com os limites (CPU > 80 %, RAM < 500 MB, disco < 15 GB).
-      3. Grava uma linha em monitor.log em toda execucao (historico de medicoes).
-      4. Se algum limite foi ultrapassado, grava em alertas.log e no log Application
-         (fonte CitizenTechMonitor, evento 9001, Warning).
-
-    Diferencas em relacao ao roteiro:
-      - Get-Counter so aceita o nome do contador no idioma do Windows. O script
-        traduz "\Processor(_Total)\% Processor Time" para o idioma local e, se
-        mesmo assim falhar, usa CIM (Win32_Processor / Win32_OperatingSystem).
-      - Usa [System.Diagnostics.EventLog]::WriteEntry, que funciona no Windows
-        PowerShell 5.1 e no PowerShell 7 (Write-EventLog nao existe no 7).
-
-    Modo de teste (-ModoTeste):
-      Serve para demonstrar o caminho do alerta sem estressar a VM. As medicoes
-      continuam reais, mas os limites sao trocados por valores que sempre disparam.
-      Tudo fica marcado como [TESTE], vai para alertas-teste.log e usa o evento 9100
-      (Information). Nao conta como alerta real.
-
-.EXAMPLE
-    powershell -ExecutionPolicy Bypass -File C:\Scripts\Monitor-Recursos.ps1
-    .\Monitor-Recursos.ps1 -ModoTeste
-    .\Monitor-Recursos.ps1 -LimiteCPU 50 -LogDir D:\logs -SemEventLog
-#>
 [CmdletBinding()]
 param(
     [double]$LimiteCPU = 80,
@@ -47,9 +14,6 @@ $ErrorActionPreference = 'Stop'
 
 function Get-ContadorLocal {
     param([string]$CaminhoIngles)
-    # Get-Counter e o PLA so aceitam o nome do contador no idioma do Windows.
-    # Pega o indice do nome em ingles (lista 009) e busca o mesmo indice na lista
-    # do idioma instalado (ex.: 016 = portugues). Testa o caminho antes de devolver.
     if ($CaminhoIngles -notmatch '^\\(?<obj>[^\\(]+)(?<inst>\([^)]*\))?\\(?<ctr>.+)$') { return $CaminhoIngles }
     $obj = $Matches['obj']; $inst = [string]$Matches['inst']; $ctr = $Matches['ctr']
     try {
@@ -94,7 +58,6 @@ try {
         $fonte.CPU = 'CIM'
     }
 
-    # Memoria disponivel (MB)
     try {
         $p = Get-ContadorLocal -CaminhoIngles '\Memory\Available MBytes'
         $ram = (Get-Counter -Counter $p).CounterSamples[0].CookedValue
@@ -104,14 +67,12 @@ try {
         $fonte.RAM = 'CIM'
     }
 
-    # Disco livre (GB e %)
     $disco = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$Unidade'"
     if (-not $disco) { throw "Unidade $Unidade nao encontrada." }
     $discoGB = $disco.FreeSpace / 1GB
     $discoPct = if ($disco.Size) { 100 * $disco.FreeSpace / $disco.Size } else { 0 }
 
     if ($ModoTeste) {
-        # Limites que sempre disparam. Medicoes continuam reais.
         $lCPU = -1; $lRAM = [double]::MaxValue; $lDisco = [double]::MaxValue
     } else {
         $lCPU = $LimiteCPU; $lRAM = $LimiteRAM; $lDisco = $LimiteDisco

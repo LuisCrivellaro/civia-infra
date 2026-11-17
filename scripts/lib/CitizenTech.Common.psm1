@@ -1,6 +1,3 @@
-# Funcoes compartilhadas pelos scripts de configuracao e validacao.
-# Compativel com Windows PowerShell 5.1 (padrao do Windows Server 2022).
-# Strings sem acento de proposito: o PowerShell 5.1 le .ps1/.psm1 sem BOM como ANSI.
 
 Set-StrictMode -Version 2.0
 
@@ -44,7 +41,6 @@ function Assert-CTAdmin {
 
 function Test-CTWindowsServer {
     $os = Get-CimInstance Win32_OperatingSystem
-    # ProductType: 1 = estacao de trabalho, 2 = controlador de dominio, 3 = servidor
     return ($os.ProductType -in 2, 3)
 }
 
@@ -54,8 +50,6 @@ function Assert-CTWindowsServer {
     }
 }
 
-# Converte um SID conhecido no nome local da conta. Evita depender do idioma
-# do sistema (ex.: "Domain Users" vira "Usuarios do dominio" no Windows em portugues).
 function Resolve-CTSid {
     param([Parameter(Mandatory)][string]$Sid)
     $obj = New-Object System.Security.Principal.SecurityIdentifier($Sid)
@@ -67,13 +61,8 @@ function Get-CTDomainUsersName {
     return Resolve-CTSid -Sid ("{0}-513" -f $dom.DomainSID.Value)
 }
 
-# Traduz um caminho de contador em ingles ("\Processor(_Total)\% Processor Time")
-# para o idioma do sistema. Get-Counter e o PLA so aceitam o nome localizado.
 function Get-CTCounterPath {
     param([string]$CaminhoIngles)
-    # Get-Counter e o PLA so aceitam o nome do contador no idioma do Windows.
-    # Pega o indice do nome em ingles (lista 009) e busca o mesmo indice na lista
-    # do idioma instalado (ex.: 016 = portugues). Testa o caminho antes de devolver.
     if ($CaminhoIngles -notmatch '^\\(?<obj>[^\\(]+)(?<inst>\([^)]*\))?\\(?<ctr>.+)$') { return $CaminhoIngles }
     $obj = $Matches['obj']; $inst = [string]$Matches['inst']; $ctr = $Matches['ctr']
     try {
@@ -99,7 +88,6 @@ function Get-CTCounterPath {
 }
 
 function Copy-CTScriptsToServer {
-    # Copia scripts e config para C:\Scripts (caminho usado pelas tarefas agendadas)
     param([Parameter(Mandatory)][hashtable]$Config)
     $origem = Split-Path $PSScriptRoot -Parent
     $destino = $Config.ScriptsDir
@@ -113,7 +101,6 @@ function Copy-CTScriptsToServer {
 }
 
 function Register-CTRepeatingTask {
-    # Tarefa que roda a cada N minutos como SYSTEM. Recria a tarefa se ja existir.
     param(
         [Parameter(Mandatory)][string]$Nome,
         [Parameter(Mandatory)][string]$Script,
@@ -123,7 +110,6 @@ function Register-CTRepeatingTask {
     )
     $arg = "-NoProfile -ExecutionPolicy Bypass -File `"$Script`" $Argumentos".Trim()
     $acao = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $arg
-    # Sem -RepetitionDuration a repeticao e indefinida no Windows Server 2016 ou superior
     $gatilho = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes $IntervaloMin)
     $principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
     $ajustes = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 10)
@@ -131,7 +117,6 @@ function Register-CTRepeatingTask {
         Unregister-ScheduledTask -TaskName $Nome -Confirm:$false
     }
     Register-ScheduledTask -TaskName $Nome -Action $acao -Trigger $gatilho -Principal $principal -Settings $ajustes -Description $Descricao | Out-Null
-    # Liga o historico do Agendador (vem desligado por padrao) para a evidencia de execucoes
     try {
         $log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration 'Microsoft-Windows-TaskScheduler/Operational'
         if (-not $log.IsEnabled) { $log.IsEnabled = $true; $log.SaveChanges() }

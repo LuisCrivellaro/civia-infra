@@ -1,21 +1,3 @@
-<#
-.SYNOPSIS
-    Salva a saida real dos comandos de evidencia em arquivos .txt, por etapa.
-
-.DESCRIPTION
-    Roda os mesmos comandos que o roteiro pede para printar e grava cada saida em
-    evidencias\<etapa>\<nn>-<nome>.txt, com data, hostname e o comando no cabecalho.
-    Nao altera nada no servidor. Os prints de tela (navegador, services.msc,
-    Monitor de Desempenho, Visualizador de Eventos) continuam sendo manuais.
-
-.PARAMETER Etapas
-    01-rede, 02-ad-dns, 03-iis, 04-ntfs-gpo, 05-monitoramento, 06-teste-falha, 07-logs, ficha.
-    Padrao: todas.
-
-.EXAMPLE
-    .\Coletar-Evidencias.ps1
-    .\Coletar-Evidencias.ps1 -Etapas 03-iis, ficha
-#>
 [CmdletBinding()]
 param(
     [ValidateSet('01-rede', '02-ad-dns', '03-iis', '04-ntfs-gpo', '05-monitoramento', '06-teste-falha', '07-logs', 'ficha')]
@@ -25,7 +7,6 @@ param(
 )
 
 $ErrorActionPreference = 'Continue'
-# $PSScriptRoot fica vazio no valor padrao de parametros no PowerShell 5.1
 if (-not $SaidaDir) { $SaidaDir = Join-Path (Split-Path $PSScriptRoot -Parent) 'evidencias' }
 Import-Module (Join-Path $PSScriptRoot 'lib\CitizenTech.Common.psm1') -Force
 $cfg = if ($ConfigPath) { Import-CTConfig -Path $ConfigPath } else { Import-CTConfig }
@@ -36,7 +17,6 @@ $fqdn = "$($cfg.Hostname).$($cfg.DomainName)".ToLower()
 $ouDn = "OU=$($cfg.AD.OUName)," + (($cfg.DomainName -split '\.' | ForEach-Object { "DC=$_" }) -join ',')
 $logs = $cfg.LogsDir
 
-# Cada item: Etapa, Nome do arquivo, comando (texto exibido) e scriptblock
 $itens = @(
     ,@('01-rede', '01-hostname', 'hostname', { hostname })
     ,@('01-rede', '02-winver-versao', 'Get-ComputerInfo (versao do Windows)', { Get-ComputerInfo -Property OsName, OsVersion, OsBuildNumber, WindowsVersion, CsProcessors, CsTotalPhysicalMemory | Format-List })

@@ -1,42 +1,3 @@
-<#
-.SYNOPSIS
-    Etapa 5: falha controlada do IIS e verificacao da recuperacao automatica.
-
-.DESCRIPTION
-    RODE SOMENTE NA VM DO LABORATORIO. O script derruba o servidor web de proposito.
-
-    O roteiro (secao 7.2) para o W3SVC com Stop-Service e espera 30 s. Esse teste
-    nao prova a recuperacao do Service Control Manager: o SCM so aplica as acoes de
-    recuperacao quando o processo termina inesperadamente. Uma parada limpa fica
-    parada, e o "Iniciando manualmente..." do roteiro acaba sendo quem sobe o servico.
-
-    Por isso ha tres modos, cada um ligado a um mecanismo:
-
-      -Modo Crash   (padrao) encerra a forca o processo svchost que hospeda W3SVC/WAS.
-                    Quem recupera: SCM (sc.exe failure). Prova: evento 7031 no log System.
-      -Modo Parada  Stop-Service W3SVC (igual ao roteiro).
-                    Quem recupera: tarefa CitizenTech_Recuperacao (a cada 2 min).
-                    Prova: linha "AGENDADA | W3SVC" nova no recuperacao.log.
-      -Modo Pool    Stop-WebAppPool CitizenTechPool (site responde 503).
-                    Quem recupera: tarefa CitizenTech_Recuperacao.
-
-    Passos registrados (pedidos na atividade):
-      [1] estado inicial do servico   [2] HTTP antes da falha   [3] falha provocada
-      [4] indisponibilidade observada [5] espera da recuperacao [6] estado final
-      [7] HTTP depois
-
-    Resultado final, sem meio-termo:
-      RECUPERACAO AUTOMATICA COMPROVADA   - voltou sem nenhuma acao deste script
-      RECUPERACAO MANUAL (NAO AUTOMATICA) - so voltou com -PermitirFallbackManual
-      FALHA                               - nao voltou
-
-    Saida completa em C:\Scripts\logs\teste-falha-<data>.log (transcript).
-
-.EXAMPLE
-    powershell -ExecutionPolicy Bypass -File C:\Scripts\Teste-Falha.ps1
-    .\Teste-Falha.ps1 -Modo Parada -TimeoutSegundos 180
-    .\Teste-Falha.ps1 -Modo Pool -Confirmar
-#>
 [CmdletBinding()]
 param(
     [ValidateSet('Crash', 'Parada', 'Pool')]
@@ -65,7 +26,6 @@ function Get-Http {
     }
 }
 
-# Seguranca: so em Windows Server, como administrador, e com confirmacao
 $os = Get-CimInstance Win32_OperatingSystem
 if ($os.ProductType -notin 2, 3) { Write-Host 'Abortado: este teste so roda no Windows Server da VM.' -ForegroundColor Red; exit 3 }
 $id = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
@@ -108,9 +68,6 @@ try {
             $permitidos = @('W3SVC', 'WAS', 'IISADMIN', 'W3LOGSVC')
             $outros = $vizinhos | Where-Object { $_ -notin $permitidos }
             if ($outros) { throw "O processo $procId tambem hospeda $($outros -join ', '). Abortado para nao derrubar outros servicos." }
-            # O w3wp.exe do pool atende as requisicoes por conta propria; se so o svchost cair,
-            # o site continua respondendo (observado no primeiro teste em 16/11/2026).
-            # Por isso o crash derruba o servico E o processo de trabalho do pool.
             $workers = Get-CimInstance Win32_Process -Filter "Name='w3wp.exe'" | Where-Object { $_.CommandLine -match "-ap `"$Pool`"" }
             Stop-Process -Id $procId -Force
             Write-Host "Processo $procId (W3SVC/WAS) encerrado a forca." -ForegroundColor Red
@@ -155,7 +112,6 @@ try {
 
     if ($recuperou -and $indisponivel) {
         $resultado = 'RECUPERACAO AUTOMATICA COMPROVADA'
-        # Quem recuperou?
         $ev = Get-WinEvent -FilterHashtable @{ LogName = 'System'; ProviderName = 'Service Control Manager'; Id = 7031, 7034; StartTime = $inicio } -ErrorAction SilentlyContinue
         $novas = if (Test-Path $logRec) { @(Get-Content $logRec) | Select-Object -Skip $linhasRecAntes } else { @() }
         $daTarefa = $novas | Where-Object { $_ -match '\| AGENDADA \|' }

@@ -1,25 +1,3 @@
-<#
-.SYNOPSIS
-    Etapa 1 (rede): diagnostico da rede, renomeacao do servidor e IP fixo.
-
-.DESCRIPTION
-    Roteiro do professor, secao 3.2. O script separa tres acoes para nao
-    alterar nada sem querer:
-      -Acao Diagnosticar  (padrao) so le e mostra a rede atual. Nao altera nada.
-      -Acao Renomear      renomeia para o Hostname da config. Pede confirmacao.
-      -Acao IPFixo        aplica IP fixo, gateway e DNS da config. Pede confirmacao.
-
-    Diferencas em relacao ao roteiro:
-      - New-NetIPAddress falha se a interface ja tiver gateway padrao (vindo do DHCP).
-        Por isso o script desliga o DHCP e remove IP/rota antigos antes de aplicar.
-      - Antes de aplicar, testa se o IP escolhido ja responde na rede (conflito).
-      - Rede alterada pode derrubar uma sessao RDP. Rode pelo console da VM.
-
-.EXAMPLE
-    .\Configurar-Rede.ps1
-    .\Configurar-Rede.ps1 -Acao Renomear -Reiniciar
-    .\Configurar-Rede.ps1 -Acao IPFixo -InterfaceIndex 6
-#>
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
 param(
     [ValidateSet('Diagnosticar', 'Renomear', 'IPFixo')]
@@ -98,12 +76,9 @@ try {
                 }
             }
             if ($PSCmdlet.ShouldProcess("Interface $InterfaceIndex", "Definir DNS $($cfg.Rede.DnsServers -join ',')")) {
-                # IPv6 tambem aponta para o proprio servidor (::1). Sem isso o Windows usa o DNS IPv6
-                # entregue pelo roteador, que nao conhece a zona do dominio.
                 Set-DnsClientServerAddress -InterfaceIndex $InterfaceIndex -ServerAddresses (@($cfg.Rede.DnsServers) + '::1')
                 Write-CTLog "DNS definido: $($cfg.Rede.DnsServers -join ', '), ::1" -Nivel OK
             }
-            # Espera o IP sair do estado Tentative (verificacao de duplicidade) antes de testar
             for ($i = 0; $i -lt 15; $i++) {
                 if ((Get-NetIPAddress -InterfaceIndex $InterfaceIndex -IPAddress $ip -ErrorAction SilentlyContinue).AddressState -eq 'Preferred') { break }
                 Start-Sleep -Seconds 1

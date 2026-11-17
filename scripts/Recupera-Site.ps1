@@ -1,25 +1,3 @@
-<#
-.SYNOPSIS
-    Etapa 5: verifica W3SVC, pool, site e resposta HTTP e tenta recuperar o que estiver parado.
-
-.DESCRIPTION
-    Baseado no script do roteiro (secao 7.3). A tarefa CitizenTech_Recuperacao roda
-    este script a cada 2 minutos como SYSTEM, com -Origem Agendada. Essa marcacao
-    aparece no log e permite separar recuperacao automatica (tarefa) de execucao manual.
-
-    Ordem das verificacoes (diferente do roteiro, que testava o pool primeiro):
-      1. Servico W3SVC  - sem ele o site nao sobe, entao vem primeiro.
-      2. Pool de aplicativos.
-      3. Site.
-      4. Resposta HTTP. Se falhar, executa iisreset e testa de novo.
-
-    Cada acao fica registrada em recuperacao.log no formato:
-      data | origem | componente | acao | resultado
-
-.EXAMPLE
-    .\Recupera-Site.ps1
-    .\Recupera-Site.ps1 -Origem Agendada
-#>
 [CmdletBinding()]
 param(
     [string]$Site = 'CitizenTech',
@@ -54,7 +32,6 @@ function Testar-Http {
 try {
     Import-Module WebAdministration -ErrorAction Stop
 
-    # 1. Servico W3SVC
     $svc = Get-Service W3SVC
     if ($svc.Status -ne 'Running') {
         Registrar 'W3SVC' "estava $($svc.Status). Iniciando." 'Yellow'
@@ -64,7 +41,6 @@ try {
         $script:acoes++
     }
 
-    # 2. Pool
     $estadoPool = (Get-WebAppPoolState -Name $Pool).Value
     if ($estadoPool -ne 'Started') {
         Registrar 'POOL' "$Pool estava $estadoPool. Iniciando." 'Yellow'
@@ -74,7 +50,6 @@ try {
         $script:acoes++
     }
 
-    # 3. Site
     $estadoSite = (Get-Website | Where-Object Name -eq $Site).State
     if ($estadoSite -ne 'Started') {
         Registrar 'SITE' "$Site estava $estadoSite. Iniciando." 'Yellow'
@@ -84,7 +59,6 @@ try {
         $script:acoes++
     }
 
-    # 4. HTTP
     $codigo = Testar-Http
     if ($codigo -eq 200) {
         if ($script:acoes -gt 0) { Registrar 'HTTP' "site respondendo com HTTP 200 apos $($script:acoes) acao(oes). RECUPERADO." 'Green' }

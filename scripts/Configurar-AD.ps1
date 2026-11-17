@@ -1,32 +1,9 @@
-<#
-.SYNOPSIS
-    Etapa 1 (identidade): AD DS, dominio citizentech.local, DNS, OU, grupos e usuarios.
-
-.DESCRIPTION
-    Roteiro do professor, secoes 3.3 a 3.5. Dividido em etapas porque a
-    promocao a controlador de dominio reinicia o servidor:
-
-      -Etapa InstalarRecurso  instala AD-Domain-Services (+ ferramentas). Sem reinicio.
-      -Etapa PromoverDominio  cria a floresta citizentech.local com DNS.
-                              Roda Test-ADDSForestInstallation antes, pede a senha DSRM
-                              e REINICIA a VM ao final.
-      -Etapa CriarObjetos     cria OU, grupos e usuarios de teste (pode rodar de novo
-                              sem duplicar nada). Pede a senha inicial das contas.
-
-    Pre-requisitos da promocao: hostname final aplicado e IP fixo configurado.
-
-.EXAMPLE
-    .\Configurar-AD.ps1 -Etapa InstalarRecurso
-    .\Configurar-AD.ps1 -Etapa PromoverDominio
-    .\Configurar-AD.ps1 -Etapa CriarObjetos
-#>
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
 param(
     [Parameter(Mandatory)]
     [ValidateSet('InstalarRecurso', 'PromoverDominio', 'CriarObjetos')]
     [string]$Etapa,
     [string]$ConfigPath,
-    # Opcionais: permitem rodar sem Read-Host (ex.: PowerShell Direct). Nunca grave senhas em arquivo.
     [System.Security.SecureString]$SenhaDSRM,
     [System.Security.SecureString]$SenhaUsuarios
 )
@@ -50,7 +27,6 @@ try {
         }
 
         'PromoverDominio' {
-            # Verificacoes antes de algo irreversivel
             $cs = Get-CimInstance Win32_ComputerSystem
             if ($cs.DomainRole -ge 4) {
                 Write-CTLog "Este servidor ja e controlador de dominio ($($cs.Domain)). Nada a fazer." -Nivel OK
@@ -80,7 +56,6 @@ try {
                 Write-CTLog "Promovendo $($env:COMPUTERNAME) a DC de $($cfg.DomainName). O servidor vai reiniciar." -Nivel AVISO
                 Install-ADDSForest -DomainName $cfg.DomainName -DomainNetbiosName $cfg.NetbiosName `
                     -InstallDns -SafeModeAdministratorPassword $dsrm -Force
-                # Install-ADDSForest reinicia sozinho ao terminar
             }
         }
 

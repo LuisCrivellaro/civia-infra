@@ -1,19 +1,3 @@
-<#
-.SYNOPSIS
-    Valida todos os criterios da atividade e grava o resultado de cada verificacao.
-
-.DESCRIPTION
-    So le o estado do servidor. Nao altera nenhuma configuracao.
-    Cada verificacao tem um dos resultados:
-      PASSOU  - conferido e de acordo com o esperado
-      FALHOU  - conferido e fora do esperado
-      ERRO    - a verificacao nao conseguiu rodar (modulo ausente, sem permissao etc.)
-    Saida: tabela na tela + CSV e TXT em evidencias\00-validacao.
-
-.EXAMPLE
-    .\Validar-Ambiente.ps1
-    .\Validar-Ambiente.ps1 -SaidaDir C:\Temp\validacao
-#>
 [CmdletBinding()]
 param(
     [string]$ConfigPath,
@@ -21,7 +5,6 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-# $PSScriptRoot fica vazio no valor padrao de parametros no PowerShell 5.1
 if (-not $SaidaDir) { $SaidaDir = Join-Path (Split-Path $PSScriptRoot -Parent) 'evidencias\00-validacao' }
 Import-Module (Join-Path $PSScriptRoot 'lib\CitizenTech.Common.psm1') -Force
 $cfg = if ($ConfigPath) { Import-CTConfig -Path $ConfigPath } else { Import-CTConfig }
@@ -29,7 +12,6 @@ $resultados = New-Object System.Collections.Generic.List[object]
 
 function Check {
     param([string]$Criterio, [string]$Item, [scriptblock]$Teste)
-    # O scriptblock devolve @($ok, 'detalhe')
     try {
         $r = & $Teste
         $status = if ($r[0]) { 'PASSOU' } else { 'FALHOU' }
@@ -47,7 +29,6 @@ function Http([string]$u) {
     catch { if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 0 } }
 }
 
-# Le FailureActions do registro (independe do idioma do sc.exe)
 function Get-FailureActions([string]$svc) {
     $b = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\$svc" -Name FailureActions -ErrorAction Stop).FailureActions
     $reset = [BitConverter]::ToUInt32($b, 0)
@@ -72,7 +53,6 @@ $isAdmin = Test-CTAdmin
 Write-Host "=== VALIDACAO CITIZENTECH - $env:COMPUTERNAME - $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') ===" -ForegroundColor Cyan
 if (-not $isAdmin) { Write-Host 'Aviso: sem privilegio de Administrador algumas verificacoes vao dar ERRO.' -ForegroundColor Yellow }
 
-# ---------- 1. Rede e identidade ----------
 $C = '1-Rede/Identidade'
 Check $C 'Windows Server' { $os = Get-CimInstance Win32_OperatingSystem; @(($os.ProductType -in 2,3), "$($os.Caption) build $($os.BuildNumber)") }
 Check $C 'Hostname' { @(($env:COMPUTERNAME -ieq $cfg.Hostname), "atual=$env:COMPUTERNAME esperado=$($cfg.Hostname)") }
@@ -102,7 +82,6 @@ Check $C 'Usuarios de teste' {
     $u = @(Get-ADUser -Filter * -SearchBase "OU=$($cfg.AD.OUName),$((Get-ADDomain).DistinguishedName)")
     @(($u.Count -ge $cfg.AD.Usuarios.Count -and -not ($u | Where-Object { -not $_.Enabled })), "$($u.Count) usuarios: $($u.SamAccountName -join ',')") }
 
-# ---------- 2. IIS ----------
 $C = '2-IIS/NTFS/Share'
 Check $C 'Recursos instalados' {
     $f = Get-WindowsFeature Web-Server, AD-Domain-Services, DNS, FS-FileServer
@@ -128,7 +107,6 @@ Check $C 'Permissoes do share' {
     $everyone = $a | Where-Object { $_.AccountName -eq (Resolve-CTSid 'S-1-1-0') }
     @(($adm -and -not $everyone), (($a | ForEach-Object { "$($_.AccountName)=$($_.AccessRight)" }) -join '; ')) }
 
-# ---------- GPO e RDP (fazem parte do funcionamento completo) ----------
 $C = '6-GPO/RDP/DFS'
 Check $C 'GPO existe' { $g = Get-GPO -Name $cfg.GPO.Nome; @(($g.GpoStatus -eq 'AllSettingsEnabled'), "status=$($g.GpoStatus)") }
 Check $C 'GPO vinculada a OU' {
@@ -144,7 +122,6 @@ Check $C 'Firewall RDP so rede local' {
     @(($r -and ($addr -notcontains 'Any')), "regras ativas=$(@($r).Count) remoto=$($addr -join ',')") }
 Check $C 'DFS (opcional)' { $d = Get-DfsnRoot -Path "\\$($cfg.DomainName)\$($cfg.DFS.NamespaceName)" -ErrorAction Stop; @(($d.State -eq 'Online'), "$($d.Path) $($d.State)") }
 
-# ---------- 3. Monitoramento ----------
 $C = '3-Monitoramento'
 Check $C 'DCS CitizenTech_Monitor' {
     $d = New-Object -ComObject Pla.DataCollectorSet; $d.Query($cfg.Monitor.DcsNome, $null)
@@ -169,7 +146,6 @@ Check $C 'monitor.log atualizado' {
     $ult = Get-Content $f -Tail 1
     @(((Get-Item $f).LastWriteTime -gt (Get-Date).AddMinutes(-15)), $ult) }
 
-# ---------- 4. Recuperacao ----------
 $C = '4-Recuperacao'
 Check $C 'sc failure W3SVC' { $f = Get-FailureActions 'W3SVC'; @(($f.Reset -gt 0 -and ($f.Acoes -match '^restart').Count -ge 1), "reset=$($f.Reset)s acoes=$($f.Acoes -join ',')") }
 Check $C 'Pool rapidFail/autoStart' {
@@ -183,7 +159,6 @@ Check $C 'Teste de falha registrado' {
     $ok = Select-String -Path $f -Pattern 'RECUPERACAO AUTOMATICA COMPROVADA' -SimpleMatch
     @([bool]$ok, $(if ($ok) { $ok[-1].Line } else { 'nenhum teste com recuperacao automatica comprovada' })) }
 
-# ---------- 5. Auditoria ----------
 $C = '5-Auditoria/Logs'
 Check $C 'auditpol Logon' { $s = Get-Audit '{0CCE9215-69AE-11D9-BED3-505054503030}'; @((($s -match 'Success|xito|Sucesso') -and ($s -match 'Failure|Falha')), $s) }
 Check $C 'auditpol File System' { $s = Get-Audit '{0CCE921D-69AE-11D9-BED3-505054503030}'; @((($s -match 'Success|xito|Sucesso') -and ($s -match 'Failure|Falha')), $s) }
@@ -192,7 +167,6 @@ Check $C 'Eventos de logon (4624)' { $e = Get-WinEvent -FilterHashtable @{LogNam
 Check $C 'Eventos de acesso a arquivo (4663)' { $e = Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4663} -MaxEvents 1; @([bool]$e, "ultimo em $($e.TimeCreated)") }
 Check $C 'Logs do IIS' { $f = Get-ChildItem 'C:\inetpub\logs\LogFiles' -Recurse -Filter *.log; @((@($f).Count -gt 0), "$(@($f).Count) arquivo(s)") }
 
-# ---------- Saida ----------
 New-Item -Path $SaidaDir -ItemType Directory -Force | Out-Null
 $carimbo = Get-Date -Format 'yyyyMMdd-HHmmss'
 $csv = Join-Path $SaidaDir "validacao-$carimbo.csv"
