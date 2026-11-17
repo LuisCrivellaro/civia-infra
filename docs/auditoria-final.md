@@ -44,7 +44,7 @@ Os 49/49 do validador cobrem a configuração do servidor. Eles não cobrem os p
 | | DFS (opcional) | `Configurar-Infraestrutura.ps1 -Componentes DFS` | `04-ntfs-gpo/06-get-dfsnroot.txt` | Validado | - |
 | | README com ficha e rastreabilidade (8.3) | `README.md`, `docs/ficha-citizentech.md` | ficha, IP, hostname, domínio, credenciais de teste sem senha, tabela de critérios | Validado | - |
 | | estrutura do repositório (8.2) | `README.md` | pastas `docs/`, `scripts/`, `evidencias/01-rede` a `07-logs` | Validado | - |
-| | vídeo de até 7 minutos | `docs/roteiro-video.md`, `scripts/Demo-Video.ps1` | https://www.youtube.com/watch?v=CGmx1JJHYeI | Executado | a duração não foi conferida nesta auditoria (D.4) |
+| | vídeo de até 7 minutos | `docs/roteiro-video.md`, `scripts/Demo-Video.ps1` | https://www.youtube.com/watch?v=CGmx1JJHYeI (6:04, público) | Validado | - |
 | | `prompts.md` (regra geral da GS) | `prompts.md` | registro dos pedidos e da divisão de tarefas | Validado | - |
 | Entrega | link no Teams, um integrante, até 19/11 às 23h55 | - | - | Pendente | envio (D.5) |
 
@@ -73,7 +73,7 @@ Nenhum script `.ps1` foi alterado nesta auditoria e os arquivos de `app/` també
    - `evidencias/04-ntfs-gpo/10-rdp-conexao-hostname.png`
    - `evidencias/04-ntfs-gpo/11-share-acessado-do-host.png`
    - `evidencias/03-iis/07-aba-seguranca-site.png`
-2. **Vídeo:** confirme no YouTube Studio que a duração é de no máximo 7:00 e que a visibilidade é "Não listado".
+2. **Vídeo:** conferido em 16/11 pela página do YouTube: 6:04 de duração, visibilidade pública, abre sem login.
 3. **Envio:** um integrante envia `https://github.com/LuisCrivellaro/civia-infra` na tarefa de Operating Systems do Teams até 19/11 às 23h55 e confere se ficou como entregue.
 4. **Aplicação real (opcional, decisão da equipe):** se a aplicação web da Civia de outra disciplina estiver pronta, troque o conteúdo de `app/`, rode `Configurar-IIS.ps1` de novo e tire um print novo do navegador. Se ela tiver backend, o caminho passa a ser o B.
 5. **Publicação:** feita depois da revisão do aluno.
@@ -85,7 +85,6 @@ Nenhum script `.ps1` foi alterado nesta auditoria e os arquivos de `app/` també
 |---|---|---|
 | Aplicação hospedada é uma página de demonstração | Alto | o roteiro e o documento geral pedem a aplicação web da equipe; afeta dois critérios que somam 4 pontos |
 | Envio no Teams não feito | Crítico até ser feito | sem envio não há nota; depende só da equipe |
-| Duração do vídeo não conferida nesta auditoria | Baixo | o roteiro foi montado para 7:00 e o vídeo foi editado; falta confirmar o tempo final |
 | GPO testada com logon no controlador de domínio | Baixo | exigiu uma liberação temporária, documentada e desfeita; o ideal seria uma VM cliente |
 | Bloco 8.1 salvo em texto, não em print único | Baixo | o conteúdo está completo, com `TcpTestSucceeded : True` |
 | Teste de falha do vídeo sem transcript no repositório | Baixo | os três testes anteriores estão salvos; o do vídeo aparece na gravação |
@@ -104,10 +103,7 @@ Nenhum script `.ps1` foi alterado nesta auditoria e os arquivos de `app/` també
 - README e ficha;
 - rastreabilidade;
 - `prompts.md`;
-- vídeo publicado.
-
-**Ainda precisa de validação:**
-- duração final do vídeo.
+- vídeo publicado, com 6:04.
 
 **Impede a entrega:**
 - só o envio no Teams.
@@ -125,7 +121,7 @@ Nenhuma pendência técnica impede o envio.
 | Links Markdown internos | nenhum quebrado |
 | Referências a arquivos de evidência nos `.md` | todas existem; só `alertas-teste.log` é citado como arquivo da VM, gerado no modo de teste |
 | IPs nas evidências | só `192.168.0.250` (servidor), `192.168.0.1` (gateway) e `192.168.0.17` (PC host, nos logs do IIS); IPv6 público já trocado |
-| Link do vídeo | o oEmbed do YouTube devolveu o título do vídeo, então ele abre sem login |
+| Link do vídeo | o oEmbed do YouTube devolveu o título do vídeo, então ele abre sem login; a página informa 364 segundos (6:04) e `isUnlisted: false` |
 | PSScriptAnalyzer | não executado: o módulo não está instalado no PC |
 | Leitura de dados atuais da VM | não feita: o processo que acessava a VM tinha sido fechado, e nenhum dado novo foi necessário |
 

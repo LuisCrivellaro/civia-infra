@@ -74,7 +74,7 @@ Um item só vira Validado com o arquivo de evidência correspondente em `evidenc
 | Repositório organizado | Validado | https://github.com/LuisCrivellaro/civia-infra |
 | Ficha CitizenTech | Validado | `docs/ficha-citizentech.md` completa |
 | Evidências associadas aos critérios | Validado | tabela de rastreabilidade no README |
-| Vídeo demonstrativo de até sete minutos | Validado | https://www.youtube.com/watch?v=CGmx1JJHYeI (YouTube, não listado), gravado com `scripts/Demo-Video.ps1` seguindo `docs/roteiro-video.md` |
+| Vídeo demonstrativo de até sete minutos | Validado | https://www.youtube.com/watch?v=CGmx1JJHYeI (YouTube, público, 6:04), gravado com `scripts/Demo-Video.ps1` seguindo `docs/roteiro-video.md` |
 | Link de entrega preparado | Executado | link pronto: https://github.com/LuisCrivellaro/civia-infra |
 | Envio no Teams | Pendente | um integrante envia até 19/11/2026 às 23h55 e confere se ficou como entregue |
 
