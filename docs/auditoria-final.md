@@ -38,7 +38,7 @@ Os 49/49 do validador cobrem a configuração do servidor. Eles não cobrem os p
 | Auditoria e logs (1,0) | `auditpol` Logon e File System | `Configurar-Infraestrutura.ps1` | `07-logs/01-auditpol.txt` | Validado | - |
 | | SACL, eventos 4624 e 4663 | `Configurar-Infraestrutura.ps1` | `05-sacl-site.txt`, `03-logon-4624-4625.txt`, `04-acesso-arquivo-4663.txt`, `07-event-viewer-security.png` | Validado | - |
 | | logs do IIS | - | `06-logs-iis.txt`, `u_ex261116.log`, `08-pasta-logs-iis.png` | Validado | - |
-| Funcionamento completo (2,0) | bloco de validação 8.1 com `Test-NetConnection` | `Coletar-Evidencias.ps1`, `Validar-Ambiente.ps1` | `00-validacao/00-ficha-infraestrutura.txt` (`TcpTestSucceeded : True`), `validacao-20261116-123441.txt` (49/49) | Validado | o roteiro pede "um único print"; a saída está em texto |
+| Funcionamento completo (2,0) | bloco de validação 8.1 com `Test-NetConnection` | `Coletar-Evidencias.ps1`, `Validar-Ambiente.ps1` | `00-validacao/00-ficha-infraestrutura.txt` (`TcpTestSucceeded : True`), `validacao-20261116-123441.txt` (49/49), prints `01-` e `02-validacao-final-49-de-49-parte*.png` | Validado | o validador ocupa duas telas, então são dois prints |
 | | GPO visível e verificável | `Configurar-Infraestrutura.ps1` | `04-ntfs-gpo/03-get-gpo-all.txt`, `07-gpo-painel-bloqueado-bruno.png`, `08-gpresult-bruno.txt`, `09-relatorio-gpo.html` | Validado | - |
 | | acesso remoto RDP | `Configurar-Infraestrutura.ps1` | `04-ntfs-gpo/05-rdp.txt`, validação (NLA, firewall `LocalSubnet`), `10-rdp-conexao-hostname.png` | Validado | - |
 | | DFS (opcional) | `Configurar-Infraestrutura.ps1 -Componentes DFS` | `04-ntfs-gpo/06-get-dfsnroot.txt` | Validado | - |
@@ -86,7 +86,6 @@ Nenhum script `.ps1` foi alterado nesta auditoria e os arquivos de `app/` també
 | Aplicação hospedada é uma página de demonstração | Alto | o roteiro e o documento geral pedem a aplicação web da equipe; afeta dois critérios que somam 4 pontos |
 | Envio no Teams não feito | Crítico até ser feito | sem envio não há nota; depende só da equipe |
 | GPO testada com logon no controlador de domínio | Baixo | exigiu uma liberação temporária, documentada e desfeita; o ideal seria uma VM cliente |
-| Bloco 8.1 salvo em texto, não em print único | Baixo | o conteúdo está completo, com `TcpTestSucceeded : True` |
 | Teste de falha do vídeo sem transcript no repositório | Baixo | os três testes anteriores estão salvos; o do vídeo aparece na gravação |
 
 ## F. Checklist final

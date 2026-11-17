@@ -42,6 +42,7 @@ Continuar do ponto em que parou, sem recomeçar; revisar o que já existia; exec
 | Link do vídeo publicado | colocou o link no README e no checklist |
 | Auditoria final antes da entrega | revisou documentos, scripts e evidências contra os PDFs e escreveu `docs/auditoria-final.md` |
 | Tirar os prints que faltavam | conduziu a Área de Trabalho Remota e o Explorador e salvou os prints da conexão RDP, da aba Segurança e do compartilhamento; o aluno digitou a senha da conexão ao compartilhamento |
+| Conferência final da lista de entrega e prints que ainda faltavam | conferiu cada item; pela Área de Trabalho Remota, rodou comandos de leitura (`Demo-Video.ps1 -SoParte 1`, `2` e `5` e `Validar-Ambiente.ps1`) e salvou as telas de rede, AD e DNS, monitoramento e validação final; o aluno digitou a senha da conexão |
 
 ## Quem fez o quê
 
